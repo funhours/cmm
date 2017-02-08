@@ -2,71 +2,60 @@
 #@layout()
 #define main()
 <!-- 内容容器 -->
-<div class="jf-panel-box jf-pull-left">
-
-	<!-- 项目 -->
-	<div class="jf-panel">
-		<h2 class="jf-panel-name"><a href="/project">项目</a></h2>
-		<a class="jf-panel-more" href="/project">更多»</a>
-		<ul class="jf-panel-list">
-			#for(x : projectList)
-				<li>
-					<div class="jf-panel-img">
-						<a href="/user/#(x.accountId)"><img src="/upload/avatar/#(x.avatar)"></a>
-					</div>
-					<div class="jf-panel-item">
-						<h3><a href="/project/#(x.id)">#(x.title)</a></h3>
-						<p>
-							#(x.content)
-						</p>
-					</div>
-				</li>
-			#end
+<div class="admin-content">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf">
+            <strong class="am-text-primary am-text-lg">首页</strong> / <small>活动管理</small> / <small>正在进行活动</small>
+        </div>
+    </div>
+    
+   <div class="am-g">
+     <div class="am-u-sm-12 am-u-md-2 am-u-md-push-10">
+    
+		 <ul class="am-tree" id="firstTree">
+		  <li class="am-tree-branch am-hide" data-template="treebranch">
+		    <div class="am-tree-branch-header">
+		      <button class="am-tree-branch-name">
+		        <span class="am-tree-icon am-tree-icon-folder"></span>
+		        <span class="am-tree-label"></span>
+		      </button>
+		    </div>
+		    <ul class="am-tree-branch-children"></ul>
+		    <div class="am-tree-loader"><span class="am-icon-spin am-icon-spinner"></span></div>
+		  </li>
+		  <li class="am-tree-item am-hide" data-template="treeitem">
+		    <button class="am-tree-item-name">
+		      <span class="am-tree-icon am-tree-icon-item"></span>
+		      <span class="am-tree-label"></span>
+		    </button>
+		  </li>
 		</ul>
+	  </div>
+	  <div class="am-u-sm-12 am-u-md-10 am-u-md-pull-2">
+	  <hr>
+	  
+	  <div class="am-btn-toolbar">
+        <div class="am-btn-group am-btn-group-xs">
+          <button type="button" class="am-btn am-btn-default addEvent"><span class="am-icon-plus"></span> 新增</button>
+          <button type="button" class="am-btn am-btn-default deleteAllSelect"><span class="am-icon-trash-o"></span> 删除</button>
+        </div>
+        
+	  	<table class="am-table am-table-bd am-table-striped admin-content-table">
+            <thead>
+            <tr>
+              <th class="table-check"><input type="checkbox" class="allCheck" /></th><th class="table-id">ID</th><th>名称</th><th>活动图片</th><th>简介</th><th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+	             
+            </tbody>
+          </table>
+        <hr />
+		
+	  </div>
 	</div>
-
-	<!-- 分享 -->
-	<div class="jf-panel">
-		<h2 class="jf-panel-name"><a href="/share">分享</a></h2>
-		<a class="jf-panel-more" href="/share">更多»</a>
-		<ul class="jf-panel-list">
-			#for(x : shareList)
-				<li>
-					<div class="jf-panel-img">
-						<a href="/user/#(x.accountId)"><img src="/upload/avatar/#(x.avatar)"></a>
-					</div>
-					<div class="jf-panel-item">
-						<h3><a href="/share/#(x.id)">#(x.title)</a></h3>
-						<p>
-							#(x.content)
-						</p>
-					</div>
-				</li>
-			#end
-		</ul>
-	</div>
-
-	<!-- 反馈 -->
-	<div class="jf-panel">
-		<h2 class="jf-panel-name"><a href="/feedback">反馈</a></h2>
-		<a class="jf-panel-more" href="/feedback">更多»</a>
-		<ul class="jf-panel-list">
-			#for(x : feedbackList)
-				<li>
-					<div class="jf-panel-img">
-						<a href="/user/#(x.accountId)"><img src="/upload/avatar/#(x.avatar)"></a>
-					</div>
-					<div class="jf-panel-item">
-						<h3><a href="/feedback/#(x.id)">#(x.title)</a></h3>
-						<p>
-							#(x.content)
-						</p>
-					</div>
-				</li>
-			#end
-		</ul>
-	</div>
-
+   
+</div>
 </div>
 
 <!-- 包含侧边栏文件 -->
