@@ -1,0 +1,68 @@
+<%
+	// 当前页
+	var currentPage = page.pageNumber;
+	// 总页数
+	var totalPage   = page.totalPage;
+
+	// 对于不够分页的直接跳出
+	if (totalPage <= 0 || currentPage > totalPage || totalPage == 1) {
+		return;
+	}
+	// 表示显示的按钮数量，请为设置为奇数个
+	var _btn_count = isEmpty(btnCount) ? 7 : btnCount;
+
+	var _temp_count = _btn_count / 2;
+	var startPage, endPage;
+	// 以7页作为参考的话，小于5页，开始添加新按钮
+	if (currentPage < _temp_count + 1) {
+		startPage = 1;
+		endPage = _btn_count + 1;
+	} else {
+		startPage = currentPage - _temp_count + 1;
+		endPage = currentPage + _temp_count + 1;
+	}
+	// 尾页不足_btn_count时补全, *注意：* beetl尾页补全。 如for(var i in range(1,5)) {print(i)},将依次打印1234
+	if ((totalPage - currentPage) < _temp_count) {
+		startPage = totalPage - _btn_count + 1;
+		endPage = totalPage + 1;
+	}
+	if (startPage < 1) {
+		startPage = 1;
+	}
+
+	// 判断URL是否含有?
+	actionUrl = (strutil.index(actionUrl, "?") == -1) ? actionUrl + "?" : actionUrl + "&";
+%>
+<ul class="am-pagination">
+	<% if (currentPage == 1) { %>
+		<li class="am-disabled">
+			<a href="#">&laquo;</a>
+		</li>
+	<% } else { %>
+		<li>
+			<a href="${actionUrl}pageNum=${currentPage - 1}">&laquo;</a>
+		</li>
+	<% } %>
+
+	<% for(var i in range(startPage, endPage)) { %>
+		<% if (currentPage == i) { %>
+			<li class="am-active">
+				<a>${i}</a>
+			</li>
+		<% } else { %>
+			<li>
+				<a href="${actionUrl}pageNum=${i}">${i}</a>
+			</li>
+		<% } %>
+	<% } %>
+
+	<% if (currentPage == totalPage) { %>
+		<li class="am-disabled">
+			<a>&raquo;</a>
+		</li>
+	<% } else { %>
+		<li>
+			<a href="${actionUrl}pageNum=${currentPage + 1}">&raquo;</a>
+		</li>
+	<% } %>
+</ul>

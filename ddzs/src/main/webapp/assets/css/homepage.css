@@ -1,0 +1,98 @@
+/*=========
+     初始化css
+ ==========*/
+body{margin: 0;padding: 0; font-size: 12px;font-family:"Arial","Microsoft YaHei";min-width:1180px ;-webkit-font-smoothing: antialiased;background-color: #F8F8F8;}
+a{text-decoration: none;color: #2C7CDF;}
+*{margin: 0px;padding: 0px;}
+img{border: 0px;}
+ul,li{list-style-type: none;}
+
+/*=========
+     头部样式
+ ==========*/
+.wapper{height: auto;margin: 0 auto;}
+.wapper .header-bg{width: 100%;position: fixed;top: 0;z-index: 999;background-color: #2c7cdf; box-shadow: 0 1px 3px rgba(222,222,222,0.5);}
+.wapper .header{width:1180px;height: 60px; position: relative;margin: auto;}
+.header .logo{width: 180px;height: 60px;line-height: 60px;text-align: center;position: absolute;left: 10px;}
+.header .system-name{display: inline-block;width: 100px;position: absolute;left: 210px; top: 16px;color: #FFFFFF;font-size: 18px;}
+.header .topitem{display: inline-block;width: 80px;height: 40px;line-height: 40px;text-align: center;border-bottom: 4px solid #2C7CDF;}
+.header .top-item1{ position: absolute;left: 590px;top: 14px;}
+.header .top-item2{ position: absolute;left: 700px;top: 14px;}
+.header .top-item3{ position: absolute;left: 810px;top: 14px;}
+.header .item-focus{border-bottom: 4px solid #FFFFFF;}
+.header .topitem:hover{border-bottom: 4px solid #FFFFFF;}
+.header .topitem .icon{width: 15px;height: 15px;vertical-align: text-bottom;}
+.header .topitem .text{font-size: 14px;color: #FFFFFF;}
+.header .username{display: inline-block;width: 100px;height: 30px;line-height: 30px; position: absolute;border: 1px solid #4F98E9;right: 150px;top: 16px;border-radius: 5px;background-color: #2598F9;color: #FFFFFF;}
+.header .username .toux{width: 28px;height: 28px;float: left;position: absolute;top: 1px;left: 2px;}
+.header .username .name{font-size: 14px;position: absolute;top: 1px;left: 46px;}
+.header .more-on{display: inline-block;height: 30px;width: 100px;line-height: 30px;font-size: 14px;border: 1px solid #4F98E9;border-radius: 5px;text-align: center;color: #FFFFFF;background-color: #2598f9;position: absolute;right:20px;top: 16px;}
+.header .more-on:hover{background-color: #208ce7;cursor: pointer;}
+/*下拉框的内容*/
+.header .more-details{display: none; width: 150px; background-color: #FFFFFF;position: absolute;right: 20px;top: 60px;box-shadow: 0 0 4px #DBDCE0;}
+.header .more-details li{height: 32px;line-height: 32px;background-color: #FFFFFF;}
+.header .more-details li:nth-child(2n){border-bottom: 1px solid #DBDCE0;}
+.header .more-details li a{display: inline-block; height: 32px;line-height: 32px;width: 100%;}
+.header .more-details li a p{display: inline-block;height: 14px;line-height: 14px;width: 100%;}
+.header .more-details li a p span{ color: #222222;padding-left: 40px;}
+/*下拉框里面的移上去改变的样式*/
+.header .more-details li:hover{background-color: #2C7CDF;}
+.header .more-details li:hover a span{color: #FFFFFF;}
+.header .more-details .more-icon1{background: url(../img/homepage/icon-drop.png) no-repeat 15px -34px;}
+.header .more-details .more-icon2{background: url(../img/homepage/icon-drop.png) no-repeat 15px -10px;}
+.header .more-details .more-icon3{background: url(../img/homepage/icon-drop.png) no-repeat 15px -135px;}
+.header .more-details .more-icon4{background: url(../img/homepage/icon-drop.png) no-repeat 15px -95.5px;}
+.header .more-details .more-icon5{background: url(../img/homepage/icon-drop.png) no-repeat 15px -47px;}
+.header .more-details .more-icon6{background: url(../img/homepage/icon-drop.png) no-repeat 15px -200px;}
+.header .more-details .more-icon7{background: url(../img/homepage/icon-left.png) no-repeat 15px -272px;}
+.header .more-details .more-icon8{background: url(../img/homepage/icon-drop.png) no-repeat 15px -121px;}
+.header .more-details li:hover .more-icon1{background: url(../img/homepage/icon-drop.png) no-repeat 15px 1px;}
+.header .more-details li:hover .more-icon2{background: url(../img/homepage/icon-drop.png) no-repeat 15px -70px;}
+.header .more-details li:hover .more-icon3{background: url(../img/homepage/icon-drop.png) no-repeat 15px -148px;}
+.header .more-details li:hover .more-icon4{background: url(../img/homepage/icon-drop.png) no-repeat 15px -22px;}
+.header .more-details li:hover .more-icon5{background: url(../img/homepage/icon-drop.png) no-repeat 15px -58px;}
+.header .more-details li:hover .more-icon6{background: url(../img/homepage/icon-drop.png) no-repeat 15px -163px;}
+.header .more-details li:hover .more-icon7{background: url(../img/homepage/icon-left.png) no-repeat 15px -225px;}
+.header .more-details li:hover .more-icon8{background: url(../img/homepage/icon-drop.png) no-repeat 15px -187px;}
+/*=========
+     主体内容左边导航条样式
+ ==========*/
+.wapper .content-bg{min-width: 1200px;min-height: 800px;margin-top: 60px;}
+.content-bg .content{width: 1180px;height: auto; border: 1px solid #F8F8F8;margin: auto;position: relative;}
+.content .left-nav{width: 180px;height: 600px;background-color: #FFFFFF;margin-top: 10px;box-shadow: 0 0 8px #dcdcdc;}
+.left-nav .top-setup{width: 100%;height: 120px;background: url(../img/homepage/avatar-bg.jpg) no-repeat;background-size: 100% 100%;position: relative;}
+.left-nav .top-setup .imgt{width: 60px;height: 60px;border-radius: 50%;position: absolute;top: 30px;left: 20px;}
+.left-nav .top-setup .person-name{width: 60px;height: 25px;line-height: 25px;text-align:left;font-size: 15px;font-family: "黑体"; position: absolute;top: 32px;left: 90px;color: #000;}
+.left-nav .top-setup .person-shezhi{width: 66px;height: 25px;line-height: 25px;text-align: center;position: absolute;top: 60px;left: 90px;background-color: #c9c9c9;color: #FFFFFF;border-radius: 4px;}
+.left-nav .nav-menu{}
+.left-nav .nav-menu li{height: 40px;line-height: 40px;width: 100%;}
+.left-nav .nav-menu li a{display: inline-block; height: 40px;line-height: 40px;width: 100%;color: #222222;font-size: 15px;font-family: "黑体";}
+.left-nav .nav-menu li a span{padding-left: 60px;}
+.left-nav .nav-menu li + li{border-top: 1px solid #ededed;}
+.left-nav .nav-menu .nav-1{background: url(../img/homepage/ddh.png) no-repeat 30px 8px;}
+.left-nav .nav-menu .nav-2{background: url(../img/homepage/temh.png) no-repeat 30px 8px;}
+.left-nav .nav-menu .nav-3{background: url(../img/homepage/mesh.png) no-repeat 30px 10px;}
+.left-nav .nav-menu .nav-4{background: url(../img/homepage/czh.png) no-repeat 30px 7px;}
+.left-nav .nav-menu .nav-5{background: url(../img/homepage/hyh.png) no-repeat 30px 10px;}
+.left-nav .nav-menu .nav-6{background: url(../img/homepage/lyh.png) no-repeat 30px 10px;}
+.left-nav .nav-menu .nav-7{background: url(../img/homepage/ych.png) no-repeat 30px 9px;}
+/*每个选中的页面动态加载这几个样式==选中状态*/
+.left-nav .nav-menu .nav-focus1{background: url(../img/homepage/ddb.png) no-repeat 30px 8px;}
+.left-nav .nav-menu .bg-focus{background-color: #2C7CDF;}
+.left-nav .nav-menu .text-focus{color: #FFFFFF;font-size: 16px;}
+.left-nav .nav-menu li:hover{background-color: #2C7CDF;}
+.left-nav .nav-menu li:hover .nav-1{background: url(../img/homepage/ddb.png) no-repeat 30px 8px;}
+.left-nav .nav-menu li:hover .nav-2{background: url(../img/homepage/temb.png) no-repeat 30px 8px;}
+.left-nav .nav-menu li:hover .nav-3{background: url(../img/homepage/mesb.png) no-repeat 30px 10px;}
+.left-nav .nav-menu li:hover .nav-4{background: url(../img/homepage/czb.png) no-repeat 30px 7px;}
+.left-nav .nav-menu li:hover .nav-5{background: url(../img/homepage/hyb.png) no-repeat 30px 10px;}
+.left-nav .nav-menu li:hover .nav-6{background: url(../img/homepage/lyb.png) no-repeat 30px 10px;}
+.left-nav .nav-menu li:hover .nav-7{background: url(../img/homepage/ycb.png) no-repeat 30px 9px;}
+.left-nav .nav-menu li:hover a span{color: #FFFFFF;font-size: 16px;}
+/*=========
+     主体内容右边主体内容样式
+ ==========*/
+.content .right-content{width: 980px;min-height: 800px;background-color: #FFFFFF;margin-top: 10px;box-shadow: 0 0 8px #dcdcdc;position: absolute;right: 10px;top: 0px;}
+
+
+

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>创建账号</title>
+		<link rel="stylesheet" href="/view/css/CreateAccount.css" />
+		
+	</head>
+	<body>
+		<div class="wapper">
+			<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：头部内容
+            -->
+			<header class="header-bg">
+				<div class="header">
+					<div class="tit-left">
+						<a class="logo" href="#">
+							<h1>logo</h1>
+						</a>
+					</div>
+					<div class="tit-login">
+						<a class="but SignInBtn" >登录</a>
+					</div>
+					<!-- <div class="tit-right">
+						<a class="but" href="#">创建账号</a>
+					</div> -->
+				</div>
+				
+			</header>
+			<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：主体内容
+            -->
+			<div class="content-bg">
+				<div class="content">
+					<form action="" id="login">
+						<div class="minregister">
+							<div class="register">
+								<p class="welcom">欢迎创建账号</p>
+								<p class="message">
+									<i class="icon"></i>
+									请输入正确的手机号！
+								</p>
+								<div class="number">
+									<i class="icon-num"></i>
+									<input type="text" class="loginName" placeholder="手机号" name="num" id="number" autocomplete="off">
+									<i class="icon-fail"></i>
+								</div>
+								<div class="verification">
+									<div class="yanz">
+										<i class="icon-yanz"></i>
+										<input type="text" class="code" placeholder="手机验证码" name="verification" id="verification" autocomplete="off">
+										<i class="icon-fail"></i>
+									</div>
+									<a id="send" class="fasong">发送验证码</a>
+								</div>
+								<div class="type">
+									<i class="icon-type"></i>
+									<select required="required" class="userType">
+										<option selected="selected" value="-1">-请选择用户类型-</option>
+										<option value="0">系统管理员</option>
+										<option value="1">供应源商家</option>
+										<option value="2">商家员工</option>
+										<option value="3">商家代理</option>
+									</select>
+									<i class="icon-fail"></i>
+								</div>
+								<div class="name">
+									<i class="icon-user"></i>
+									<input type="text" class="nickName" placeholder="真实姓名" name="user" id="username" autocomplete="off">
+									<i class="icon-fail"></i>
+								</div>
+								<div class="password">
+									<i class="icon-pwd"></i>
+									<input type="password" class="userPassword" placeholder="密码" name="password" id="password" autocomplete="off">
+									<i class="icon-fail"></i>
+								</div>
+								<div class="remember">
+									<input id="my_agree" class="input-checkbok" type="checkbox" checked="checked" autocomplete="off" />
+									<label class="text">我接受并同意<a class="tiaok" href="">《订单助手使用条款》</a> </label>
+								</div>
+								<a class="button registerBtn" id="register_now" >立即注册</a>
+							</div>
+						</div>
+					</form>
+			</div>
+		</div>
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：页脚-网站链接及版权信息
+            -->
+			<footer class="footer">
+				<div class="about">
+					<div class="link">
+						<a href="">关于我们</a>
+					</div>
+					<div class="link">
+						<a href="">使用条款</a>
+					</div>
+					<div class="link">
+						<a href="">安全声明</a>
+					</div>
+					<div class="link">
+						<a href="">隐私声明</a>
+					</div>
+					<div class="link">
+						<a href="">技术支持</a>
+					</div>
+					<div class="link">
+						<a href="">加入我们</a>
+					</div>
+				</div>
+				<div class="copy">Copyright&nbsp;&nbsp;&copy;&nbsp;&nbsp;2017&nbsp;&nbsp;重庆凯优科技有限公司&nbsp;&nbsp;版权所有</div>
+			</footer>
+		</div>	
+	</body>
+	<script src="/view/js/jquery-1.11.3.min.js"></script>
+	<script src="/static/layer/layer.js"></script>
+	<script type="text/javascript">
+		//登录
+		$(".SignInBtn").unbind("click");
+		$(".SignInBtn").bind("click",function(){
+			window.location.href='/login';
+		});
+		
+		//发送验证码
+		$('.fasong').unbind('click').click(function () {
+			var loginName = $(".loginName").val();
+			var url = "/api/account/sendCode";
+			$.ajax({
+			  type: 'POST',
+			  url: url,
+			  data: {loginName:loginName},
+			  success: function(data){
+				 alert("验证码发送成功！"+data);
+			  },error: function (XMLHttpRequest) {
+				alert("Ajax请求失败，错误状态为："+XMLHttpRequest.status);
+			}
+			});
+		});
+		
+		//用户注册
+		$('.registerBtn').unbind('click').click(function () {
+			var loginName = $(".loginName").val();
+			var code = $(".code").val();
+			var userType = $(".userType").val();
+			var nickName = $(".nickName").val();
+			var password = $(".userPassword").val();
+			var url = "/api/account/register";
+			$.ajax({
+			  type: 'POST',
+			  url: url,
+			  data: {
+				  loginName:loginName,
+				  code:code,
+				  userType:userType,
+				  nickName:nickName,
+				  password:password
+				  },
+			  success: function(data){
+				 if(data.code == 1){
+					 layer.msg("注册成功", {shift: 1});
+					 setTimeout(function(){window.location.href='/login';}, 600);
+				 }else{
+					 alert(data.message);
+				 }
+			  },error: function (XMLHttpRequest) {
+				  layer.msg("注册失败请稍后再试", {shift: 1});
+			}
+			});
+		});
+
+	</script>
+</html>

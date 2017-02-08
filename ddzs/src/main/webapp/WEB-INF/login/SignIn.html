@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>订单助手</title>
+<link rel="stylesheet" href="css/SignIn.css" />
+<script src="static/amazeui/assets/js/jquery.min.js"></script>
+</head>
+<body>
+	<div class="wapper">
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：头部内容
+            -->
+		<header class="header-bg">
+			<div class="header">
+				<div class="tit-left">
+					<a class="logo" href="#">
+						<h1>logo</h1>
+					</a>
+				</div>
+				<div class="tit-right">
+					<a class="but" href="CreateAccount.html">创建账号</a>
+				</div>
+			</div>
+
+		</header>
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：主体内容
+            -->
+		<div class="content-bg">
+			<div class="content">
+				<!--左边广告-->
+				<div class="advert">
+					<div class="pic">
+						<img src="img/SignIn/guanggao.png" />
+					</div>
+					<div class="weixin">
+						<img class="anzhuo" src="img/SignIn/anzhuo.png" /> <img
+							class="apple" src="img/SignIn/apple.png" />
+					</div>
+				</div>
+				<!--右边from表单，用户登录模块-->
+				<form action="" id="login">
+					<div class="denglv-bg">
+						<div class="denglv">
+							<p class="welcom">欢迎使用</p>
+							<p class="message">
+								<i class="icon"></i> 请输入正确的手机号或邮箱！
+							</p>
+							<div class="name">
+								<i class="icon-user"></i> <input type="text" placeholder="账号"
+									name="user" id="username" autocomplete="off"> <i
+									class="icon-fail"></i>
+							</div>
+							<div class="password">
+								<i class="icon-pwd"></i> <input type="text" placeholder="密码"
+									name="password" id="password" autocomplete="off"> <i
+									class="icon-fail"></i>
+							</div>
+							<div class="remember">
+								<div class="holdon">
+									<input id="cbx_keep" class="input-checkbok" type="checkbox"
+										autocomplete="off" /> <label class="text">保持登录</label>
+								</div>
+								<div class="forget">
+									<a class="wangji" href="#">忘记密码？</a>
+								</div>
+							</div>
+							<a class="button" id="btn_login" href="">登录</a>
+							<p class="no-account">
+								<span class="no">没有账号?</span> <a class="zhuce" href="">立即注册</a>
+							</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：页脚-网站链接及版权信息
+            -->
+		<footer class="footer">
+			<div class="about">
+				<div class="link">
+					<a href="">关于我们</a>
+				</div>
+				<div class="link">
+					<a href="">使用条款</a>
+				</div>
+				<div class="link">
+					<a href="">安全声明</a>
+				</div>
+				<div class="link">
+					<a href="">隐私声明</a>
+				</div>
+				<div class="link">
+					<a href="">技术支持</a>
+				</div>
+				<div class="link">
+					<a href="">加入我们</a>
+				</div>
+			</div>
+			<div class="copy">Copyright&nbsp;&nbsp;&copy;&nbsp;&nbsp;2017&nbsp;&nbsp;重庆凯优科技有限公司&nbsp;&nbsp;版权所有</div>
+		</footer>
+	</div>
+</body>
+
+	<script type="text/javascript">
+		jQuery(function($) {
+			//注册
+			$(".zhuce").unbind("click");
+			$(".zhuce").bind("click", function() {
+				window.location.href = "/api/account/checkUser?loginName=123";
+			});
+			
+		});
+	</script>
+
+
+</html>
