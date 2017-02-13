@@ -24,7 +24,6 @@ public class IndexController extends BaseController {
 	static IndexService srv = IndexService.me;
 
 	public void index() {
-		
 		render("index.html");
 	}
 

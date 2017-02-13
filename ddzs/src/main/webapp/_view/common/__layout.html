@@ -12,12 +12,16 @@
 <title>#(seoTitle ?? "微商订单助手")</title>
 
 <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
-<link rel="stylesheet" type="text/css" href="/assets/css/jfinal-com-v1.0.css?v=15">
-<link rel="stylesheet" type="text/css" href="/assets/css/jfinal-com-my-space-v1.0.css?v=15">
-<link rel="stylesheet" type="text/css" href="/assets/iconfont/iconfont.css">
+<link rel="stylesheet" type="text/css"
+	href="/assets/css/jfinal-com-v1.0.css?v=15">
+<link rel="stylesheet" type="text/css"
+	href="/assets/css/jfinal-com-my-space-v1.0.css?v=15">
+<link rel="stylesheet" type="text/css"
+	href="/assets/iconfont/iconfont.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/homepage.css">
-<link rel="apple-touch-icon-precomposed" href="${ctxPath}/static/amazeui/assets/i/app-icon72x72@2x.png">
-<link rel="stylesheet" href="/static/amazeui/assets/css/amazeui.min.css"/>
+<link rel="apple-touch-icon-precomposed"
+	href="${ctxPath}/static/amazeui/assets/i/app-icon72x72@2x.png">
+<link rel="stylesheet" href="/static/amazeui/assets/css/amazeui.min.css" />
 <link rel="stylesheet" href="/static/amazeui/assets/css/admin.css">
 
 ### 模板函数安全调用，找到 css() 模板函数则调用，找不到则直接跳过 ### 适合于部分页面在 layout.html 提供的 css
@@ -26,101 +30,171 @@
 </head>
 
 <body>
-<div class="wapper">
-	<!-- 头部容器 -->
-	<div class="header-bg">
-		<div class="header">
-			<div class="logo">
-				<h1 style="color: #FFFFFF;">logo</h1>
-			</div>
-			<span class="system-name">系统管理员</span>
-			<div class="top-item1 topitem item-focus">
-				<img class="icon" src="/assets/img/homepage/dnicon.png" /> <span
-					class="text">工作台</span>
-			</div>
-			<div class="top-item2 topitem">
-				<img class="icon" src="/assets/img/homepage/gggg.png" /> <span
-					class="text">系统公告</span>
-			</div>
-			<div class="top-item3 topitem">
-				<img class="icon" src="/assets/img/homepage/shez.png" /> <span
-					class="text">系统设置</span>
-			</div>
-			<div class="username">
-				<img class="toux" src="/assets/img/homepage/tou.png" /> <span
-					class="name">张三</span>
-			</div>
-			<div class="more-on" id="MoreOn">更多关于</div>
-			<ul class="more-details" id="MoreDetails">
-				<li><a href=""><p class="more-icon1">
-							<span>在线客服</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon2">
-							<span>400-1017-0000</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon3">
-							<span>安卓下载</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon4">
-							<span>IOS下载</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon5">
-							<span>官方微信</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon6">
-							<span>意见反馈</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon7">
-							<span>分享</span>
-						</p></a></li>
-				<li><a href=""><p class="more-icon8">
-							<span>退出</span>
-						</p></a></li>
-			</ul>
-		</div>
-	</div>
-
-	<!-- 中部主体容器 -->
-	<div class="content-bg">
-		<div class="content">
-			<!--左边导航栏-->
-			<div class="left-nav">
-				<div class="top-setup">
-					<img class="imgt" src="/assets/img/homepage/tou.png" /> <span
-						class="person-name">张三</span> <span class="person-shezhi">个人设置</span>
+	<div class="wapper">
+		<!-- 头部容器 -->
+		<div class="header-bg am-topbar am-topbar-inverse admin-header">
+			<div class="header">
+				<div class="logo">
+					<h1 style="color: #FFFFFF;">logo</h1>
 				</div>
-				<ul class="nav-menu">
-					<li class="bg-focus"><a class="nav-1 nav-focus1" href=""><span
-							class="text-focus">订单管理</span></a></li>
-					<li><a class="nav-2" href=""><span>微商管理</span></a></li>
-					<li><a class="nav-3" href="/smsManage"><span>短信管理</span></a></li>
-					<li><a class="nav-4" href=""><span>充值管理</span></a></li>
-					<li><a class="nav-5" href=""><span>会员管理</span></a></li>
-					<li><a class="nav-6" href=""><span>留言管理</span></a></li>
-					<li><a class="nav-7" href=""><span>异常单管理</span></a></li>
+				<span class="system-name">系统管理员</span>
+				<div class="top-item1 topitem item-focus">
+					<img class="icon" src="/assets/img/homepage/dnicon.png" /> <span
+						class="text">工作台</span>
+				</div>
+				<div class="top-item2 topitem">
+					<img class="icon" src="/assets/img/homepage/gggg.png" /> <span
+						class="text">系统公告</span>
+				</div>
+				<div class="top-item3 topitem">
+					<img class="icon" src="/assets/img/homepage/shez.png" /> <span
+						class="text">系统设置</span>
+				</div>
+				<div class="username">
+					<img class="toux" src="/assets/img/homepage/tou.png" /> <span
+						class="name">张三</span>
+				</div>
+				<div class="more-on" id="MoreOn">更多关于</div>
+				<ul class="more-details" id="MoreDetails">
+					<li><a href=""><p class="more-icon1">
+								<span>在线客服</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon2">
+								<span>400-1017-0000</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon3">
+								<span>安卓下载</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon4">
+								<span>IOS下载</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon5">
+								<span>官方微信</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon6">
+								<span>意见反馈</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon7">
+								<span>分享</span>
+							</p></a></li>
+					<li><a href=""><p class="more-icon8">
+								<span>退出</span>
+							</p></a></li>
 				</ul>
 			</div>
-			<!--右边主体内容-->
-			<div class="right-content">
-				#@main()
-			</div>
+		</div>
 
+		<!-- 中部主体容器 -->
+
+
+<div class="am-cf admin-main content-bg">
+	<!-- sidebar start -->
+	<div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+		<div class="top-setup">
+			<img class="imgt" src="/upload/avatar/0/localhost.jpg" style="width: 30%;" /> <span
+				class="person-name">张三</span> <!-- <span class="person-shezhi">个人设置</span> -->
+		</div>
+		<div class="am-offcanvas-bar admin-offcanvas-bar">
+			<ul class="am-list admin-sidebar-list nav-menu">
+				<li>
+					<a href="${ctxPath}/admin">
+						<span class="am-icon-reorder" ></span> 订单管理
+					</a>
+				</li>
+				<li class="admin-parent">
+					<a class="am-cf" data-am-collapse="{target: '#collapse-server'}" href="/person"> 
+						<span class="am-icon-users"></span> 微商管理
+						<!-- <span class="am-icon-angle-right am-fr am-margin-right"></span> --> 
+					</a>
+				</li>
+				<li class="admin-parent">
+					<a class="am-cf" data-am-collapse="{target: '#collapse-system'}" href="/smsManage"> 
+						<span class="am-icon-envelope"></span> 短信管理 
+						<!-- <span class="am-icon-angle-right am-fr am-margin-right"></span> -->
+					</a>
+				</li>
+				<li class="admin-parent">
+					<a class="am-cf" data-am-collapse="{target: '#collapse-system'}"> 
+						<span class="am-icon-jpy"></span> 充值管理 
+						<!-- <span class="am-icon-angle-right am-fr am-margin-right"></span> -->
+					</a>
+				</li>
+				<li class="admin-parent">
+					<a class="am-cf" data-am-collapse="{target: '#collapse-system'}"> 
+						<span class="am-icon-user-secret"></span> 会员管理 
+						<!-- <span class="am-icon-angle-right am-fr am-margin-right"></span> -->
+					</a>
+				</li>
+				<li class="admin-parent">
+					<a class="am-cf" data-am-collapse="{target: '#collapse-system'}"> 
+						<span class="am-icon-comment"></span> 留言管理
+						<!-- <span class="am-icon-angle-right am-fr am-margin-right"></span> -->
+					</a>
+				</li>
+				<li class="admin-parent">
+					<a class="am-cf" data-am-collapse="{target: '#collapse-system'}"> 
+						<span class="am-icon-warning"></span> 异常单管理
+						<!-- <span class="am-icon-angle-right am-fr am-margin-right"></span> -->
+					</a>
+				</li>
+			</ul>
+
+			<div class="am-panel am-panel-default admin-sidebar-panel">
+				<div class="am-panel-bd">
+					<p>
+						<span class="am-icon-bookmark"></span> 通知
+					</p>
+					<p>新订单通知……</p>
+				</div>
+			</div>
 		</div>
 	</div>
+	<!-- sidebar end -->
 
-	<!-- 底部容器 -->
-	<div class="jf-footer-box">
-		<ul>
-			<li><a href="/share/1" target="_blank">关于订单助手</a></li>
-			<li><a href="javascript:void(0);">友情链接</a></li> #--
-			<li><script src="http://s5.cnzz.com/z_stat.php?id=100033&web_id=100033" language="JavaScript"></script></li> --#
-		</ul>
-	</div>
+	<!-- content start -->
+	#@main()
+	<!-- content end -->
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- 底部容器 -->
+		<div class="jf-footer-box">
+			<ul>
+				<li><a href="/share/1" target="_blank">关于订单助手</a></li>
+				<li><a href="javascript:void(0);">友情链接</a></li> #--
+				<li><script
+						src="http://s5.cnzz.com/z_stat.php?id=100033&web_id=100033"
+						language="JavaScript"></script></li> --#
+			</ul>
+		</div>
 	</div>
 	<script type="text/javascript" src="/assets/js/jquery.min-v1.11.3.js"></script>
 	<script type="text/javascript" src="/assets/js/jfinal-com-v1.0.js?v=15"></script>
 	<script type="text/javascript" src="/assets/js/more.js"></script>
-	<script type="text/javascript" src="/static/amazeui/assets/js/amazeui.min.js"></script>
+	<script type="text/javascript"
+		src="/static/amazeui/assets/js/amazeui.min.js"></script>
 
 	### 模板函数安全调用，找到 js() 模板函数则调用，找不到则直接跳过 ### 适合于部分页面在 layout.html 提供的 js
 	###文件之外，还需额外添加 js 资源的应用场景 #@js?()
