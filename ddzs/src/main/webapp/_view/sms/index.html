@@ -1,0 +1,43 @@
+#set(seoTitle="订单助手")
+#@layout()
+#define main()
+<!-- 内容容器 -->
+<div class="admin-content">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf">
+            <strong class="am-text-primary am-text-lg">首页</strong> / <small>短信管理</small>
+        </div>
+    </div>
+    
+   <div class="am-g">
+    <div class="am-u-sm-12 am-u-md-2 am-u-md-push-10"></div>
+	<div class="am-u-sm-12 am-u-md-10 am-u-md-pull-2">
+	  <hr>
+	  
+	  <div class="am-btn-toolbar">
+        <div class="am-btn-group am-btn-group-xs">
+          <button type="button" class="am-btn am-btn-default addEvent"><span class="am-icon-plus"></span> 新增</button>
+          <button type="button" class="am-btn am-btn-default deleteAllSelect"><span class="am-icon-trash-o"></span> 删除</button>
+        </div>
+        
+	  	<table class="am-table am-table-bd am-table-striped admin-content-table">
+            <thead>
+            <tr>
+              <th class="table-check"><input type="checkbox" class="allCheck" /></th><th class="table-id">ID</th><th>名称</th><th>活动图片</th><th>简介</th><th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+	             
+            </tbody>
+          </table>
+        <hr />
+		
+	  </div>
+	</div>
+   
+</div>
+</div>
+
+<!-- 包含侧边栏文件 -->
+###include("_sidebar.html")
+#end

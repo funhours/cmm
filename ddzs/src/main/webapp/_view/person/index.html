@@ -1,0 +1,114 @@
+#set(seoTitle="订单助手")
+#@layout()
+#define main()
+<link rel="stylesheet" href="/static/amazeui/assets/css/amazeui.tree.min.css">
+<script src="/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+
+<div class="admin-content">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf">
+            <strong class="am-text-primary am-text-lg">首页</strong> / <small>微商团队人员管理</small>
+        </div>
+    </div>
+    
+   <div class="am-g">
+   	<div class="am-u-sm-12 am-u-md-2 am-u-md-push-10"></div>
+  	<div class="am-u-sm-12 am-u-md-10 am-u-md-pull-2">
+	  <hr>
+	  
+	  <div class="am-btn-toolbar">
+        <div class="am-btn-group am-btn-group-xs">
+          <button type="button" class="am-btn am-btn-default addPerson"><span class="am-icon-plus"></span> 新增</button>
+        </div>
+        
+	  	<table class="am-table am-table-bd am-table-striped admin-content-table">
+            <thead>
+            <tr>
+              <th class="table-check"><input type="checkbox" /></th>
+              <th>名称</th>
+              <th>头像</th>
+              <th>简介</th>
+              <th>地区</th>
+              <th>票数</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            	#for(x : page.list)
+	            <tr>
+	              <td><input type="checkbox" /></td>
+	              <td style="overflow:hidden">#(x.loginName)</td>
+	              <td style="overflow:hidden">#(x.headImgId)</td>
+	              <td style="overflow:hidden">#(x.personInfo)</td>
+	              <td style="overflow:hidden">#(x.personArea)</td>
+	              <td style="overflow:hidden">#(x.voteCount)</td>
+	              <td style="overflow:hidden">
+	              	<div class="am-btn-toolbar">
+	                   <div class="am-btn-group am-btn-group-xs">
+	                     <button class="am-btn am-btn-default am-btn-xs am-text-secondary perEdit" value="${x.personId}"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+	                     <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only delete" value="${x.personId}"><span class="am-icon-trash-o"></span> 删除</button>
+	                   </div>
+	                 </div>
+	              </td>
+	            </tr>
+	            #end
+            </tbody>
+          </table>
+		<div class="am-cf">
+            <div class="am-fr">
+                ###include("/common/_paginate.html", {actionUrl: ctxPath + '/person', page: page!})
+                <!-- 包含分页组件 -->
+				###@paginate(page.pageNumber, page.totalPage, "/my/message?p=")
+            </div>
+        </div>
+        <hr />
+		
+	  </div>
+	</div>
+   
+
+
+</div>
+</div>
+
+<script type="text/javascript">
+	jQuery(function($) {	
+		//添加
+		$(".addPerson").unbind("click");
+		$(".addPerson").bind("click",function(){
+			window.location.href = "/person/toEdit?editType=0";
+		});
+		
+		//编辑
+		$(".perEdit").unbind("click");
+		$(".perEdit").bind("click",function(){
+			var pId = this.value;
+			window.location.href = "${ctxPath}/person/toEdit?editType=1&pId="+pId;
+		});
+		
+		//删除
+		$(".delete").unbind("click");
+		$(".delete").bind("click",function(){
+			var pId = this.value;
+			$.ajax({
+			    type : "POST",
+			    url : "person/delPersonById",
+			    data: {"pId":pId},
+			    dataType : "json",
+			    success : function(data) {
+			    	layer.msg("删除成功", {shift: 1});
+					setTimeout(function(){window.location.href = "${ctxPath}/person";}, 600);
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+	});
+
+</script>
+
+
+
+#end

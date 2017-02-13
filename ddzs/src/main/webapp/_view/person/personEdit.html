@@ -1,0 +1,199 @@
+#set(seoTitle="订单助手")
+#@layout()
+#define main()
+<link rel="stylesheet" type="text/css" href="/static/cityselect/css/hzw-city-picker.css">
+
+<div class="admin-content">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf">
+            <strong class="am-text-primary am-text-lg">首页</strong> / <small>添加人员</small>
+        </div>
+    </div>
+    <hr>
+    
+  <!-- content start -->
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
+          <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+              <div class="am-g">
+                <div class="am-u-md-4">
+                  <img class="am-img-circle am-img-thumbnail headImg" src="/imageUpload/${vPerson.ImgName!}" alt=""/>
+                </div>
+                <div class="am-u-md-8">
+               <!--  <button class="hImgUpload">上传图像</button> -->
+                 <p>你可以使用系统提供的头像或者使用本地上传头像。 </p>
+                  	<form class="am-form" id="js_images_form" action="/uploadFile/ajax_upload/" method="post" enctype="multipart/form-data">
+						<div class="am-form-group">
+							<input type="file" id="imageFile" name="imgFile" multiple="multiple">
+							<p class="am-form-help">请选择要上传的文件...</p>
+						</div>
+					</form>
+					<div style="width: 400px">
+						<div class="am-progress-bar" style="background-color: green; height: 40px;width: 0%"></div>
+					</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
+          <form class="am-form am-form-horizontal votePersonForm" class="am-form am-form-horizontal eventForm" data-am-validator>
+            <div class="am-form-group">
+              <label for="user-name" class="am-u-sm-3 am-form-label">姓名 / Name</label>
+              <div class="am-u-sm-9">
+              	<input type="hidden" name="votePerson.personId" value="#(vPerson.personId)">
+              	<input type="hidden" class="headImgId" name="votePerson.headImgId" value="${vPerson.headImgId!}">
+                <input type="text" id="user-name" placeholder="姓名 / Name" name="votePerson.personName" value="${vPerson.personName!}">
+                <small>输入你的名字，让我们记住你。</small>
+              </div>
+            </div>
+            
+            
+            <div class="am-form-group">
+              <label for="cityChoice" class="am-u-sm-3 am-form-label">地区 / Area</label>
+              <div class="am-u-sm-9">
+             	 <input type="text" id="cityChoice" placeholder="地区 / Area" name="votePerson.personArea" value="${vPerson.personArea!}">
+              </div>
+            </div>
+            
+            <div class="am-form-group">
+              <label for="user-email" class="am-u-sm-3 am-form-label">电子邮件 / Email</label>
+              <div class="am-u-sm-9">
+                <input type="email" id="user-email" placeholder="输入你的电子邮件 / Email" name="votePerson.email" value="${vPerson.email!}">
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <label for="user-phone" class="am-u-sm-3 am-form-label">电话 / Telephone</label>
+              <div class="am-u-sm-9">
+                <input type="tel" id="user-phone" placeholder="输入你的电话号码 / Telephone" name="votePerson.telephone" value="${vPerson.telephone!}" >
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <label for="user-QQ" class="am-u-sm-3 am-form-label">QQ</label>
+              <div class="am-u-sm-9">
+                <input type="number" pattern="[0-9]*" id="user-QQ" placeholder="输入你的QQ号码" name="votePerson.QQ" value="${vPerson.QQ!}">
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <label for="user-weibo" class="am-u-sm-3 am-form-label">微博 / WeiBo</label>
+              <div class="am-u-sm-9">
+                <input type="text" id="user-weibo" placeholder="输入你的微博 / WeiBo" name="votePerson.weiBo" value="${vPerson.weiBo!}">
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <label for="user-intro" class="am-u-sm-3 am-form-label">简介 / Intro</label>
+              <div class="am-u-sm-9">
+                <textarea class="" rows="5" id="user-intro" placeholder="输入个人简介" name="votePerson.personInfo"> ${vPerson.personInfo!}</textarea>
+                <small>250字以内写出此人的与众不同...</small>
+              </div>
+            </div>
+            <div class="am-form-group">
+              <div class="am-u-sm-9 am-u-sm-push-3">
+                <button type="button" class="am-btn am-btn-primary saveVotePersonEdit">保存信息</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="am-btn am-btn-primary back">返回</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+<script src="/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="/static/front/jquery.form.js"></script>
+<script type="text/javascript" src="/static/cityselect/js/city-data.js"></script>
+<script type="text/javascript" src="/static/cityselect/js/hzw-city-picker.min.js"></script>
+<script  type="text/javascript">
+$(function($) {
+	//提交保存
+	$(".saveVotePersonEdit").unbind("click");
+	$(".saveVotePersonEdit").bind("click",function(){
+		var headImgId = $(".headImgId").val();
+		if(headImgId == "" || headImgId == "undefined"){
+			layer.msg("请上传人物头像", {shift: 1});
+			return;
+		}
+		
+		var $form = $(".votePersonForm");
+		$.ajax({
+			type : "POST",
+		    url : "saveVotePersonEdit",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "/person";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	
+	//返回
+	$(".back").unbind("click");
+	$(".back").bind("click",function(){
+    	window.location.href = "/person";
+	});
+	
+	
+	//上传图片
+	$("#imageFile").bind("change",function(){
+		$("#js_images_form").ajaxSubmit({
+		    dataType: "json",
+		    beforeSend: function() {
+		        var percentVal = "0%";
+		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
+		    },
+		    uploadProgress: function(event, position, total, percentComplete) {
+		        var percentVal = percentComplete + "%";
+		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
+		    },
+		    success: function(data) {
+		        var percentVal = "100%";
+		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
+		        layer.msg(data.message, {shift: 1});
+		        var url = "\\imageUpload\\"+data.data.imgName;
+		        $(".headImg").attr("src",url);
+		        $(".headImgId").attr("value",data.data.id);
+		    }
+		});
+	});
+	
+	
+	//地区选择器
+    var cityPicker = new HzwCityPicker({
+        data: data,
+        target: 'cityChoice',
+        valType: 'k-v',
+        hideCityInput: {
+            name: 'city',
+            id: 'city'
+        },
+        hideProvinceInput: {
+            name: 'province',
+            id: 'province'
+        },
+        callback: function(data){
+        }
+    });
+
+    cityPicker.init();
+	
+});
+
+
+
+    
+    
+</script>
+
+#end

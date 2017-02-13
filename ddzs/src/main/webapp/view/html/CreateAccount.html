@@ -56,7 +56,8 @@
 										<input type="text" class="code" placeholder="手机验证码" name="verification" id="verification" autocomplete="off">
 										<i class="icon-fail"></i>
 									</div>
-									<a id="send" class="fasong">发送验证码</a>
+									<!-- <a id="send" class="fasong">免费获取验证码</a> -->
+									<input id="send" class="fasong" type="button"  value="免费获取验证码"  />
 								</div>
 								<div class="type">
 									<i class="icon-type"></i>
@@ -137,11 +138,15 @@
 			  url: url,
 			  data: {loginName:loginName},
 			  success: function(data){
-				 alert("验证码发送成功！"+data);
+				layer.msg("验证码发送成功！请在一分钟内完成注册", {shift: 1});
 			  },error: function (XMLHttpRequest) {
-				alert("Ajax请求失败，错误状态为："+XMLHttpRequest.status);
+				  layer.msg("Ajax请求失败，错误状态为："+XMLHttpRequest.status,{shift: 1});
 			}
 			});
+			
+			addCookie("secondsremained",60,60);//添加cookie记录,有效时间60s
+	        settime($('.fasong'));//开始倒计时
+	        
 		});
 		
 		//用户注册
@@ -175,5 +180,58 @@
 			});
 		});
 
+		//发送验证码时添加cookie
+		function addCookie(name,value,expiresHours){ 
+		    var cookieString=name+"="+escape(value); 
+		    //判断是否设置过期时间,0代表关闭浏览器时失效
+		    if(expiresHours>0){ 
+		        var date=new Date(); 
+		        date.setTime(date.getTime()+expiresHours*1000); 
+		        cookieString=cookieString+";expires=" + date.toUTCString(); 
+		    } 
+		        document.cookie=cookieString; 
+		} 
+		//修改cookie的值
+		function editCookie(name,value,expiresHours){ 
+		    var cookieString=name+"="+escape(value); 
+		    if(expiresHours>0){ 
+		      var date=new Date(); 
+		      date.setTime(date.getTime()+expiresHours*1000); //单位是毫秒
+		      cookieString=cookieString+";expires=" + date.toGMTString(); 
+		    } 
+		      document.cookie=cookieString; 
+		} 
+		//根据名字获取cookie的值
+		function getCookieValue(name){ 
+		      var strCookie=document.cookie; 
+		      var arrCookie=strCookie.split("; "); 
+		      for(var i=0;i<arrCookie.length;i++){ 
+		        var arr=arrCookie[i].split("="); 
+		        if(arr[0]==name){
+		          return unescape(arr[1]);
+		          break;
+		        }else{
+		             return ""; 
+		             break;
+		         } 
+		      } 
+		       
+		}
+		//开始倒计时
+		var countdown;
+		function settime(obj) { 
+		    countdown=getCookieValue("secondsremained");
+		    if (countdown == 0) { 
+		        obj.removeAttr("disabled");    
+		        obj.val("免费获取验证码"); 
+		        return;
+		    } else { 
+		        obj.attr("disabled", true); 
+		        obj.val("重新发送(" + countdown + ")"); 
+		        countdown--;
+		        editCookie("secondsremained",countdown,countdown+1);
+		    } 
+		    setTimeout(function() { settime(obj) },1000) //每1000毫秒执行一次
+		} 
 	</script>
 </html>
