@@ -18,12 +18,11 @@
             <div class="am-panel-bd">
               <div class="am-g">
                 <div class="am-u-md-4">
-                  <img class="am-img-circle am-img-thumbnail headImg" src="/imageUpload/${vPerson.ImgName!}" alt=""/>
+                  <img class="am-img-circle am-img-thumbnail avatar" src="/upload/avatar/0/localhost.jpg" alt=""/>
                 </div>
                 <div class="am-u-md-8">
-               <!--  <button class="hImgUpload">上传图像</button> -->
                  <p>你可以使用系统提供的头像或者使用本地上传头像。 </p>
-                  	<form class="am-form" id="js_images_form" action="/uploadFile/ajax_upload/" method="post" enctype="multipart/form-data">
+                  	<form class="am-form" id="js_images_form" action="/api/fs/upload" method="post" enctype="multipart/form-data">
 						<div class="am-form-group">
 							<input type="file" id="imageFile" name="imgFile" multiple="multiple">
 							<p class="am-form-help">请选择要上传的文件...</p>
@@ -40,14 +39,19 @@
         </div>
 
         <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
-          <form class="am-form am-form-horizontal votePersonForm" class="am-form am-form-horizontal eventForm" data-am-validator>
+          <form class="am-form am-form-horizontal personForm" data-am-validator>
             <div class="am-form-group">
               <label for="user-name" class="am-u-sm-3 am-form-label">姓名 / Name</label>
               <div class="am-u-sm-9">
-              	<input type="hidden" name="votePerson.personId" value="#(vPerson.personId)">
-              	<input type="hidden" class="headImgId" name="votePerson.headImgId" value="${vPerson.headImgId!}">
-                <input type="text" id="user-name" placeholder="姓名 / Name" name="votePerson.personName" value="${vPerson.personName!}">
-                <small>输入你的名字，让我们记住你。</small>
+              	<input type="hidden" class="formAvatar" name="user.avatar" value="">
+                <input type="text" id="user-name" placeholder="姓名 / Name" name="user.nickName" value="">
+              </div>
+            </div>
+            
+            <div class="am-form-group">
+              <label for="user-name" class="am-u-sm-3 am-form-label">登录密码 / PassWord</label>
+              <div class="am-u-sm-9">
+                <input type="password" id="user-name" placeholder="登录密码 / PassWord" name="user.password" value="">
               </div>
             </div>
             
@@ -55,48 +59,62 @@
             <div class="am-form-group">
               <label for="cityChoice" class="am-u-sm-3 am-form-label">地区 / Area</label>
               <div class="am-u-sm-9">
-             	 <input type="text" id="cityChoice" placeholder="地区 / Area" name="votePerson.personArea" value="${vPerson.personArea!}">
+             	 <input type="text" id="cityChoice" placeholder="地区 / Area" name="user.personArea" value="">
               </div>
             </div>
             
+            <div class="am-form-group am-form-select">
+              <label for="role" class="am-u-sm-3 am-form-label">角色 / Role</label>
+              <div class="am-u-sm-9">
+             	 <select class="" name="user.userType">
+			      <option selected="selected" value="-1">-请选择用户类型-</option>
+					<option value="0">系统管理员</option>
+					<option value="1">供应源商家</option>
+					<option value="2">商家员工</option>
+					<option value="3">商家代理</option>
+			    </select>
+              </div>
+            </div>
+            
+                   
             <div class="am-form-group">
               <label for="user-email" class="am-u-sm-3 am-form-label">电子邮件 / Email</label>
               <div class="am-u-sm-9">
-                <input type="email" id="user-email" placeholder="输入你的电子邮件 / Email" name="votePerson.email" value="${vPerson.email!}">
+                <input type="email" id="user-email" placeholder="输入你的电子邮件 / Email" name="user.email" value="">
               </div>
             </div>
 
             <div class="am-form-group">
               <label for="user-phone" class="am-u-sm-3 am-form-label">电话 / Telephone</label>
               <div class="am-u-sm-9">
-                <input type="tel" id="user-phone" placeholder="输入你的电话号码 / Telephone" name="votePerson.telephone" value="${vPerson.telephone!}" >
+                <input type="tel" id="user-phone" placeholder="输入你的电话号码 / Telephone" name="user.telephone" value="" >
               </div>
             </div>
 
             <div class="am-form-group">
               <label for="user-QQ" class="am-u-sm-3 am-form-label">QQ</label>
               <div class="am-u-sm-9">
-                <input type="number" pattern="[0-9]*" id="user-QQ" placeholder="输入你的QQ号码" name="votePerson.QQ" value="${vPerson.QQ!}">
+                <input type="number" pattern="[0-9]*" id="user-QQ" placeholder="输入你的QQ号码/ QQ" name="user.QQ" value="">
               </div>
             </div>
 
             <div class="am-form-group">
               <label for="user-weibo" class="am-u-sm-3 am-form-label">微博 / WeiBo</label>
               <div class="am-u-sm-9">
-                <input type="text" id="user-weibo" placeholder="输入你的微博 / WeiBo" name="votePerson.weiBo" value="${vPerson.weiBo!}">
+                <input type="text" id="user-weibo" placeholder="输入你的微博 / WeiBo" name="user.weiBo" value="">
               </div>
             </div>
 
             <div class="am-form-group">
               <label for="user-intro" class="am-u-sm-3 am-form-label">简介 / Intro</label>
               <div class="am-u-sm-9">
-                <textarea class="" rows="5" id="user-intro" placeholder="输入个人简介" name="votePerson.personInfo"> ${vPerson.personInfo!}</textarea>
+                <textarea class="" rows="5" id="user-intro" placeholder="输入个人简介" name="user.personInfo"> </textarea>
                 <small>250字以内写出此人的与众不同...</small>
               </div>
             </div>
             <div class="am-form-group">
               <div class="am-u-sm-9 am-u-sm-push-3">
-                <button type="button" class="am-btn am-btn-primary saveVotePersonEdit">保存信息</button>
+                <button type="button" class="am-btn am-btn-primary savePersonEdit">保存信息</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" class="am-btn am-btn-primary back">返回</button>
               </div>
@@ -114,18 +132,18 @@
 <script  type="text/javascript">
 $(function($) {
 	//提交保存
-	$(".saveVotePersonEdit").unbind("click");
-	$(".saveVotePersonEdit").bind("click",function(){
-		var headImgId = $(".headImgId").val();
-		if(headImgId == "" || headImgId == "undefined"){
+	$(".savePersonEdit").unbind("click");
+	$(".savePersonEdit").bind("click",function(){
+		var avatar = $(".avatar").val();
+		if(avatar == "" || avatar == "avatar"){
 			layer.msg("请上传人物头像", {shift: 1});
 			return;
 		}
 		
-		var $form = $(".votePersonForm");
+		var $form = $(".personForm");
 		$.ajax({
 			type : "POST",
-		    url : "saveVotePersonEdit",
+		    url : "savePersonEdit",
 		    data: $form.serialize(),
 		    dataType : "json",
 		    success : function(data) {
@@ -149,7 +167,7 @@ $(function($) {
 	$("#imageFile").bind("change",function(){
 		$("#js_images_form").ajaxSubmit({
 		    dataType: "json",
-		    beforeSend: function() {
+		    beforeSend: function(){
 		        var percentVal = "0%";
 		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
 		    },
@@ -160,10 +178,11 @@ $(function($) {
 		    success: function(data) {
 		        var percentVal = "100%";
 		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
-		        layer.msg(data.message, {shift: 1});
-		        var url = "\\imageUpload\\"+data.data.imgName;
-		        $(".headImg").attr("src",url);
-		        $(".headImgId").attr("value",data.data.id);
+		        layer.msg("上传成功", {shift: 1});
+		        var url = "/upload"+data.datum.imgFile;
+		        $(".avatar").attr("src",url);
+		        $(".avatar").val(url);
+		        $(".formAvatar").val(url);
 		    }
 		});
 	});

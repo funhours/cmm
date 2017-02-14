@@ -18,11 +18,15 @@ public class User extends Model<User> {
 	public static String STATUS = "status";
 	public static String CREATION_DATE = "creationDate";
 	public static String AVATAR = "avatar";
+	public static String PERSONAREA = "personArea";
+	public static String TELEPHONE = "telephone";
+	public static String QQ = "QQ";
+	public static String WEIBO = "weiBo";
+	public static String PERSONINFO = "personInfo";
 
 	
 	private static final long serialVersionUID = 1L;
 	public static final User user = new User();
-
     /**
      * 获取用户id*
      * @return 用户id

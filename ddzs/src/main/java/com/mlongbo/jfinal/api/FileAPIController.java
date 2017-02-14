@@ -19,7 +19,7 @@ import java.util.Map;
  * @author mlongbo
  */
 
-@Before(TokenInterceptor.class)
+//TODO @Before(TokenInterceptor.class)
 public class FileAPIController extends BaseAPIController {
 	
 	/**

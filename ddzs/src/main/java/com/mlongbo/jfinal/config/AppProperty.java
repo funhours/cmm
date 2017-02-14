@@ -114,7 +114,7 @@ public class AppProperty {
     }
     
     public String uploadRooPath() {
-        return getProperty(AppConstant.RES_UPLOAD_ROOT_PATH, "upload");
+        return getProperty(AppConstant.RES_UPLOAD_ROOT_PATH, "/upload");
     }
     
     public String imagePath() {

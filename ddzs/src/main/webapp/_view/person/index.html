@@ -27,10 +27,12 @@
             <tr>
               <th class="table-check"><input type="checkbox" /></th>
               <th>名称</th>
+              <th>角色</th>
               <th>头像</th>
+              <th>QQ</th>
+              <th>微博</th>
               <th>简介</th>
               <th>地区</th>
-              <th>票数</th>
               <th>操作</th>
             </tr>
             </thead>
@@ -39,14 +41,24 @@
 	            <tr>
 	              <td><input type="checkbox" /></td>
 	              <td style="overflow:hidden">#(x.loginName)</td>
-	              <td style="overflow:hidden">#(x.headImgId)</td>
+	              	#if((x.userType) == 0)
+	              	<td style="overflow:hidden">系统管理员</td>
+	              	#elseif((x.userType) == 1)
+	              	<td style="overflow:hidden">供应源商家</td>
+	              	#elseif((x.userType) == 2)
+	              	<td style="overflow:hidden">商家员工</td>
+	              	#elseif((x.userType) == 3)
+	              	<td style="overflow:hidden">商家代理</td>
+	              	#end
+	              <td style="overflow:hidden"><img alt="" src="#(x.avatar)" style="width: 5%;"></td>
+	              <td style="overflow:hidden">#(x.QQ)</td>
+	              <td style="overflow:hidden">#(x.weiBo)</td>
 	              <td style="overflow:hidden">#(x.personInfo)</td>
 	              <td style="overflow:hidden">#(x.personArea)</td>
-	              <td style="overflow:hidden">#(x.voteCount)</td>
 	              <td style="overflow:hidden">
 	              	<div class="am-btn-toolbar">
 	                   <div class="am-btn-group am-btn-group-xs">
-	                     <button class="am-btn am-btn-default am-btn-xs am-text-secondary perEdit" value="${x.personId}"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+	                     <button class="am-btn am-btn-default am-btn-xs am-text-secondary userEdit" value="${x.userId}"><span class="am-icon-pencil-square-o"></span> 编辑</button>
 	                     <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only delete" value="${x.personId}"><span class="am-icon-trash-o"></span> 删除</button>
 	                   </div>
 	                 </div>
@@ -57,9 +69,10 @@
           </table>
 		<div class="am-cf">
             <div class="am-fr">
-                ###include("/common/_paginate.html", {actionUrl: ctxPath + '/person', page: page!})
+                ###include("/common/__paginate.html", {actionUrl: '/person', page: page!}){}
                 <!-- 包含分页组件 -->
-				###@paginate(page.pageNumber, page.totalPage, "/my/message?p=")
+				#@paginate(page.pageNumber, page.totalPage, "/person?p=")
+
             </div>
         </div>
         <hr />
@@ -81,10 +94,10 @@
 		});
 		
 		//编辑
-		$(".perEdit").unbind("click");
-		$(".perEdit").bind("click",function(){
-			var pId = this.value;
-			window.location.href = "${ctxPath}/person/toEdit?editType=1&pId="+pId;
+		$(".userEdit").unbind("click");
+		$(".userEdit").bind("click",function(){
+			var uId = this.value;
+			window.location.href = "/person/toEdit?editType=1&uId="+uId;
 		});
 		
 		//删除
