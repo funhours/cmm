@@ -33,9 +33,9 @@ public class PersonController extends Controller {
 	public void toEdit(){
 		int editType = getParaToInt("editType");
 		if(editType == 1){//1：编辑 0：新增
-			int pId = getParaToInt("pId");
-			Record votePerson = Db.findFirst("select a.*,b.ImgName from voteperson a,image b where a.personId = " + pId + " and a.headImgId = b.id" );
-			setAttr("vPerson", votePerson);
+			int uId = getParaToInt("uId");
+			Record person = Db.findFirst("select * from t_user where userId = " + uId  );
+			setAttr("person", person);
 		}
 		
 		render("personEdit.html");
