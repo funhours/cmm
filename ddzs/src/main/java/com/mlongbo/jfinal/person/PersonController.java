@@ -14,13 +14,6 @@ public class PersonController extends Controller {
 	static User dao = new User().dao();
 	public void index() {
 		//分页参数
-		/*int pageNumber = getParaToInt("pageNum", 1);
-		int pageSize = getParaToInt("pageSize", 10);
-		setAttr("pageNumber", pageNumber);
-		setAttr("pageSize", pageSize);*/
-		
-	
-//		Page<Record> page = Db.paginate(pageNumber, pageSize, "select * ","from t_user where 1=1 order by creationDate");
 		Page<User> page = dao.paginate(getParaToInt("p", 1), 10,"select * ","from t_user where 1=1 order by creationDate");
 		setAttr("page", page);
 		render("index.html");

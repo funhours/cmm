@@ -69,10 +69,9 @@
           </table>
 		<div class="am-cf">
             <div class="am-fr">
-                ###include("/common/__paginate.html", {actionUrl: '/person', page: page!}){}
                 <!-- 包含分页组件 -->
 				#@paginate(page.pageNumber, page.totalPage, "/person?p=")
-
+				#@paginate(feedbackPage.pageNumber, feedbackPage.totalPage, "/feedback?p=")
             </div>
         </div>
         <hr />
@@ -85,6 +84,8 @@
 </div>
 </div>
 
+
+#end
 <script type="text/javascript">
 	jQuery(function($) {	
 		//添加
@@ -122,6 +123,3 @@
 
 </script>
 
-
-
-#end
