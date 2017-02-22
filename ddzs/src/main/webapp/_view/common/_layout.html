@@ -51,8 +51,8 @@
 						class="text">系统设置</span>
 				</div>
 				<div class="username">
-					<img class="toux" src="/assets/img/homepage/tou.png" /> <span
-						class="name">张三</span>
+					<img class="toux" src="/assets/img/homepage/tou.png" /> 
+					<span class="name">#(loginUser.nickName)</span>
 				</div>
 				<div class="more-on" id="MoreOn">更多关于</div>
 				<ul class="more-details" id="MoreDetails">
@@ -91,8 +91,8 @@
 	<!-- sidebar start -->
 	<div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
 		<div class="top-setup">
-			<img class="imgt" src="/upload/avatar/0/localhost.jpg" style="width: 30%;" /> <span
-				class="person-name">张三</span> <!-- <span class="person-shezhi">个人设置</span> -->
+			<img class="imgt" src="#(loginUser.avatar)" style="width: 30%;" /> <span
+				class="person-name">#(loginUser.nickName)</span> <!-- <span class="person-shezhi">个人设置</span> -->
 		</div>
 		<div class="am-offcanvas-bar admin-offcanvas-bar">
 			<ul class="am-list admin-sidebar-list nav-menu">

@@ -25,7 +25,7 @@ import com.mlongbo.jfinal.interceptor.ErrorInterceptor;
 import com.mlongbo.jfinal.model._MappingKit;
 import com.mlongbo.jfinal.router.APIRouter;
 import com.mlongbo.jfinal.router.ActionRouter;
-import com.mlongbo.jfinal.router.BackRoutes;
+import com.mlongbo.jfinal.router.AdminRoutes;
 
 /**
  * JFinal总配置文件，挂接所有接口与插件
@@ -73,7 +73,7 @@ public class AppConfig extends JFinalConfig {
 	public void configRoute(Routes me) {
 		me.add(new APIRouter());//接口路由
         me.add(new ActionRouter()); //页面路由
-        me.add(new BackRoutes());//后台路由
+        me.add(new AdminRoutes());//后台路由
         
 	}
 	
@@ -82,7 +82,7 @@ public class AppConfig extends JFinalConfig {
      */
 	@Override
 	public void configEngine(Engine me) {
-		me.addSharedFunction("/_view/common/_layout.html");
+		me.addSharedFunction("/_view/_admin/common/__admin_layout.html");
     	me.addSharedFunction("/_view/common/_paginate.html");
 	}
 

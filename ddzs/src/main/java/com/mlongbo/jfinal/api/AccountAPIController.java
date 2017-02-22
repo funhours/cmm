@@ -2,6 +2,7 @@ package com.mlongbo.jfinal.api;
 
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
+import com.jfinal.kit.HashKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.mlongbo.jfinal.common.bean.*;
 import com.mlongbo.jfinal.common.utils.SMSUtils;
@@ -139,11 +140,12 @@ public class AccountAPIController extends BaseAPIController {
         
 		//保存用户数据
 		String userId = RandomUtils.randomCustomUUID();
+		String saltPassword = HashKit.sha256("kyddzs" + password);
 
 		new User()
                 .set("userId", userId)
                 .set(User.LOGIN_NAME, loginName)
-		        .set(User.PASSWORD, StringUtils.encodePassword(password, "md5"))
+		        .set(User.PASSWORD, saltPassword)
                 .set(User.NICK_NAME, nickName)
 		        .set(User.CREATION_DATE, DateUtils.getNowTimeStamp())
 		        .set(User.USERTYPE, userType)
@@ -172,6 +174,7 @@ public class AccountAPIController extends BaseAPIController {
         )) {
             return;
         }
+        
         String sql = "SELECT * FROM t_user WHERE loginName=? AND password=?";
         User nowUser = User.user.findFirst(sql, loginName, StringUtils.encodePassword(password, "md5"));
         LoginResponse response = new LoginResponse();

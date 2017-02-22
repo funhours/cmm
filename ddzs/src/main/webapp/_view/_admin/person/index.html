@@ -1,5 +1,5 @@
 #set(seoTitle="订单助手")
-#@layout()
+#@adminLayout()
 #define main()
 <link rel="stylesheet" href="/static/amazeui/assets/css/amazeui.tree.min.css">
 <script src="/static/amazeui/assets/js/jquery.min.js"></script>
@@ -19,7 +19,8 @@
 	  
 	  <div class="am-btn-toolbar">
         <div class="am-btn-group am-btn-group-xs">
-          <button type="button" class="am-btn am-btn-default addPerson"><span class="am-icon-plus"></span> 新增</button>
+          <button type="button" class="am-btn am-btn-default addPerson">
+          <span class="am-icon-plus"></span> 新增</button>
         </div>
         
 	  	<table class="am-table am-table-bd am-table-striped admin-content-table">
@@ -71,7 +72,6 @@
             <div class="am-fr">
                 <!-- 包含分页组件 -->
 				#@paginate(page.pageNumber, page.totalPage, "/person?p=")
-				#@paginate(feedbackPage.pageNumber, feedbackPage.totalPage, "/feedback?p=")
             </div>
         </div>
         <hr />

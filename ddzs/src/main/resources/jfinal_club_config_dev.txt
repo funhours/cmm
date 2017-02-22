@@ -3,6 +3,7 @@ user=root
 password=root
 devMode=true
 
+admin = test@test.com, otherAdmin@test.com
 
 # 邮件发送账号，用于激活注册账号与找回密码  ----------------------------
 emailServer=test.com

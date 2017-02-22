@@ -1,8 +1,8 @@
 package com.mlongbo.jfinal.model;
 
-import com.jfinal.plugin.activerecord.Model;
-
 import java.util.Map;
+
+import com.jfinal.plugin.activerecord.Model;
 
 /**
  * @author malongbo
@@ -23,6 +23,7 @@ public class User extends Model<User> {
 	public static String QQ = "QQ";
 	public static String WEIBO = "weiBo";
 	public static String PERSONINFO = "personInfo";
+	public static String SALT = "salt";
 
 	
 	private static final long serialVersionUID = 1L;
@@ -41,4 +42,32 @@ public class User extends Model<User> {
 	public Map<String, Object> getAttrs() {
 		return super.getAttrs();
 	}
+	
+	public void setSalt(java.lang.String salt) {
+		set(SALT, salt);
+	}
+
+	public java.lang.String getSalt() {
+		return get(SALT);
+	}
+	
+	public void setPassword(java.lang.String password) {
+		set(PASSWORD, password);
+	}
+
+	public java.lang.String getPassword() {
+		return get(PASSWORD);
+	}
+
+	public User removeSensitiveInfo() {
+		remove(PASSWORD, "salt");
+		return this;
+	}
+	
+	public java.lang.Integer getStatus() {
+		return get(STATUS);
+	}
+	
+
+	
 }
