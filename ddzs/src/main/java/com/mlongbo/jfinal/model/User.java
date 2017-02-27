@@ -24,6 +24,7 @@ public class User extends Model<User> {
 	public static String WEIBO = "weiBo";
 	public static String PERSONINFO = "personInfo";
 	public static String SALT = "salt";
+	public static String ACTIVITY = "activity";
 
 	
 	private static final long serialVersionUID = 1L;

@@ -17,6 +17,10 @@ public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
 		arp.addMapping("t_user", User.USER_ID, User.class);//用户表
+		arp.addMapping("t_roles", Role.ROLE_ID, Role.class);//角色表
+		arp.addMapping("t_userroles",UserRole.USER_ID, UserRole.class);//角色用户关联表
+		arp.addMapping("t_permission", Permission.PERMISSION_ID, Permission.class);//权限表
+		arp.addMapping("t_rolepermissions", RolePermissions.class);//权限角色关联表
         arp.addMapping("t_register_code", RegisterCode.MOBILE, RegisterCode.class); //注册验证码对象
         arp.addMapping("t_feedback", FeedBack.class); //意见反馈表
         arp.addMapping("session", "id", Session.class);
