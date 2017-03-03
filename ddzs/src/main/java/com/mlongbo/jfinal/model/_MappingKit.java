@@ -23,6 +23,8 @@ public class _MappingKit {
 		arp.addMapping("t_rolepermissions", RolePermissions.class);//权限角色关联表
         arp.addMapping("t_register_code", RegisterCode.MOBILE, RegisterCode.class); //注册验证码对象
         arp.addMapping("t_feedback", FeedBack.class); //意见反馈表
+        arp.addMapping("product", Product.class); //商品表
+        arp.addMapping("product_type", ProductType.class); //商品类型表
         arp.addMapping("session", "id", Session.class);
 	}
 }
