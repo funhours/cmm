@@ -10,7 +10,7 @@ public class ProductController extends Controller {
 	
 	public void index() {
 		//分页参数
-		Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 order by creationDate");
+		Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 order by p.creationDate");
 		setAttr("page", page);
 		render("index.html");
 	}

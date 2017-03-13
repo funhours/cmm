@@ -26,7 +26,7 @@
                       </div>
                       <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                           <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                              <input type="text" class="am-form-field searchName" placeholder="请输入人员名字以搜索">
+                              <input type="text" class="am-form-field searchName" placeholder="请输入类型名字以搜索">
                               <span class="am-input-group-btn">
 								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
 							  </span>
@@ -109,7 +109,7 @@
 		//添加
 		$(".addPtype").unbind("click");
 		$(".addPtype").bind("click",function(){
-			$('#my-prompt').modal({
+			/* $('#my-prompt').modal({
 		      relatedTarget: this,
 		      onConfirm: function(e) {
 		    	  layer.msg('你输入的是：' + e.data || '')
@@ -117,7 +117,14 @@
 		      onCancel: function(e) {
 		    	  layer.msg("取消增加属性", {shift: 1});
 		      }
-		    });
+		    }); */
+			
+			layer.prompt(function(val, index){
+			  layer.msg('得到了'+val);
+			  layer.close(index);
+			});
+			
+			
 		});
 		
 		//启用

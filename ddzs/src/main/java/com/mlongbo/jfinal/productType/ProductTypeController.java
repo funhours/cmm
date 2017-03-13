@@ -13,5 +13,4 @@ public class ProductTypeController extends Controller {
 		setAttr("page", page);
 		render("index.html");
 	}
-	
 }
