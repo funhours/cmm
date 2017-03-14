@@ -76,13 +76,12 @@ public class PersonController extends Controller {
 			user.set(User.LOGIN_NAME, user.get("telephone"));
 			
 			
-			new UserRole()
+			saveOk = new UserRole()
             .set(UserRole.USER_ID, userId)
             .set(UserRole.ROLE_ID, user.get(User.USERTYPE))
             .save();
 			
-			if(user.save()){
-				saveOk = true;
+			if(saveOk){
 				result.success("信息保存成功");
 			}else{
 				result.addError("信息保存失败，请联系管理员");

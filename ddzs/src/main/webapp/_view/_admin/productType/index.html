@@ -26,7 +26,7 @@
                       </div>
                       <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                           <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                              <input type="text" class="am-form-field searchName" placeholder="请输入类型名字以搜索">
+                              <input type="text" class="am-form-field searchTypeName" placeholder="请输入类型名字以搜索">
                               <span class="am-input-group-btn">
 								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
 							  </span>
@@ -38,7 +38,6 @@
                               <thead>
                                   <tr>
                                       <th class="table-check"><input type="checkbox" class="allCheck"/></th>
-						              <th>类型</th>
 						              <th>名称</th>
 						              <th>状态</th>
 						              <th>操作</th>
@@ -48,7 +47,6 @@
 					            	#for(x : page.list)
 						            <tr>
 						              <td><input type="checkbox" value="#(x.id)" name="spCodeId"/></td>
-						              <td>#(x.id)</td>
 						              <td>#(x.typeName)</td>
 						              <td style="overflow:hidden"> 
 						              	#if(x.status == 1)
@@ -59,7 +57,7 @@
 						              </td>
 						              <td style="overflow:hidden">
 						                 <div class="tpl-table-black-operation">
-                                             <a href="javascript:;" class="edit" id="#(x.id)">
+                                             <a href="javascript:;" class="pTypeEdit" id="#(x.id)">
                                                  <i class="am-icon-pencil"></i> 编辑
                                              </a>
                                              <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(x.id)">
@@ -109,32 +107,43 @@
 		//添加
 		$(".addPtype").unbind("click");
 		$(".addPtype").bind("click",function(){
-			/* $('#my-prompt').modal({
-		      relatedTarget: this,
-		      onConfirm: function(e) {
-		    	  layer.msg('你输入的是：' + e.data || '')
-		      },
-		      onCancel: function(e) {
-		    	  layer.msg("取消增加属性", {shift: 1});
-		      }
-		    }); */
-			
-			layer.prompt(function(val, index){
-			  layer.msg('得到了'+val);
+			layer.prompt(
+				{
+				  formType: 0, 
+				  value: '', 
+				  maxlength: 10, 
+				},function(val, index){
+			  var typeName = val;
 			  layer.close(index);
+			  if(typeName != null){
+				  $.ajax({
+				    type : "POST",
+				    url : "/ptype/edit",
+				    data: {
+				    	"editType":0,
+				    	"typeName":typeName
+				    	},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("添加成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/ptype";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
 			});
-			
-			
 		});
 		
 		//启用
 		$(".enable").unbind("click");
 		$(".enable").bind("click",function(){
-			layer.confirm('确定启用选中人员?', {icon: 3, title:'提示'}, function(index){
+			layer.confirm('确定启用选中类型?', {icon: 3, title:'提示'}, function(index){
 			  layer.close(index);
 			//获取所有选中的值
 				 var spCodesTemp = "";
-				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+				 $(".productItem :checkbox[name=spCodeId]:checked").each(function(i){
 			       if(0==i){
 			        spCodesTemp = $(this).val();
 			       }else{
@@ -144,12 +153,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/review",
+				    url : "/ptype/review",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
-				    	layer.msg("审核成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+				    	layer.msg("启用成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -160,11 +169,11 @@
 		//禁用
 		$(".disable").unbind("click");
 		$(".disable").bind("click",function(){
-			layer.confirm('确定禁用选中人员?', {icon: 3, title:'提示'}, function(index){
+			layer.confirm('禁用类型将导致关联商品无法使用，确定禁用选中类型?', {icon: 3, title:'提示'}, function(index){
 			  layer.close(index);
 			//获取所有选中的值
 				 var spCodesTemp = "";
-				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+				 $(".productItem :checkbox[name=spCodeId]:checked").each(function(i){
 			       if(0==i){
 			        spCodesTemp = $(this).val();
 			       }else{
@@ -174,12 +183,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/disable",
+				    url : "/ptype/disable",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("禁用成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -189,40 +198,73 @@
 		});
 		
 		//编辑
-		$(".userEdit").unbind("click");
-		$(".userEdit").bind("click",function(){
-			var userId = this.id;
-			window.location.href = "/person/toEdit?editType=1&userId="+userId;
+		$(".pTypeEdit").unbind("click");
+		$(".pTypeEdit").bind("click",function(){
+			var pTypeId = this.id;
+			layer.prompt(
+					{
+					  formType: 0, 
+					  value: '', 
+					  maxlength: 10, 
+					},function(val, index){
+				  var typeName = val;
+				  layer.close(index);
+				  if(typeName != null){
+					  $.ajax({
+					    type : "POST",
+					    url : "/ptype/edit",
+					    data: {
+					    	"editType":1,
+					    	"typeName":typeName,
+					    	"pTypeId":pTypeId
+					    	},
+					    dataType : "json",
+					    success : function(data) {
+					    	layer.msg("修改成功", {shift: 1});
+							setTimeout(function(){window.location.href = "/ptype";}, 600);
+					    },
+					    error : function(data) {
+					    	layer.msg(data.message, {shift: 6});
+					    }
+					});
+				  }
+				});
 		});
 		
 		//单个删除
 		$(".delete").unbind("click");
 		$(".delete").bind("click",function(e){
-			var userId = this.id;
-			$.ajax({
-			    type : "POST",
-			    url : "person/delById",
-			    data: {"userId":userId},
-			    dataType : "json",
-			    success : function(data) {
-			    	if(data){
-				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
-			    	}
-			    },
-			    error : function(data) {
-			    	layer.msg(data.message, {shift: 6});
-			    }
+			var pTypeId = this.id;
+			
+			layer.confirm('删除类型将导致关联商品无法使用，确定删除选中类型?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+			  $.ajax({
+				    type : "POST",
+				    url : "ptype/delById",
+				    data: {"pTypeId":pTypeId},
+				    dataType : "json",
+				    success : function(data) {
+				    	if(data){
+					    	layer.msg("删除成功", {shift: 1});
+							setTimeout(function(){window.location.href = "/ptype";}, 600);
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
 			});
+			
+			
 		});
 		
 		//删除选中
 		$(".dels").unbind("click");
 		$(".dels").bind("click",function(){
-			layer.confirm('确定删除选中人员?', {icon: 3, title:'提示'}, function(index){
+			layer.confirm('删除类型将导致关联商品无法使用，确定删除选中类型?', {icon: 3, title:'提示'}, function(index){
 			  layer.close(index);
 				 var spCodesTemp = "";
-				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+				 $(".productItem :checkbox[name=spCodeId]:checked").each(function(i){
 			       if(0==i){
 			        spCodesTemp = $(this).val();
 			       }else{
@@ -232,12 +274,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/delByIds",
+				    url : "/ptype/delByIds",
 				    data: {"delsList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -250,17 +292,16 @@
 		//搜索
 		$(".search").unbind("click");
 		$(".search").bind("click",function(){
-		    var searchRole = $(".searchRole").val();
-		    var searchName = $(".searchName").val();
-		    window.location.href = "/person/search?searchRole="+searchRole+"&searchName="+searchName;
+		    var searchTypeName = $(".searchTypeName").val();
+		    window.location.href = "/ptype/search?searchTypeName="+searchTypeName;
 		});
 		
 		//全选反选
 		$(".allCheck").click(function(){ 
 		    if(this.checked){   
-		        $(".userItem :checkbox").prop("checked", true);  
+		        $(".productItem :checkbox").prop("checked", true);  
 		    }else{   
-			$(".userItem :checkbox").prop("checked", false);
+			$(".productItem :checkbox").prop("checked", false);
 		    }   
 		});
 	});

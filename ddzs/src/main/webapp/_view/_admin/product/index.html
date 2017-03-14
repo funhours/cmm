@@ -7,8 +7,6 @@
               <div class="widget am-cf">
                   <div class="widget-head am-cf">
                       <div class="widget-title  am-cf">产品信息</div>
-
-
                   </div>
                   <div class="widget-body  am-fr">
 
@@ -16,8 +14,8 @@
                           <div class="am-form-group">
                               <div class="am-btn-toolbar">
                                   <div class="am-btn-group am-btn-group-xs">
-                                      <button type="button" class="am-btn am-btn-default am-btn-success addPerson"><span class="am-icon-plus"></span> 新增</button>
-                                      <button type="button" class="am-btn am-btn-default am-btn-secondary review"><span class="am-icon-save"></span> 审核</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-success addProduct"><span class="am-icon-plus"></span> 新增</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-secondary review"><span class="am-icon-save"></span> 启用</button>
                                       <button type="button" class="am-btn am-btn-default am-btn-warning disable"><span class="am-icon-archive"></span> 禁用</button>
                                       <button type="button" class="am-btn am-btn-default am-btn-danger dels"><span class="am-icon-trash-o"></span> 删除</button>
                                   </div>
@@ -26,17 +24,17 @@
                       </div>
                       <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                           <div class="am-form-group tpl-table-list-select">
-                              <select data-am-selected="{btnSize: 'sm'}" class="searchRole">
-							    <option value="0">所有</option>
-							    <option value="2">供应商</option>
-							    <option value="3">供应商员工</option>
-							    <option value="4">代理商</option>
+                              <select data-am-selected="{btnSize: 'sm'}" class="pType">
+                              		<option value="0">-请选择商品类型-</option>
+                              	#for(pt:pTypeList)
+                              		<option value="#(pt.id)">#(pt.typeName)</option>
+                              	#end
 							  </select>
                           </div>
                       </div>
                       <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                           <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                              <input type="text" class="am-form-field searchName" placeholder="请输入人员名字以搜索">
+                              <input type="text" class="am-form-field searchName" placeholder="请输入商品名字以搜索">
                               <span class="am-input-group-btn">
 								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
 							  </span>
@@ -52,7 +50,6 @@
 						              <th>名称</th>
 						              <th>规格</th>
 						              <th>价格</th>
-						              <th>库存</th>
 						              <th>描述</th>
 						              <th>状态</th>
 						              <th>操作</th>
@@ -66,7 +63,6 @@
 						              <td>#(x.name)</td>
 						              <td>#(x.spec)</td>
 						              <td>#(x.price)</td>
-						              <td>#(x.stock)</td>
 						              <td>#(x.desc)</td>
 						              <td style="overflow:hidden"> 
 						              	#if(x.status == 1)
@@ -77,7 +73,7 @@
 						              </td>
 						              <td style="overflow:hidden">
 						                 <div class="tpl-table-black-operation">
-                                             <a href="javascript:;" class="edit" id="#(x.id)">
+                                             <a href="javascript:;" class="productEdit" id="#(x.id)">
                                                  <i class="am-icon-pencil"></i> 编辑
                                              </a>
                                              <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(x.id)">
@@ -111,19 +107,19 @@
 <script type="text/javascript">
 	jQuery(function($) {	
 		//添加
-		$(".addPerson").unbind("click");
-		$(".addPerson").bind("click",function(){
-			window.location.href = "/person/toEdit?editType=0";
+		$(".addProduct").unbind("click");
+		$(".addProduct").bind("click",function(){
+			window.location.href = "/product/toEdit?editType=0";
 		});
 		
-		//审核
+		//启用
 		$(".review").unbind("click");
 		$(".review").bind("click",function(){
-			layer.confirm('确定启用选中人员?', {icon: 3, title:'提示'}, function(index){
+			layer.confirm('确定启用选中商品?', {icon: 3, title:'提示'}, function(index){
 			  layer.close(index);
 			//获取所有选中的值
 				 var spCodesTemp = "";
-				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+				 $(".productItem :checkbox[name=spCodeId]:checked").each(function(i){
 			       if(0==i){
 			        spCodesTemp = $(this).val();
 			       }else{
@@ -133,12 +129,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/review",
+				    url : "/product/review",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("审核成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "/product";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -149,11 +145,11 @@
 		//禁用
 		$(".disable").unbind("click");
 		$(".disable").bind("click",function(){
-			layer.confirm('确定禁用选中人员?', {icon: 3, title:'提示'}, function(index){
+			layer.confirm('确定禁用选中商品?', {icon: 3, title:'提示'}, function(index){
 			  layer.close(index);
 			//获取所有选中的值
 				 var spCodesTemp = "";
-				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+				 $(".productItem :checkbox[name=spCodeId]:checked").each(function(i){
 			       if(0==i){
 			        spCodesTemp = $(this).val();
 			       }else{
@@ -163,12 +159,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/disable",
+				    url : "/product/disable",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("禁用成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "/product";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -178,25 +174,25 @@
 		});
 		
 		//编辑
-		$(".userEdit").unbind("click");
-		$(".userEdit").bind("click",function(){
-			var userId = this.id;
-			window.location.href = "/person/toEdit?editType=1&userId="+userId;
+		$(".productEdit").unbind("click");
+		$(".productEdit").bind("click",function(){
+			var proId = this.id;
+			window.location.href = "/product/toEdit?editType=1&proId="+proId;
 		});
 		
 		//单个删除
 		$(".delete").unbind("click");
 		$(".delete").bind("click",function(e){
-			var userId = this.id;
+			var proId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "person/delById",
-			    data: {"userId":userId},
+			    url : "product/delById",
+			    data: {"proId":proId},
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "/product";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -208,10 +204,10 @@
 		//删除选中
 		$(".dels").unbind("click");
 		$(".dels").bind("click",function(){
-			layer.confirm('确定删除选中人员?', {icon: 3, title:'提示'}, function(index){
+			layer.confirm('确定删除选中商品?', {icon: 3, title:'提示'}, function(index){
 			  layer.close(index);
 				 var spCodesTemp = "";
-				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+				 $(".productItem :checkbox[name=spCodeId]:checked").each(function(i){
 			       if(0==i){
 			        spCodesTemp = $(this).val();
 			       }else{
@@ -221,12 +217,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/delByIds",
+				    url : "/product/delByIds",
 				    data: {"delsList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "/product";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -239,17 +235,17 @@
 		//搜索
 		$(".search").unbind("click");
 		$(".search").bind("click",function(){
-		    var searchRole = $(".searchRole").val();
+		    var pType = $(".pType").val();
 		    var searchName = $(".searchName").val();
-		    window.location.href = "/person/search?searchRole="+searchRole+"&searchName="+searchName;
+		    window.location.href = "/product/search?pType="+pType+"&searchName="+searchName;
 		});
 		
 		//全选反选
 		$(".allCheck").click(function(){ 
 		    if(this.checked){   
-		        $(".userItem :checkbox").prop("checked", true);  
+		        $(".productItem :checkbox").prop("checked", true);  
 		    }else{   
-			$(".userItem :checkbox").prop("checked", false);
+			$(".productItem :checkbox").prop("checked", false);
 		    }   
 		});
 	});

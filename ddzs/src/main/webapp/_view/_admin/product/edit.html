@@ -2,15 +2,10 @@
 #@adminLayout()
 #define main()
 <link rel="stylesheet" type="text/css" href="/static/cityselect/css/hzw-city-picker.css">
-
-
-    
-    
     <div class="container-fluid am-cf">
         <div class="row">
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
-                <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 人员增加 </div>
-                <p class="page-header-description">团队人员增加。</p>
+                <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 商品增加 </div>
             </div>
         </div>
     </div>
@@ -20,121 +15,65 @@
 	        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
 	            <div class="widget am-cf">
 				<div class="widget-body am-fr">
-
-				<form class="am-form tpl-form-line-form" id="js_images_form" action="/api/fs/upload" method="post" enctype="multipart/form-data">
-				<div class="am-form-group">
-                   <label for="user-avatar" class="am-u-sm-3 am-form-label">头像 <span class="tpl-form-line-small-title">Images</span></label>
-                   <small>你可以使用系统提供的头像或者使用本地上传头像。</small>
-                   <div class="am-u-sm-9">
-                       <div class="am-form-group am-form-file">
-                           <div class="tpl-form-file-img">
-                               <img class="am-img-circle am-img-thumbnail avatar" src="#(user.avatar)" alt="" style="width: 15%;" >
-                           </div>
-                           <button type="button" class="am-btn am-btn-danger am-btn-sm">
-								<i class="am-icon-cloud-upload"></i> 添加头像图片</button>
-                           <input type="file" id="imageFile" name="imgFile" multiple="multiple">
-                       </div>
-
-                   </div>
+		<form class="am-form tpl-form-line-form productForm" method="post" data-am-validator>
+           <div class="am-form-group">
+               <label for="product-name" class="am-u-sm-3 am-form-label">商品名称 <span class="tpl-form-line-small-title">/ Name</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入商品名称 / name" name="product.name" value="#(product.name)">
                </div>
-			</form>
-				
-				
-				<form class="am-form tpl-form-line-form personForm">
-                  <div class="am-form-group">
-                      <label for="user-name" class="am-u-sm-3 am-form-label">姓名 <span class="tpl-form-line-small-title">/ Name</span></label>
-                      <div class="am-u-sm-9">
-                          <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入姓名 / name" name="user.nickName" value="#(user.nickName)" />
-                      </div>
-                  </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">商品规格 <span class="tpl-form-line-small-title">/ Spec</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入商品规格 / spec" name="product.spec" value="#(product.spec)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-price" class="am-u-sm-3 am-form-label">商品单价 <span class="tpl-form-line-small-title">/ Price</span></label>
+               <div class="am-u-sm-9">
+                   <input type="number" required class="tpl-form-input" placeholder="请输入商品单价 / price" name="product.price" value="#(product.price)">
+               </div>
+           </div>
 
-                  <div class="am-form-group">
-                      <label for="user-password" class="am-u-sm-3 am-form-label">登录密码 <span class="tpl-form-line-small-title">/ Password</span></label>
-                      <div class="am-u-sm-9">
-                          <input type="password" class="am-form-field tpl-form-no-bg" placeholder="登录密码 / password" name="user.password" value="#(user.password)" />
-                      </div>
-                  </div>
-                  <div class="am-form-group">
-		           <label for="user-weibo" class="am-u-sm-3 am-form-label">性别<span class="tpl-form-line-small-title">/ Sex</span></label>
-		           <div class="am-u-sm-9">
-		             <select data-am-selected class="selectSex"  name="user.sex" value="#(user.sex)">
-				      	<option value="3">未知</option>
-						<option value="1">男</option>
-						<option value="0">女</option>
-				    </select>
-		           </div>
-		         </div>
-                  <div class="am-form-group">
-		           <label for="cityChoice" class="am-u-sm-3 am-form-label">地区 <span class="tpl-form-line-small-title">/ Area</span></label>
-		           <div class="am-u-sm-9">
-		          	 <input type="text" id="cityChoice" class="cityChoice" placeholder="地区 / Area" name="user.personArea" value="#(user.personArea)"/>
-		           </div>
-		         </div>
-
-                  <div class="am-form-group am-form-select">
-		           <label for="role" class="am-u-sm-3 am-form-label">角色 <span class="tpl-form-line-small-title">/ Role</span></label>
-		           <div class="am-u-sm-9">
-		          	 <select class="selectUserType" name="user.userType" data-am-selected value="#(user.userType)">
-				      	<option value="0">-请选择用户类型-</option>
-						<option value="2">供应源商家</option>
-						<option value="3">商家员工</option>
-						<option value="4">商家代理</option>
-				    </select>
-		           </div>
-		         </div>
+          <div class="am-form-group am-form-select">
+           <label for="product-type" class="am-u-sm-3 am-form-label">商品类型<span class="tpl-form-line-small-title">/ Type</span></label>
+           <div class="am-u-sm-9">
+          	 <select data-am-selected name="product.typeId" value="#(product.typeId)">
+		      	<option value="#(product.typeId)">-请选择商品类型-</option>
+				#for(p : pTypeList)
+					#if(p.id == product.typeId)
+						<option value="#(p.id)" selected>#(p.typeName)</option>
+					#else
+						<option value="#(p.id)">#(p.typeName)</option>
+					#end
+				#end
+		    </select>
+           </div>
+         </div>
          
                 
          <div class="am-form-group">
-           <label for="user-email" class="am-u-sm-3 am-form-label">电子邮件<span class="tpl-form-line-small-title">/ Email</span></label>
+           <label for="user-intro" class="am-u-sm-3 am-form-label">简介<span class="tpl-form-line-small-title">/ Desc</span></label>
            <div class="am-u-sm-9">
-             <input type="email" id="user-email" placeholder="输入你的电子邮件 / Email" name="user.email" value="#(user.email)">
-           </div>
-         </div>
-
-         <div class="am-form-group">
-           <label for="user-phone" class="am-u-sm-3 am-form-label">电话<span class="tpl-form-line-small-title">/ Telephone</span></label>
-           <div class="am-u-sm-9">
-             <input type="tel" id="user-phone" placeholder="输入你的电话号码 / Telephone" name="user.telephone" value="#(user.telephone)" >
-           </div>
-         </div>
-
-         <div class="am-form-group">
-           <label for="user-QQ" class="am-u-sm-3 am-form-label">QQ</label>
-           <div class="am-u-sm-9">
-             <input type="text" pattern="[0-9]*" id="user-QQ" placeholder="输入你的QQ号码/ QQ" name="user.QQ" value="#(user.QQ)" maxlength="11">
-           </div>
-         </div>
-
-         <div class="am-form-group">
-           <label for="user-weibo" class="am-u-sm-3 am-form-label">微博<span class="tpl-form-line-small-title">/ WeiBo</span></label>
-           <div class="am-u-sm-9">
-             <input type="text" id="user-weibo" placeholder="输入你的微博 / WeiBo" name="user.weiBo" value="#(user.weiBo)" maxlength="50">
-           </div>
-         </div>
-
-         <div class="am-form-group">
-           <label for="user-intro" class="am-u-sm-3 am-form-label">简介<span class="tpl-form-line-small-title">/ Intro</span></label>
-           <div class="am-u-sm-9">
-             <textarea class="" rows="5" id="user-intro" placeholder="输入个人简介" name="user.personInfo" value="#(user.personInfo)"> #(user.personInfo)</textarea>
-             <small>250字以内写出此人的与众不同...</small>
+             <textarea class="" rows="5" id="user-intro" placeholder="输入商品简介" name="product.desc" value="#(product.desc)"> #(product.desc)</textarea>
+             <small>250字以内写出商品特色...</small>
            </div>
          </div>
          <div class="am-form-group">
            <div class="am-u-sm-9 am-u-sm-push-3">
-             <button type="button" class="am-btn am-btn-primary savePersonEdit">保存信息</button>
+             <button type="button" class="am-btn am-btn-secondary saveProductEdit">保存信息</button>
              &nbsp;&nbsp;&nbsp;&nbsp;
              <button type="button" class="am-btn am-btn-primary back">返回</button>
            </div>
          </div>
 </div>
 
-        	<!--  隐藏数据start -->
-         <input type="hidden" name="user.parentUserId" value="#(loginUser.userId)">
-         <input type="hidden" name="user.userId" value="#(user.userId)">
-         <input type="hidden" class="formAvatar" name="user.avatar" value="#(user.avatar)">
-         
-         <!-- 隐藏数据end -->
-         
+				<!-- 隐藏数据start -->
+				<input type="hidden" name="product.id" value="#(product.id)">
+				<!-- 隐藏数据end -->
+
                 </form>
             </div>
         </div>
@@ -149,57 +88,19 @@
 <script type="text/javascript" src="/static/cityselect/js/hzw-city-picker.min.js"></script>
 <script  type="text/javascript">
 $(function($) {
-	//设置选中
-    $(".selectUserType").val(#(user.userType));
-	$(".selectSex").val(#(user.sex));
 	//提交保存
-	$(".savePersonEdit").unbind("click");
-	$(".savePersonEdit").bind("click",function(){
-		var avatar = $(".formAvatar").val();
-		if(avatar == "" || avatar == "avatar"){
-			layer.msg("请上传人物头像", {shift: 1});
-			return;
-		}
+	$(".saveProductEdit").unbind("click");
+	$(".saveProductEdit").bind("click",function(){
+		var $form = $(".productForm");
 		
-		var nickName = $("#user-name").val();
-		if(nickName == "" ){
-			layer.msg("用户名不能为空", {shift: 1});
-			return;
-		}
-		
-		var password = $(".password").val();
-		if(password == "" ){
-			layer.msg("密码不能为空", {shift: 1});
-			return;
-		}
-		
-		var email = $("#user-email").val();
-	    var emailReg = /\w+[@]{1}\w+[.]\w+/;
-	    if(!emailReg.test(email)){
-			layer.msg("请使用正确的邮箱号", {shift: 1});
-			return;
-		}
-		
-		var phone = $("#user-phone").val();
-		var phoneReg = /^1((3|5|8){1}\d{1}|70)\d{8}$/;
-		if(phone == "" ){
-			layer.msg("手机号不能为空", {shift: 1});
-			return;
-		}
-		if(!phoneReg.test(phone)){
-			layer.msg("请使用正确的手机号", {shift: 1});
-			return;
-		}
-		
-		var $form = $(".personForm");
 		$.ajax({
 			type : "POST",
-		    url : "savePersonEdit",
+		    url : "saveProductEdit",
 		    data: $form.serialize(),
 		    dataType : "json",
 		    success : function(data) {
 		    	layer.msg("保存成功", {shift: 1});
-		    	setTimeout(function(){window.location.href = "/person";}, 600);
+		    	setTimeout(function(){window.location.href = "/product";}, 600);
 		    },
 		    error : function(data) {
 		    	layer.msg(data.message, {shift: 6});
@@ -210,61 +111,11 @@ $(function($) {
 	//返回
 	$(".back").unbind("click");
 	$(".back").bind("click",function(){
-    	window.location.href = "/person";
+    	window.location.href = "/product";
 	});
 	
-	
-	//上传图片
-	$("#imageFile").bind("change",function(){
-		$("#js_images_form").ajaxSubmit({
-		    dataType: "json",
-		    beforeSend: function(){
-		        var percentVal = "0%";
-		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
-		    },
-		    uploadProgress: function(event, position, total, percentComplete) {
-		        var percentVal = percentComplete + "%";
-		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
-		    },
-		    success: function(data) {
-		        var percentVal = "100%";
-		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
-		        layer.msg("上传成功", {shift: 1});
-		        var url = "/upload"+data.datum.imgFile;
-		        $(".avatar").attr("src",url);
-		        $(".avatar").val(url);
-		        $(".formAvatar").val(url);
-		    }
-		});
-	});
-	
-	
-	//地区选择器
-    var cityPicker = new HzwCityPicker({
-        data: data,
-        target: 'cityChoice',
-        valType: 'k-v',
-        hideCityInput: {
-            name: 'city',
-            id: 'city'
-        },
-        hideProvinceInput: {
-            name: 'province',
-            id: 'province'
-        },
-        callback: function(data){
-        }
-    });
-
-    cityPicker.init();
-	
-    
 });
 
-
-
-    
-    
 </script>
 
 #end
