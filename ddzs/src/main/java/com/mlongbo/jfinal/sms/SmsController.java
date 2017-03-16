@@ -7,4 +7,9 @@ public class SmsController extends Controller {
 	public void index() {
 		render("index.html");
 	}
+	
+	public void template(){
+	    
+	    render("index.html");
+	}
 }
