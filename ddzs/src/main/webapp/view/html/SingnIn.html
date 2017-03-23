@@ -110,7 +110,7 @@
 
 </body>
 <script src="/view/js/jquery-1.11.3.min.js"></script>
-<script src="/static/layer/layer.js"></script>
+<script src="/assets/layer/layer.js"></script>
 <script type="text/javascript">
 	$(".zhuce").unbind("click");
 	$(".zhuce").bind("click",function(){
@@ -138,6 +138,7 @@
 		  success: function(data){
 			  if(data.isOk){
 				  layer.msg("登录成功", {shift: 1});
+				 
 				  setTimeout(function(){window.location.href="/admin";}, 600);
 			  }else{
 				  layer.msg(data.message, {shift: 1});

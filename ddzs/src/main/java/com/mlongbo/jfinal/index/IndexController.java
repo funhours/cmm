@@ -23,6 +23,16 @@ public class IndexController extends BaseController {
 
 	static IndexService srv = IndexService.me;
 	public void index() {
+	    /*	    int userType = getParaToInt("userType");
+	    if(userType == 1){//系统管理员
+	        render("adminIndex.html");
+        }else if(userType == 2){//商家供应商
+            render("index.html");
+        }else if(userType == 3){//商家员工
+            render("staffIndex.html");
+        }else if(userType == 4){//商家代理商  
+            render("appindex.html");
+        }*/
 		render("index.html");
 	}
 

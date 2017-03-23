@@ -4,6 +4,7 @@ import com.jfinal.config.Routes;
 import com.mlongbo.jfinal.index.IndexController;
 import com.mlongbo.jfinal.interceptor.AdminAuthInterceptor;
 import com.mlongbo.jfinal.login.LoginController;
+import com.mlongbo.jfinal.order.OrderController;
 import com.mlongbo.jfinal.person.PersonController;
 import com.mlongbo.jfinal.product.ProductController;
 import com.mlongbo.jfinal.productType.ProductTypeController;
@@ -29,6 +30,8 @@ public class AdminRoutes extends Routes {
 		add("/product", ProductController.class, "/product");
 		//产品类型管理
 		add("/ptype", ProductTypeController.class, "/productType");
+		//订单管理
+		add("/order", OrderController.class, "/order");
 	}
 
 }

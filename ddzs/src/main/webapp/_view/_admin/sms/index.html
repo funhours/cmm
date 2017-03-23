@@ -7,6 +7,18 @@
              <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 短信 <small>短信管理</small></div>
              <p class="page-header-description">在此你可以看到短信的剩余和使用内容</p>
          </div>
+        #if(loginUser.userType == 1)
+			<div class="am-u-lg-3 tpl-index-settings-button">
+             <button type="button" class="page-header-button buyConfig"><span class="am-icon-shopping-cart"></span> 购买设置</button>
+         	</div>
+		#elseif(loginUser.userType == 2)
+			<div class="am-u-lg-3 tpl-index-settings-button">
+             <button type="button" class="page-header-button buy"><span class="am-icon-shopping-cart"></span> 购买</button>
+         	</div>
+		#elseif(loginUser.userType == 3)
+			#@staffLayout()
+		#end
+         
      </div>
 
  </div>
@@ -18,13 +30,14 @@
                  <div class="widget-head am-cf">
                      <div class="widget-title am-fl">自定义短信模板</div>
                      <div class="widget-function am-fr">
-                         <a href="javascript:;" class="am-icon-cog" class="configTemplate"></a>
+                         <a href="javascript:;" class="am-icon-cog configTemplate"></a>
                      </div>
                  </div>
                  <div class="widget-body am-fr">
                      <div class="am-fl">
-                         <div class="widget-fluctuation-description-amount text-success" am-cf>
-                             +￥30420.56
+                         <div class="widget-fluctuation-description-amount text-success myTemplate" am-cf>
+                             #(smsTemplate.template??"暂无模板")
+                             <input type="hidden" class="smsTemplateId" value="#(smsTemplate.id??"")">
                          </div>
                      </div>
                  </div>
@@ -33,11 +46,11 @@
          <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
              <div class="widget widget-primary am-cf">
                  <div class="widget-statistic-header">
-                     短信使用量
+              		 短信使用量
                  </div>
                  <div class="widget-statistic-body">
                      <div class="widget-statistic-value">
-                         ￥27,294
+                         	#(useCount??0)
                      </div>
                      <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
                  </div>
@@ -46,11 +59,11 @@
          <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
              <div class="widget widget-purple am-cf">
                  <div class="widget-statistic-header">
-                     短信剩余量
+                   	  短信剩余量
                  </div>
                  <div class="widget-statistic-body">
                      <div class="widget-statistic-value">
-                         ￥27,294
+                         	#(smsStore.remaining??0)
                      </div>
                      <span class="widget-statistic-icon am-icon-support"></span>
                  </div>
@@ -62,9 +75,53 @@
 
      <div class="row am-cf">
          <div class="am-u-sm-12 ">
-
              <div class="widget am-cf widget-body-lg">
+             	#if(loginUser.userType == 1)
+	             	<div class="widget-head am-cf">
+	                     <div class="widget-title am-fl">短信购买配置</div>
+	                     <div class="widget-function am-fr">
+	                         <a href="javascript:;" class="am-icon-cog"></a>
+	                     </div>
+	                 </div>
+             		<div class="widget-body  am-fr">
+                     <div class="am-scrollable-horizontal ">
+                         <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                             <thead>
+                                 <tr>
+                                     <th>条数</th>
+                                     <th>价格</th>
+                                     <th>操作</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                             	#for(x : buyConfigPage.list)
+                                 <tr class="gradeX">
+                                     <td>#(x.count)</td>
+                                     <td>#(x.price)</td>
+                                     <td>
+                                         <div class="tpl-table-black-operation">
+                                             <a href="javascript:;" id="#(x.id)" class="editSmsBuyConfig">
+                                                 <i class="am-icon-pencil"></i> 编辑
+                                             </a>
+                                             <a href="javascript:;" class="tpl-table-black-operation-del delSmsBuyConfig" id="#(x.id)">
+                                                 <i class="am-icon-trash"></i> 删除
+                                             </a>
+                                         </div>
+                                     </td>
+                                 </tr>
+                                #end
+                             </tbody>
+                         </table>
+                     </div>
 
+                 </div>
+                #elseif(loginUser.userType == 2)
+                <div class="widget-head am-cf">
+                    <div class="widget-title am-fl">短信使用记录</div>
+                    <div class="widget-function am-fr">
+                        <a href="javascript:;" class="am-icon-cog"></a>
+                    </div>
+                </div>
                  <div class="widget-body  am-fr">
                      <div class="am-scrollable-horizontal ">
                          <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
@@ -152,13 +209,14 @@
                                          </div>
                                      </td>
                                  </tr>
-
-
                                  <!-- more data -->
                              </tbody>
                          </table>
                      </div>
                  </div>
+                 #end
+                 
+                 
              </div>
 
          </div>
@@ -169,30 +227,140 @@
 <script src="/static/amazeui/assets/js/jquery.min.js"></script>
 <script src="/static/amazeui/assets/js/amazeui.tree.min.js"></script>
 <script type="text/javascript">
-	jQuery(function($) {	
+	jQuery(function($) {
+		var remaining = #(smsStore.remaining??0);
+		var warningValue = #(smsStore.warningValue??0);
+		if(remaining != 0 || warningValue !=0 ){
+			if(remaining < warningValue){
+				layer.open({
+			        type: 1
+			        ,title: false //不显示标题栏
+			        ,closeBtn: false
+			        ,area: '300px;'
+			        ,shade: 0.8
+			        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+			        ,btn: ['前去充值', '暂时不买']
+			        ,moveType: 1 //拖拽模式，0或者1
+			        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br><br>你的短信条数余额已不足，为避免你的业务流程请及时充值。<br><br>你可以直接在本平台购买短信使用</div>'
+			        ,success: function(layero){
+			          var btn = layero.find('.layui-layer-btn');
+			          btn.css('text-align', 'center');
+			          btn.find('.layui-layer-btn0').attr({
+			            href: '/smsManage/buy?userId=#(loginUser.userId)'
+			          });
+			        }
+		      });
+			}
+		}
+		
+		
 		//设置短信模板
 		$(".configTemplate").unbind("click");
 		$(".configTemplate").bind("click",function(){
 			layer.prompt(
-				{
-				  formType: 0, 
-				  value: '', 
-				  maxlength: 10, 
-				},function(val, index){
+			{
+			  formType: 2, 
+			  value: '', 
+			  maxlength: 10,
+			  title:'短信模板',
+			  area: ['500px', '100px']
+			},function(val, index){
 			  var typeName = val;
 			  layer.close(index);
 			  if(typeName != null){
+			  	var tempId = $(".smsTemplateId").val();
+				if(tempId == ""){
+					$.ajax({
+					    type : "POST",
+					    url : "/smsManage/edit",
+					    data: {
+					    	"editType":0,
+					    	"template":typeName,
+					    	"userId":"#(loginUser.userId)"
+					    	},
+					    dataType : "json",
+					    success : function(data) {
+					    	layer.msg("添加成功", {shift: 1});
+					    	var temp = data.data.template;
+					    	$(".myTemplate").html(temp);
+							setTimeout(function(){window.location.href = "/smsManage/template?userId=#(loginUser.userId)";}, 600);
+					    },
+					    error : function(data) {
+					    	layer.msg(data.message, {shift: 6});
+					    }
+					});
+				}else{
+					$.ajax({
+					    type : "POST",
+					    url : "/smsManage/edit",
+					    data: {
+					    	"editType":1,
+					    	"template":typeName,
+					    	"userId":"#(loginUser.userId)",
+					    	"tempId":tempId
+					    	},
+					    dataType : "json",
+					    success : function(data) {
+					    	layer.msg("添加成功", {shift: 1});
+					    	var temp = data.data.template;
+					    	$(".myTemplate").html(temp);
+							setTimeout(function(){window.location.href = "/smsManage/template?userId=#(loginUser.userId)";}, 600);
+					    },
+					    error : function(data) {
+					    	layer.msg(data.message, {shift: 6});
+					    }
+					});
+				}
+				  
+			  }
+			});
+		});
+		
+		
+		//设置短信购买方式
+		$(".buyConfig").unbind("click");
+		$(".buyConfig").bind("click",function(){
+			layer.open({
+                type:2,
+                area:['300px','300px'],
+                title:'添加购买方式',
+                shade:0.6,
+                anim:2,
+                content:'/_view/_admin/sms/smsBuyConfig.html',
+                cancel : function(layero,index) {
+                	window.location.href = "/smsManage/template?userId=#(loginUser.userId)";
+                    layer.close(index);
+                }
+            })
+		});
+		
+		
+		//编辑短信购买方式
+		$(".editSmsBuyConfig").unbind("click");
+		$(".editSmsBuyConfig").bind("click",function(){
+			var sbcId = this.id;
+			layer.prompt(
+				{
+				  formType: 0, 
+				  value: '',
+				  title:'请重新设置该价格',
+				  maxlength: 10, 
+				},function(val, index){
+			  var sbcPrice = val;
+			  layer.close(index);
+			  if(sbcPrice != null){
 				  $.ajax({
 				    type : "POST",
-				    url : "/ptype/edit",
+				    url : "/smsManage/editBuyConfig",
 				    data: {
-				    	"editType":0,
-				    	"typeName":typeName
-				    	},
+				    	"sbcEditType":1,
+				    	"sbcId":sbcId,
+				    	"sbcPrice":sbcPrice
+			    	},
 				    dataType : "json",
 				    success : function(data) {
-				    	layer.msg("添加成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/ptype";}, 600);
+				    	layer.msg("修改成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/smsManage/template?userId=#(loginUser.userId)";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -201,6 +369,52 @@
 			  }
 			});
 		});
+		
+		
+		//删除短信购买方式
+		$(".delSmsBuyConfig").unbind("click");
+		$(".delSmsBuyConfig").bind("click",function(){
+			var sbcId = this.id;
+			
+			layer.confirm('确定删除?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+			  $.ajax({
+				    type : "POST",
+				    url : "/smsManage/delSbcById",
+				    data: {"sbcId":sbcId},
+				    dataType : "json",
+				    success : function(data) {
+				    	if(data){
+					    	layer.msg("删除成功", {shift: 1});
+							setTimeout(function(){window.location.href = "/smsManage/template?userId=#(loginUser.userId)";}, 600);
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+	//购买
+	$(".buy").unbind("click");
+	$(".buy").bind("click",function(){
+		$.ajax({
+		    type : "POST",
+		    url : "/smsManage/buySms",
+		    data: {
+		    	"userId":"#(loginUser.userId)"
+	    	},
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg(data);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+		
 	});	
 </script>
 

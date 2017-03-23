@@ -25,7 +25,13 @@ public class _MappingKit {
         arp.addMapping("t_feedback", FeedBack.class); //意见反馈表
         arp.addMapping("product", Product.class); //商品表
         arp.addMapping("product_type", ProductType.class); //商品类型表
+        arp.addMapping("sms_buy_log", SmsBuyLog.class); //短信购买记录
+        arp.addMapping("sms_send_log", SmsSendLog.class); //短信使用记录
+        arp.addMapping("sms_store", SmsStore.class); //短信库
+        arp.addMapping("sms_template", SmsTemplate.class); //短信模板
+        arp.addMapping("sms_buy_config", SmsBuyConfig.class); //短信购买模板
         arp.addMapping("session", "id", Session.class);
+        arp.addMapping("orders", "orderId", Orders.class);//订单
 	}
 }
 

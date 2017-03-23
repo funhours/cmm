@@ -202,33 +202,33 @@
 		$(".pTypeEdit").bind("click",function(){
 			var pTypeId = this.id;
 			layer.prompt(
-					{
-					  formType: 0, 
-					  value: '', 
-					  maxlength: 10, 
-					},function(val, index){
-				  var typeName = val;
-				  layer.close(index);
-				  if(typeName != null){
-					  $.ajax({
-					    type : "POST",
-					    url : "/ptype/edit",
-					    data: {
-					    	"editType":1,
-					    	"typeName":typeName,
-					    	"pTypeId":pTypeId
-					    	},
-					    dataType : "json",
-					    success : function(data) {
-					    	layer.msg("修改成功", {shift: 1});
-							setTimeout(function(){window.location.href = "/ptype";}, 600);
-					    },
-					    error : function(data) {
-					    	layer.msg(data.message, {shift: 6});
-					    }
-					});
-				  }
+				{
+				  formType: 0, 
+				  value: '', 
+				  maxlength: 10, 
+				},function(val, index){
+			  var typeName = val;
+			  layer.close(index);
+			  if(typeName != null){
+				  $.ajax({
+				    type : "POST",
+				    url : "/ptype/edit",
+				    data: {
+				    	"editType":1,
+				    	"typeName":typeName,
+				    	"pTypeId":pTypeId
+				    	},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("修改成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/ptype";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
 				});
+			  }
+			});
 		});
 		
 		//单个删除

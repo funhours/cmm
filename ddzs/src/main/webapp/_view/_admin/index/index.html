@@ -1,6 +1,12 @@
 #set(seoTitle="订单助手")
 #set(adminActive = 'class="active"')
-#@adminLayout()
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
 #define main()
 <div class="container-fluid am-cf">
      <div class="row">

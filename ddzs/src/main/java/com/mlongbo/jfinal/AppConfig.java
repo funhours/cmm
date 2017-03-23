@@ -83,6 +83,8 @@ public class AppConfig extends JFinalConfig {
 	@Override
 	public void configEngine(Engine me) {
 		me.addSharedFunction("/_view/_admin/common/__admin_layout.html");
+		me.addSharedFunction("/_view/_admin/common/__layout.html");
+		me.addSharedFunction("/_view/_admin/common/__staff_layout.html");
     	me.addSharedFunction("/_view/common/_paginate.html");
 	}
 
