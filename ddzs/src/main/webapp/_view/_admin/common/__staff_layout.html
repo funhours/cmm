@@ -1,4 +1,4 @@
-#define adminLayout()
+#define staffLayout()
 <!DOCTYPE html>
 <html lang="zh-CN" xml:lang="zh-CN">
 <head>
@@ -22,6 +22,7 @@
 
 #@css?()
 <script src="/assets/js/jquery.min.js"></script>
+
 
 </head>
 
@@ -53,7 +54,7 @@
 					<ul>
 						<!-- 欢迎语 -->
 						<li class="am-text-sm tpl-header-navbar-welcome"><a
-							href="javascript:;">欢迎你, 系统管理员<span>#(loginUser.nickName)</span>
+							href="javascript:;">欢迎你, <span>#(loginUser.nickName)</span>
 						</a></li>
 
 						<!-- 新邮件 -->
@@ -194,7 +195,7 @@
 					</a>
 					<ul class="sidebar-nav sidebar-nav-sub">
                         <li class="sidebar-nav-link">
-                            <a href="/order/excelPage?userId=#(loginUser.userId)">
+                            <a href="table-list.html">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 订单导入
                             </a>
                         </li>
@@ -243,7 +244,25 @@
 				</li>
 				<li class="sidebar-nav-link">
 					<a href="javascript:;" class="sidebar-nav-sub-title"> 
-						<i class="am-icon-envelope sidebar-nav-link-logo"></i> 短信设置
+						<i class="am-icon-users  sidebar-nav-link-logo"></i> 产品管理
+						<span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+					</a>
+					<ul class="sidebar-nav sidebar-nav-sub">
+                        <li class="sidebar-nav-link">
+                            <a href="/product">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 产品信息
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-link">
+                            <a href="/ptype">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 产品类别
+                            </a>
+                        </li>
+                     </ul>
+				</li>
+				<li class="sidebar-nav-link">
+					<a href="javascript:;" class="sidebar-nav-sub-title"> 
+						<i class="am-icon-envelope sidebar-nav-link-logo"></i> 短信管理
 						<span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
 					</a>
 					<ul class="sidebar-nav sidebar-nav-sub">
@@ -253,8 +272,8 @@
                             </a>
                         </li>
                         <li class="sidebar-nav-link">
-                            <a href="/smsManage/buyConfig">
-                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 短信购买设置
+                            <a href="/smsManage/buy">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 短信购买
                             </a>
                         </li>
                      </ul>

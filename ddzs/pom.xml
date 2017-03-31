@@ -129,20 +129,50 @@
 	    </dependency>
 	    
 	    <dependency>
-	        <groupId>poi-3.16-beta2</groupId>
-	        <artifactId>poi-3.16-beta2</artifactId>
+	        <groupId>poi-3.8-20120326</groupId>
+	        <artifactId>poi-3.8-20120326</artifactId>
 	        <scope>system</scope>
 	        <version>1</version>
-	       <systemPath>${project.basedir}/lib/poi-3.16-beta2.jar</systemPath>  
+	       <systemPath>${project.basedir}/lib/poi-3.8-20120326.jar</systemPath>  
 	    </dependency>
 	    
 	    <dependency>
-	        <groupId>poi-ooxml-3.16-beta2</groupId>
-	        <artifactId>poi-ooxml-3.16-beta2</artifactId>
+	        <groupId>poi-ooxml-3.8-20120326</groupId>
+	        <artifactId>poi-ooxml-3.8-20120326</artifactId>
 	        <scope>system</scope>
 	        <version>1</version>
-	       <systemPath>${project.basedir}/lib/poi-ooxml-3.16-beta2.jar</systemPath>  
+	       <systemPath>${project.basedir}/lib/poi-ooxml-3.8-20120326.jar</systemPath>  
 	    </dependency>
+	    
+	    <dependency>
+	        <groupId>poi-ooxml-schemas-3.8-20120326</groupId>
+	        <artifactId>poi-ooxml-schemas-3.8-20120326</artifactId>
+	        <scope>system</scope>
+	        <version>1</version>
+	       <systemPath>${project.basedir}/lib/poi-ooxml-schemas-3.8-20120326.jar</systemPath>  
+	    </dependency>
+	    
+	    <dependency>
+	        <groupId>poi-scratchpad-3.8-20120326</groupId>
+	        <artifactId>poi-scratchpad-3.8-20120326</artifactId>
+	        <scope>system</scope>
+	        <version>1</version>
+	       <systemPath>${project.basedir}/lib/poi-scratchpad-3.8-20120326.jar</systemPath>  
+	    </dependency>
+	    
+	    
+	    
+        <dependency>
+		    <groupId>org.apache.xmlbeans</groupId>
+		    <artifactId>xmlbeans</artifactId>
+		    <version>2.3.0</version>
+		</dependency>
+	    
+		<dependency>
+		    <groupId>net.sourceforge.javacsv</groupId>
+		    <artifactId>javacsv</artifactId>
+		    <version>2.0</version>
+		</dependency>
 	    
 	    <dependency>
 		    <groupId>org.jdom</groupId>
@@ -166,6 +196,8 @@
             <artifactId>javase</artifactId>  
             <version>2.2</version>  
         </dependency>  
+
+		        
 			
 		        
 			    

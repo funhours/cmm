@@ -32,6 +32,8 @@ public class _MappingKit {
         arp.addMapping("sms_buy_config", SmsBuyConfig.class); //短信购买模板
         arp.addMapping("session", "id", Session.class);
         arp.addMapping("orders", "orderId", Orders.class);//订单
+        arp.addMapping("orders_tb", "orderId", OrdersTb.class);//淘宝订单
+        arp.addMapping("orders_jd", "orderId", OrdersJd.class);//京东订单
 	}
 }
 
