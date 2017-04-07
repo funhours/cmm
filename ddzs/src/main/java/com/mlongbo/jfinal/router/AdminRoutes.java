@@ -1,10 +1,15 @@
 package com.mlongbo.jfinal.router;
 
 import com.jfinal.config.Routes;
+import com.mlongbo.jfinal.feedback.FeedBackController;
 import com.mlongbo.jfinal.index.IndexController;
 import com.mlongbo.jfinal.interceptor.AdminAuthInterceptor;
 import com.mlongbo.jfinal.login.LoginController;
+import com.mlongbo.jfinal.logisticsController.LogisticsController;
+import com.mlongbo.jfinal.order.ESheetController;
+import com.mlongbo.jfinal.order.OrderAbnormalController;
 import com.mlongbo.jfinal.order.OrderController;
+import com.mlongbo.jfinal.order.OrderSearchController;
 import com.mlongbo.jfinal.person.PersonController;
 import com.mlongbo.jfinal.product.ProductController;
 import com.mlongbo.jfinal.productType.ProductTypeController;
@@ -32,6 +37,18 @@ public class AdminRoutes extends Routes {
 		add("/ptype", ProductTypeController.class, "/productType");
 		//订单管理
 		add("/order", OrderController.class, "/order");
+		//订单搜索
+        add("/orderSearch", OrderSearchController.class, "/order/search");
+        //异常订单处理
+        add("/order/abnormal", OrderAbnormalController.class, "/order/abnormal");
+        //电子面单
+        add("/order/eSheet", ESheetController.class, "/order/eSheet");
+        //智能录入
+        add("/order/intelligentInput", ESheetController.class, "/order/intelligentInput");
+        //留言管理
+        add("/feedback", FeedBackController.class, "/feedback");
+        //物流查询
+        add("/logistics", LogisticsController.class, "/logistics");
 	}
 
 }

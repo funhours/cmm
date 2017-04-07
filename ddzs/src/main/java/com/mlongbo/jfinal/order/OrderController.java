@@ -39,6 +39,8 @@ import com.mlongbo.jfinal.vo.AjaxResult;
 public class OrderController extends Controller {
     private final AjaxResult result = new AjaxResult();
     static Orders dao = new Orders().dao();
+    static OrdersTb daoTb = new OrdersTb().dao();
+    static OrdersJd daoJd = new OrdersJd().dao();
     public void excelPage() {
         String userId = getPara("userId");
         Page<Orders> ordersPage = dao.paginate(getParaToInt("p", 1), 10,"select * ","from orders where 1=1 and relationUser = '"+userId+"' order by creationDate");
@@ -47,6 +49,87 @@ public class OrderController extends Controller {
         setAttr("ordersTbPage", ordersTbPage);
         render("excelImport.html");
     }
+    
+    
+    /**
+     * 耽搁作废订单
+     */
+    public void invalidById(){
+        String orderId = getPara("orderId");
+        int orderFrom = getParaToInt("orderFrom");
+        boolean isInvalid = false;
+        try {
+            switch (orderFrom) {
+            case 1://系统订单
+                Orders order = dao.findById(orderId);
+                order.set("orderStatus", 8);
+                isInvalid = order.update();
+                result.success(isInvalid);
+                break;
+            case 2://淘宝订单
+                OrdersTb orderTb = daoTb.findById(orderId);
+                orderTb.set("orderStatus", 8);
+                isInvalid = orderTb.update();
+                result.success(isInvalid);
+                break;
+            case 3://京东订单
+                OrdersJd orderJd = daoJd.findById(orderId);
+                orderJd.set("orderStatus", 8);
+                isInvalid = orderJd.update();
+                result.success(isInvalid);
+                break;
+                
+            default:
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        renderJson(result);
+    }
+    
+    
+    
+    /**
+     * 单个删除
+     * @Description (TODO这里用一句话描述这个方法的作用)
+     */
+    public void deleteById(){
+        String orderId = getPara("orderId");
+        int orderFrom = getParaToInt("orderFrom");
+        boolean isDelete = false;
+        try {
+            switch (orderFrom) {
+            case 1://系统订单
+                Orders order = dao.findById(orderId);
+                isDelete = order.delete();
+                result.success(isDelete);
+                break;
+            case 2://淘宝订单
+                OrdersTb orderTb = daoTb.findById(orderId);
+                isDelete = orderTb.delete();
+                result.success(isDelete);
+                break;
+            case 3://京东订单
+                OrdersJd orderJd = daoJd.findById(orderId);
+                isDelete = orderJd.delete();
+                result.success(isDelete);
+                break;
+                
+            default:
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        renderJson(result);
+    }
+    
+    
+    
+    
     
     /**
      * 
@@ -136,19 +219,13 @@ public class OrderController extends Controller {
         renderJson(result);
     }
     
-    @Before(Tx.class)
+   @Before(Tx.class)
     public void importJdExcel() {
         String userId = getPara("userId");
         String _shipperInfo = getPara("shipperInfo");
         String[] shipperInfo = _shipperInfo.split(",");
         // 获取文件
-        UploadFile file = getFile("orderFile");
-        String extension = file.getOriginalFileName().substring(file.getOriginalFileName().lastIndexOf("."));
-        if (".xlsx".equals(extension)){
-            result.addError("上传的文件必须为2003版的excel表格！");
-            renderJson(result);
-            return;
-        }
+        UploadFile file = getFile("jdOrderFile");
         String path = file.getUploadPath() +  "\\"+file.getFileName();
 
         // 处理导入数据
@@ -177,6 +254,7 @@ public class OrderController extends Controller {
                 .save();
                 successCount++;
             } catch (Exception e) {
+                e.printStackTrace();
                 failCount++;
             }
         }
@@ -188,14 +266,14 @@ public class OrderController extends Controller {
         result.success(resultJson);
         renderJson(result);
     }
-    
+
     
     /**
      * 
      * @throws Exception 
      * @Description (导入京东订单)
-     *//*
-    @Before(Tx.class)
+     */
+/*    @Before(Tx.class)
     public void importJdExcel() throws Exception {
         String userId = getPara("userId");
         String _shipperInfo = getPara("shipperInfo");
@@ -228,15 +306,15 @@ public class OrderController extends Controller {
                if (xssfRow != null) {
                    try {
                        order = new OrdersJd();
-                       String orderId = xssfRow.getCell(0)==null?xssfRow.getCell(0).toString():"";
-                       String productName = xssfRow.getCell(2)==null?xssfRow.getCell(2).toString():"";
-                       String productCount = xssfRow.getCell(3)==null?xssfRow.getCell(3).toString():"";
-                       String productPrice = xssfRow.getCell(8)==null?xssfRow.getCell(8).toString():"";
-                       String recipient = xssfRow.getCell(14)==null?xssfRow.getCell(14).toString():"";
-                       String recipientTel = xssfRow.getCell(16)==null?xssfRow.getCell(16).toString():"";
-                       String recipientAddress = xssfRow.getCell(15)==null?xssfRow.getCell(15).toString():"";
-                       String remarks = xssfRow.getCell(17)==null?xssfRow.getCell(17).toString():"";
-                       String orderStatus = xssfRow.getCell(11)==null?xssfRow.getCell(11).toString():"";
+                       XSSFCell orderId = xssfRow.getCell(0);
+                       XSSFCell productName = xssfRow.getCell(2);
+                       XSSFCell productCount = xssfRow.getCell(3);
+                       XSSFCell productPrice = xssfRow.getCell(8);
+                       XSSFCell recipient = xssfRow.getCell(14);
+                       XSSFCell recipientTel = xssfRow.getCell(16);
+                       XSSFCell recipientAddress = xssfRow.getCell(15);
+//                       String remarks = xssfRow.getCell(17)==null?xssfRow.getCell(17).toString():"";
+                       XSSFCell orderStatus = xssfRow.getCell(11);
                        
                        order.set("orderId", orderId)
                        .set("productName", productName)
@@ -245,7 +323,7 @@ public class OrderController extends Controller {
                        .set("recipient", recipient)
                        .set("recipientTel", recipientTel)
                        .set("recipientAddress", recipientAddress)
-                       .set("remarks", remarks)
+//                       .set("remarks", remarks)
                        .set("orderStatus", orderStatus)
                        .set("creationDate", DateUtils.getNowTimeStamp())
                        .set("shipper", shipperInfo[0])// 寄件人
@@ -268,8 +346,8 @@ public class OrderController extends Controller {
         resultJson.put("failCount", failCount);
         result.success(resultJson);
         renderJson(result);
-    }*/
-    
+    }
+  */  
     
     
     
@@ -341,6 +419,11 @@ public class OrderController extends Controller {
                     for(int j=0;j<row.getLastCellNum(); j++) {
                         
                         XSSFCell cell = row.getCell(j); // 获取到第j行的数据(单元格)
+                        
+                        if(cell == null){
+                            map.put(j, "");
+                            continue;
+                        }
 
                         cell.setCellType(HSSFCell.CELL_TYPE_STRING);
                         
@@ -349,9 +432,7 @@ public class OrderController extends Controller {
                     
                     list.add(map);
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             
@@ -381,28 +462,32 @@ public class OrderController extends Controller {
                 for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
                    XSSFRow xssfRow = xssfSheet.getRow(rowNum);
                    if (xssfRow != null) {
-                       order = new OrdersJd();
-                       XSSFCell orderId = xssfRow.getCell(0);
-                       XSSFCell productName = xssfRow.getCell(2);
-                       XSSFCell productCount = xssfRow.getCell(3);
-                       XSSFCell productPrice = xssfRow.getCell(8);
-                       XSSFCell recipient = xssfRow.getCell(14);
-                       XSSFCell recipientTel = xssfRow.getCell(16);
-                       XSSFCell recipientAddress = xssfRow.getCell(15);
-                       XSSFCell remarks = xssfRow.getCell(18);
-                       XSSFCell orderStatus = xssfRow.getCell(11);
-                       
-                       order.set("orderId", orderId);
-                       order.set("productName", productName);
-                       order.set("productCount", productCount);
-                       order.set("productPrice", productPrice);
-                       order.set("recipient", recipient);
-                       order.set("recipientTel", recipientTel);
-                       order.set("recipientAddress", recipientAddress);
-                       order.set("remarks", remarks);
-                       order.set("orderStatus", orderStatus);
-                       order.set("creationDate", DateUtils.getNowTimeStamp());
-                       list.add(order);
+                       try {
+                           order = new OrdersJd();
+                           XSSFCell orderId = xssfRow.getCell(0);
+                           XSSFCell productName = xssfRow.getCell(2);
+                           XSSFCell productCount = xssfRow.getCell(3);
+                           XSSFCell productPrice = xssfRow.getCell(8);
+                           XSSFCell recipient = xssfRow.getCell(14);
+                           XSSFCell recipientTel = xssfRow.getCell(16);
+                           XSSFCell recipientAddress = xssfRow.getCell(15);
+                           XSSFCell remarks = xssfRow.getCell(18);
+                           XSSFCell orderStatus = xssfRow.getCell(11);
+                           
+                           order.set("orderId", orderId);
+                           order.set("productName", productName);
+                           order.set("productCount", productCount);
+                           order.set("productPrice", productPrice);
+                           order.set("recipient", recipient);
+                           order.set("recipientTel", recipientTel);
+                           order.set("recipientAddress", recipientAddress);
+                           order.set("remarks", remarks);
+                           order.set("orderStatus", orderStatus);
+                           order.set("creationDate", DateUtils.getNowTimeStamp());
+                           list.add(order);
+                       } catch (Exception e) {
+                           e.printStackTrace();
+                       }
                    }
                 }
             }

@@ -28,7 +28,7 @@ public class CommonAPIController extends BaseAPIController{
      */
     @Before(TokenInterceptor.class)
     public void feedback(){
-        if (!"post".equalsIgnoreCase(getRequest().getMethod())) {
+       /* if (!"post".equalsIgnoreCase(getRequest().getMethod())) {
             renderJson(new BaseResponse(Code.NOT_FOUND));
             return;
         }
@@ -51,7 +51,7 @@ public class CommonAPIController extends BaseAPIController{
         //保存反馈
         boolean flag = feedBack.save();
 
-        renderJson(new BaseResponse(flag ? Code.SUCCESS : Code.FAIL, flag ? "意见反馈成功" : "意见反馈失败"));
+        renderJson(new BaseResponse(flag ? Code.SUCCESS : Code.FAIL, flag ? "意见反馈成功" : "意见反馈失败"));*/
     }
 
     /**

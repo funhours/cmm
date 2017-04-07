@@ -1,5 +1,11 @@
 #set(seoTitle="订单助手")
-#@adminLayout()
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
 #define main()
 <link rel="stylesheet" type="text/css" href="/static/cityselect/css/hzw-city-picker.css">
     

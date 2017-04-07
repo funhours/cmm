@@ -61,7 +61,7 @@
                           <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                               <thead>
                                   <tr>
-                                      <th class="table-check"><input type="checkbox" class="allCheck"/></th>
+                                      <th class="table-check"><input type="checkbox" class="xtAllCheck"/></th>
 						              <th>订单编号</th>
 						              <th>商品名称</th>
 						              <th>商品数量</th>
@@ -77,9 +77,10 @@
 						              <th>操作</th>
                                   </tr>
                               </thead>
-                              	<tbody class="orderItem">
+                              	<tbody class="xtOrderItem">
                               		#for(x : ordersPage.list)
                               		<tr>
+                              			<td><input type="checkbox" value="#(x.orderId??)" name="xtOrderId"/></td>
                               			<td>#(x.orderId??)</td>
                               			<td>#(x.productName??)</td>
                               			<td>#(x.productCount??)</td>
@@ -90,8 +91,37 @@
                               			<td>#(x.shipper??)</td>
                               			<td>#(x.shipperTel??)</td>
                               			<td>#(x.orderEntry??)</td>
-                              			<td>#(x.orderStatus??)</td>
-                              			<td>#(x.orderEntry??)</td>
+                              			<td>#(x.remarks??)</td>
+                              			<td>
+                              				#if((x.orderStatus) == 1)
+							              		未分配
+							              	#elseif((x.orderStatus) == 2)
+							              		已分配
+							              	#elseif((x.orderStatus) == 3)
+							              		未打印
+							              	#elseif((x.orderStatus) == 4)
+							              		已打印
+							              	#elseif((x.orderStatus) == 5)
+							              		快递中
+							              	#elseif((x.orderStatus) == 6)
+							              		已收件
+							              	#elseif((x.orderStatus) == 7)
+							              		异常件
+							              	#elseif((x.orderStatus) == 8)
+							              		作废
+							              	#end
+                              			</td>
+                              			
+                              			<td style="overflow:hidden">
+						                 <div class="tpl-table-black-operation">
+                                             <a href="javascript:;" class="xtInvalid" id="#(x.orderId)">
+                                                 <i class="am-icon-pencil"></i> 作废
+                                             </a>
+                                             <a href="javascript:;" class="tpl-table-black-operation-del xtDelete" id="#(x.orderId)">
+                                                 <i class="am-icon-trash"></i> 删除
+                                             </a>
+                                         </div>
+						              </td>
                               		</tr>
                               		#end
 				            	</tbody>
@@ -100,7 +130,8 @@
                         <div class="am-u-lg-12 am-cf">
 
                             <div class="am-fr">
-                                ###@paginate(page.pageNumber, page.totalPage, "/person?p=")
+                                <!-- 分页 -->
+								#@paginate(ordersPage.pageNumber, ordersPage.totalPage, "/order?p=")
                             </div>
                         </div>
 <!-- ****************************淘宝订单***************************************** -->
@@ -126,7 +157,7 @@
 						              <th>操作</th>
                                   </tr>
                               </thead>
-                              	<tbody class="orderItem">
+                              	<tbody class="tbOrderItem">
                               		#for(x : ordersTbPage.list)
                               		<tr>
                               			<td>#(x.id)</td>
@@ -199,6 +230,7 @@
 				$("#js_jd_excel_form").ajaxSubmit({
 				    type: "POST", 
 				    dataType: "json",
+				    contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 				    url:"/order/importJdExcel?userId=#(loginUser.userId)&shipperInfo="+shipperInfo,
 				    success: function(data) {
 				    	var code = data.code;
@@ -245,7 +277,159 @@
 			window.location.href="/order/downLoadOrderTemplateExcel";
 		});
 		
+		//订单作废
+		$(".xtInvalid").unbind("click");
+		$(".xtInvalid").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "/order/invalidById",
+			    data: {"orderId":orderId,"orderFrom":1},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("作废成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
 		
+		//淘宝作废
+		$(".tbInvalid").unbind("click");
+		$(".tbInvalid").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "/order/invalidById",
+			    data: {"orderId":orderId,"orderFrom":2},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("作废成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//京东作废
+		$(".jdInvalid").unbind("click");
+		$(".xjdInvalid").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "/order/invalidById",
+			    data: {"orderId":orderId,"orderFrom":3},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("作废成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//系统删除
+		$(".xtDelete").unbind();
+		$(".xtDelete").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "/order/deleteById",
+			    data: {"orderId":orderId,"orderFrom":1},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("作废成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//淘宝删除
+		$(".tbDelete").unbind();
+		$(".tbDelete").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "/order/deleteById",
+			    data: {"orderId":orderId,"orderFrom":2},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("作废成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		
+		//京东删除
+		$(".jdDelete").unbind();
+		$(".jdDelete").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "/order/deleteById",
+			    data: {"orderId":orderId,"orderFrom":3},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("作废成功", {shift: 1});
+						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		
+		
+		//系统订单全选反选
+		$(".xtAllCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".xtOrderItem :checkbox").prop("checked", true);  
+		    }else{   
+				$(".xtOrderItem :checkbox").prop("checked", false);
+		    }   
+		});
+		//淘宝订单全选反选
+		$(".tbAllCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".tbOrderItem :checkbox").prop("checked", true);  
+		    }else{   
+				$(".tbOrderItem :checkbox").prop("checked", false);
+		    }   
+		});
+		//京东订单全选反选
+		$(".jdAllCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".jdOrderItem :checkbox").prop("checked", true);  
+		    }else{   
+				$(".jdOrderItem :checkbox").prop("checked", false);
+		    }   
+		});
 		
 	});
 

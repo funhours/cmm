@@ -22,7 +22,8 @@ public class _MappingKit {
 		arp.addMapping("t_permission", Permission.PERMISSION_ID, Permission.class);//权限表
 		arp.addMapping("t_rolepermissions", RolePermissions.class);//权限角色关联表
         arp.addMapping("t_register_code", RegisterCode.MOBILE, RegisterCode.class); //注册验证码对象
-        arp.addMapping("t_feedback", FeedBack.class); //意见反馈表
+        arp.addMapping("feed_back", FeedBack.class); //留言表
+        arp.addMapping("feed_back_reply", FeedBackReply.class); //留言回复表
         arp.addMapping("product", Product.class); //商品表
         arp.addMapping("product_type", ProductType.class); //商品类型表
         arp.addMapping("sms_buy_log", SmsBuyLog.class); //短信购买记录
