@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
@@ -78,7 +78,7 @@
                         </div>
                         <div class="am-u-lg-12 am-cf">
                             <div class="am-fr">
-                                #@paginate(page.pageNumber, page.totalPage, "/productType?p=")
+                                #@paginate(page.pageNumber, page.totalPage, "#(base_path)/productType?p=")
                             </div>
                         </div>
                     </div>
@@ -106,8 +106,8 @@
 
 #end
 #define js()
-<script src="/static/amazeui/assets/js/jquery.min.js"></script>
-<script src="/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
 <script type="text/javascript">
 	jQuery(function($) {	
 		//添加
@@ -124,7 +124,7 @@
 			  if(typeName != null){
 				  $.ajax({
 				    type : "POST",
-				    url : "/ptype/edit",
+				    url : "#(base_path)/ptype/edit",
 				    data: {
 				    	"editType":0,
 				    	"typeName":typeName
@@ -132,7 +132,7 @@
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("添加成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/ptype";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -159,12 +159,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/ptype/review",
+				    url : "#(base_path)/ptype/review",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("启用成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/ptype";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -189,12 +189,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/ptype/disable",
+				    url : "#(base_path)/ptype/disable",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("禁用成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/ptype";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -218,7 +218,7 @@
 			  if(typeName != null){
 				  $.ajax({
 				    type : "POST",
-				    url : "/ptype/edit",
+				    url : "#(base_path)/ptype/edit",
 				    data: {
 				    	"editType":1,
 				    	"typeName":typeName,
@@ -227,7 +227,7 @@
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("修改成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/ptype";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -246,13 +246,13 @@
 			  layer.close(index);
 			  $.ajax({
 				    type : "POST",
-				    url : "ptype/delById",
+				    url : "#(base_path)/ptype/delById",
 				    data: {"pTypeId":pTypeId},
 				    dataType : "json",
 				    success : function(data) {
 				    	if(data){
 					    	layer.msg("删除成功", {shift: 1});
-							setTimeout(function(){window.location.href = "/ptype";}, 600);
+							setTimeout(function(){window.location.href = "#(base_path)/ptype";}, 600);
 				    	}
 				    },
 				    error : function(data) {
@@ -280,12 +280,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/ptype/delByIds",
+				    url : "#(base_path)/ptype/delByIds",
 				    data: {"delsList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/ptype";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/ptype";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -299,7 +299,7 @@
 		$(".search").unbind("click");
 		$(".search").bind("click",function(){
 		    var searchTypeName = $(".searchTypeName").val();
-		    window.location.href = "/ptype/search?searchTypeName="+searchTypeName;
+		    window.location.href = "#(base_path)/ptype/search?searchTypeName="+searchTypeName;
 		});
 		
 		//全选反选

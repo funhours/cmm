@@ -3,29 +3,39 @@ package com.mlongbo.jfinal.person;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jfinal.core.Controller;
 import com.jfinal.kit.HashKit;
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.DbPro;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.mlongbo.jfinal.common.utils.DateUtils;
 import com.mlongbo.jfinal.common.utils.RandomUtils;
 import com.mlongbo.jfinal.common.utils.StringUtils;
-import com.mlongbo.jfinal.model.Role;
+import com.mlongbo.jfinal.controller.BaseController;
 import com.mlongbo.jfinal.model.User;
 import com.mlongbo.jfinal.model.UserRole;
 import com.mlongbo.jfinal.vo.AjaxResult;
 
-public class PersonController extends Controller {
+public class PersonController extends BaseController {
 	private final AjaxResult result = new AjaxResult();
 	static User dao = new User().dao();
 	static UserRole userRoleDao = new UserRole().dao();
 	public void index() {
+	    String userId = getLoginUserId();
 		//分页参数
-		Page<User> page = dao.paginate(getParaToInt("p", 1), 10,"select * ","from t_user where 1=1 and userType <> 1 order by creationDate");
+		Page<User> page = dao.paginate(getParaToInt("p", 1), 10,"select * ","from t_user where 1=1 and userType <> 1 and parentUserId = '"+userId+"' and userId <> '"+userId+"' order by creationDate");
 		setAttr("page", page);
 		render("index.html");
+	}
+	
+	/**
+	 * 
+	 * @Description (供应商管理)
+	 */
+	public void supplier(){
+        //分页参数
+        Page<User> page = dao.paginate(getParaToInt("p", 1), 10,"select * ","from t_user where 1=1 and userType = 2 order by creationDate");
+        setAttr("page", page);
+        render("supplier.html");
 	}
 	
 	/**
@@ -35,7 +45,7 @@ public class PersonController extends Controller {
 	public void toEdit(){
 		int editType = getParaToInt("editType");
 		if(editType == 1){//1：编辑 0：新增
-			String userId = getPara("userId");
+			String userId = getLoginUserId();
 			Record user = Db.findFirst("select * from t_user where userId = '" + userId+"'"  );
 			setAttr("user", user);
 			render("personEdit.html");
@@ -50,9 +60,11 @@ public class PersonController extends Controller {
 	 */
 	public void savePersonEdit(){
 		boolean saveOk = false;
+		String loginUserId = getLoginUserId();
 		User user = getModel(User.class);
 		//修改
 		String userId = user.get("userId");
+		user.set("parentUserId", loginUserId);
 		user.set(User.CREATION_DATE, DateUtils.getNowTimeStamp());
 		if(!StringUtils.isEmpty(userId)){
 			UserRole userRole = userRoleDao.findFirst("select * from t_userroles where userID='"+userId+"'");
@@ -74,6 +86,8 @@ public class PersonController extends Controller {
 			String hashedPass = HashKit.sha256("kyddzs" + password);
 			user.setPassword(hashedPass);
 			user.set(User.LOGIN_NAME, user.get("telephone"));
+			user.set("parentUserId", loginUserId);
+			user.save();
 			
 			
 			saveOk = new UserRole()
@@ -122,7 +136,7 @@ public class PersonController extends Controller {
 	
 	// 单个删除
 	public void delById(){
-		String userId = getPara("userId");
+		String userId = getLoginUserId();
 		boolean isDelete = dao.deleteById(userId);
 		
 		renderJson(isDelete);

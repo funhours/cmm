@@ -15,6 +15,9 @@
 package com.mlongbo.jfinal.controller;
 
 import com.jfinal.core.Controller;
+import com.mlongbo.jfinal.login.LoginService;
+import com.mlongbo.jfinal.model.Account;
+import com.mlongbo.jfinal.model.User;
 
 /**
  * 基础控制器，方便获取登录信息
@@ -27,13 +30,13 @@ import com.jfinal.core.Controller;
  */
 public class BaseController extends Controller {
 
-	/*private Account loginAccount = null;
+	private User loginAccount = null;
 
-	public Account getLoginAccount() {
+	public User getLoginAccount() {
 		if (loginAccount == null) {
-			loginAccount = getAttr(LoginService.loginAccountCacheName);
-			if (loginAccount != null && ! loginAccount.isStatusOk()) {
-				throw new IllegalStateException("当前用户状态不允许登录，status = " + loginAccount.getStatus());
+			loginAccount = getAttr(LoginService.loginUserCacheName);
+			if (loginAccount != null && "0".equals(loginAccount.getACTIVITY())) {
+				throw new IllegalStateException("当前用户状态不允许登录，status = " + loginAccount.getACTIVITY());
 			}
 		}
 		return loginAccount;
@@ -47,14 +50,14 @@ public class BaseController extends Controller {
 		return !isLogin();
 	}
 
-	*//**
+	/**
 	 * 获取登录账户id
 	 * 确保在 FrontAuthInterceptor 之下使用，或者 isLogin() 为 true 时使用
 	 * 也即确定已经是在登录后才可调用
-	 *//*
-	public int getLoginAccountId() {
-		return getLoginAccount().getId();
-	}*/
+	 */
+	public String getLoginUserId() {
+		return getLoginAccount().getUserId();
+	}
 }
 
 

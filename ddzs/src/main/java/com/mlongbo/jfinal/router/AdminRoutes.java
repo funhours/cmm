@@ -1,15 +1,18 @@
 package com.mlongbo.jfinal.router;
 
 import com.jfinal.config.Routes;
+import com.mlongbo.jfinal.accountBook.AccountBookController;
+import com.mlongbo.jfinal.banner.BannerController;
 import com.mlongbo.jfinal.feedback.FeedBackController;
 import com.mlongbo.jfinal.index.IndexController;
-import com.mlongbo.jfinal.interceptor.AdminAuthInterceptor;
 import com.mlongbo.jfinal.login.LoginController;
 import com.mlongbo.jfinal.logisticsController.LogisticsController;
 import com.mlongbo.jfinal.order.ESheetController;
 import com.mlongbo.jfinal.order.OrderAbnormalController;
 import com.mlongbo.jfinal.order.OrderController;
+import com.mlongbo.jfinal.order.OrderDistController;
 import com.mlongbo.jfinal.order.OrderSearchController;
+import com.mlongbo.jfinal.order.SmartInputController;
 import com.mlongbo.jfinal.person.PersonController;
 import com.mlongbo.jfinal.product.ProductController;
 import com.mlongbo.jfinal.productType.ProductTypeController;
@@ -21,7 +24,7 @@ public class AdminRoutes extends Routes {
 	public void config() {
 		
 		// 添加后台管理拦截器，将拦截在此方法中注册的所有 Controller
-		addInterceptor(new AdminAuthInterceptor());
+//		addInterceptor(new AdminAuthInterceptor());
 				
 		setBaseViewPath("/_view/_admin");
 		add("/login", LoginController.class);
@@ -44,11 +47,18 @@ public class AdminRoutes extends Routes {
         //电子面单
         add("/order/eSheet", ESheetController.class, "/order/eSheet");
         //智能录入
-        add("/order/intelligentInput", ESheetController.class, "/order/intelligentInput");
+        add("/order/smart", SmartInputController.class, "/order/smart");
+        //物流轨迹异步推送接口
+        add("/order/dist", OrderDistController.class);
         //留言管理
         add("/feedback", FeedBackController.class, "/feedback");
         //物流查询
         add("/logistics", LogisticsController.class, "/logistics");
+        
+        //账本管理
+        add("/accountBook", AccountBookController.class, "/accountBook");
+        //banner图管理
+        add("/banner", BannerController.class, "/banner");
 	}
 
 }

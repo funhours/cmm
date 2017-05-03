@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #set(adminActive = 'class="active"')
 #if(loginUser.userType == 1)
 	#@adminLayout()
@@ -11,11 +11,7 @@
 <div class="container-fluid am-cf">
      <div class="row">
          <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
-             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 部件首页 <small>Amaze UI</small></div>
-             <p class="page-header-description">Amaze UI 含近 20 个 CSS 组件、20 余 JS 组件，更有多个包含不同主题的 Web 组件。</p>
-         </div>
-         <div class="am-u-lg-3 tpl-index-settings-button">
-             <button type="button" class="page-header-button"><span class="am-icon-paint-brush"></span> 设置</button>
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 蜂鸟订单助手</div>
          </div>
      </div>
 
@@ -23,48 +19,55 @@
 
  <div class="row-content am-cf">
      <div class="row  am-cf">
-         <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
-             <div class="widget am-cf">
-                 <div class="widget-head am-cf">
-                     <div class="widget-title am-fl">月度财务收支计划</div>
-                     <div class="widget-function am-fr">
-                         <a href="javascript:;" class="am-icon-cog"></a>
-                     </div>
+         <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+             <div class="widget widget-primary am-cf">
+                 <div class="widget-statistic-header">
+                     	 今日订单额
                  </div>
-                 <div class="widget-body am-fr">
-                     <div class="am-fl">
-                         <div class="widget-fluctuation-period-text">
-                             ￥61746.45
-                             <button class="widget-fluctuation-tpl-btn">
-             <i class="am-icon-calendar"></i>
-             更多月份
-           </button>
-                         </div>
+                 <div class="widget-statistic-body">
+                     <div class="widget-statistic-value">
+                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;￥#(daySum??0)</span>
                      </div>
-                     <div class="am-fr am-cf">
-                         <div class="widget-fluctuation-description-amount text-success" am-cf>
-                             +￥30420.56
-
-                         </div>
-                         <div class="widget-fluctuation-description-text am-text-right">
-                             8月份收入
-                         </div>
-                     </div>
+                     <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
                  </div>
              </div>
-
          </div>
          <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
              <div class="widget widget-primary am-cf">
                  <div class="widget-statistic-header">
-                     本季度利润
+                     	 本月订单额
                  </div>
                  <div class="widget-statistic-body">
                      <div class="widget-statistic-value">
-                         ￥27,294
+                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;￥#(monthSum??0)</span>
                      </div>
-                     <div class="widget-statistic-description">
-                         本季度比去年多收入 <strong>2593元</strong> 人民币
+                     <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
+                 </div>
+             </div>
+         </div>
+         <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+             <div class="widget widget-primary am-cf">
+                 <div class="widget-statistic-header">
+                    	总订单额
+                 </div>
+                 <div class="widget-statistic-body">
+                     <div class="widget-statistic-value">
+                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;￥#(allSum??0)</span>
+                     </div>
+                     <span class="widget-statistic-icon am-icon-support"></span>
+                 </div>
+             </div>
+         </div>
+     </div>
+     
+         <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+             <div class="widget widget-purple am-cf">
+                 <div class="widget-statistic-header">
+                     	 今日订单量
+                 </div>
+                 <div class="widget-statistic-body">
+                     <div class="widget-statistic-value">
+                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;#(dayCount??0)</span>
                      </div>
                      <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
                  </div>
@@ -73,14 +76,24 @@
          <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
              <div class="widget widget-purple am-cf">
                  <div class="widget-statistic-header">
-                     本季度利润
+                     	 本月订单量
                  </div>
                  <div class="widget-statistic-body">
                      <div class="widget-statistic-value">
-                         ￥27,294
+                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;#(monthCount??0)</span>
                      </div>
-                     <div class="widget-statistic-description">
-                         本季度比去年多收入 <strong>2593元</strong> 人民币
+                     <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
+                 </div>
+             </div>
+         </div>
+         <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+             <div class="widget widget-purple am-cf">
+                 <div class="widget-statistic-header">
+                    	总订单量
+                 </div>
+                 <div class="widget-statistic-body">
+                     <div class="widget-statistic-value">
+                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;#(allCount??0)</span>
                      </div>
                      <span class="widget-statistic-icon am-icon-support"></span>
                  </div>
@@ -92,18 +105,19 @@
          <div class="am-u-sm-12 am-u-md-8">
              <div class="widget am-cf">
                  <div class="widget-head am-cf">
-                     <div class="widget-title am-fl">月度财务收支计划</div>
+                     <div class="widget-title am-fl">年度订单统计</div>
                      <div class="widget-function am-fr">
                          <a href="javascript:;" class="am-icon-cog"></a>
                      </div>
                  </div>
-                 <div class="widget-body-md widget-body tpl-amendment-echarts am-fr" id="tpl-echarts">
-
+                <div class="widget-body-md widget-body tpl-amendment-echarts am-fr" id="tpl-echarts">
+					
                  </div>
              </div>
          </div>
 
-         <div class="am-u-sm-12 am-u-md-4">
+
+         <!-- <div class="am-u-sm-12 am-u-md-4">
              <div class="widget am-cf">
                  <div class="widget-head am-cf">
                      <div class="widget-title am-fl">专用服务器负载</div>
@@ -113,11 +127,11 @@
                  </div>
                  <div class="widget-body widget-body-md am-fr">
 
-                     <div class="am-progress-title">CPU Load <span class="am-fr am-progress-title-more">28% / 100%</span></div>
+                     <div class="am-progress-title">当天订单数 <span class="am-fr am-progress-title-more">28% / 100%</span></div>
                      <div class="am-progress">
                          <div class="am-progress-bar" style="width: 15%"></div>
                      </div>
-                     <div class="am-progress-title">CPU Load <span class="am-fr am-progress-title-more">28% / 100%</span></div>
+                     <div class="am-progress-title">本月订单数 <span class="am-fr am-progress-title-more">28% / 100%</span></div>
                      <div class="am-progress">
                          <div class="am-progress-bar  am-progress-bar-warning" style="width: 75%"></div>
                      </div>
@@ -127,137 +141,143 @@
                      </div>
                  </div>
              </div>
-         </div>
-     </div>
-
-
-     <div class="row am-cf">
-         <div class="am-u-sm-12 am-u-md-12 am-u-lg-4 widget-margin-bottom-lg ">
-             <div class="tpl-user-card am-text-center widget-body-lg">
-                 <div class="tpl-user-card-title">
-                     禁言小张
-                 </div>
-                 <div class="achievement-subheading">
-                     月度最佳员工
-                 </div>
-                 <img class="achievement-image" src="assets/img/user07.png" alt="">
-                 <div class="achievement-description">
-                     禁言小张在
-                     <strong>30天内</strong> 禁言了
-                     <strong>200多</strong>人。
-                 </div>
-             </div>
-         </div>
-
-         <div class="am-u-sm-12 am-u-md-12 am-u-lg-8 widget-margin-bottom-lg">
-
-             <div class="widget am-cf widget-body-lg">
-
-                 <div class="widget-body  am-fr">
-                     <div class="am-scrollable-horizontal ">
-                         <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
-                             <thead>
-                                 <tr>
-                                     <th>文章标题</th>
-                                     <th>作者</th>
-                                     <th>时间</th>
-                                     <th>操作</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                                 <tr class="gradeX">
-                                     <td>新加坡大数据初创公司 Latize 获 150 万美元风险融资</td>
-                                     <td>张鹏飞</td>
-                                     <td>2016-09-26</td>
-                                     <td>
-                                         <div class="tpl-table-black-operation">
-                                             <a href="javascript:;">
-                                                 <i class="am-icon-pencil"></i> 编辑
-                                             </a>
-                                             <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                 <i class="am-icon-trash"></i> 删除
-                                             </a>
-                                         </div>
-                                     </td>
-                                 </tr>
-                                 <tr class="even gradeC">
-                                     <td>自拍的“政治角色”：观众背对希拉里自拍合影表示“支持”</td>
-                                     <td>天纵之人</td>
-                                     <td>2016-09-26</td>
-                                     <td>
-                                         <div class="tpl-table-black-operation">
-                                             <a href="javascript:;">
-                                                 <i class="am-icon-pencil"></i> 编辑
-                                             </a>
-                                             <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                 <i class="am-icon-trash"></i> 删除
-                                             </a>
-                                         </div>
-                                     </td>
-                                 </tr>
-                                 <tr class="gradeX">
-                                     <td>关于创新管理，我想和你当面聊聊。</td>
-                                     <td>王宽师</td>
-                                     <td>2016-09-26</td>
-                                     <td>
-                                         <div class="tpl-table-black-operation">
-                                             <a href="javascript:;">
-                                                 <i class="am-icon-pencil"></i> 编辑
-                                             </a>
-                                             <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                 <i class="am-icon-trash"></i> 删除
-                                             </a>
-                                         </div>
-                                     </td>
-                                 </tr>
-                                 <tr class="even gradeC">
-                                     <td>究竟是趋势带动投资，还是投资引领趋势？</td>
-                                     <td>着迷</td>
-                                     <td>2016-09-26</td>
-                                     <td>
-                                         <div class="tpl-table-black-operation">
-                                             <a href="javascript:;">
-                                                 <i class="am-icon-pencil"></i> 编辑
-                                             </a>
-                                             <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                 <i class="am-icon-trash"></i> 删除
-                                             </a>
-                                         </div>
-                                     </td>
-                                 </tr>
-                                 <tr class="even gradeC">
-                                     <td>Docker领域再添一员，网易云发布“蜂巢”，加入云计算之争</td>
-                                     <td>醉里挑灯看键</td>
-                                     <td>2016-09-26</td>
-                                     <td>
-                                         <div class="tpl-table-black-operation">
-                                             <a href="javascript:;">
-                                                 <i class="am-icon-pencil"></i> 编辑
-                                             </a>
-                                             <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                 <i class="am-icon-trash"></i> 删除
-                                             </a>
-                                         </div>
-                                     </td>
-                                 </tr>
-
-
-                                 <!-- more data -->
-                             </tbody>
-                         </table>
-                     </div>
-                 </div>
-             </div>
-
-         </div>
+         </div> -->
      </div>
  </div>
+
 #end
 
 #define js()
-	<script type="text/javascript">
-		$(document).ready(function() {
-			// alert("主体被调用");
-		});
-	</script>
+<script src="#(base_path)/_view/_admin/index/index.js"></script>
+<script type="text/javascript">
+jQuery(function($) {
+ // 使用刚指定的配置项和数据显示图表。
+ var myChart = echarts.init(document.getElementById('tpl-echarts'));
+
+ var colors = ['#5793f3', '#d14a61'];
+
+ option = {
+     color: colors,
+
+     tooltip: {
+         trigger: 'axis',
+         axisPointer: {
+             type: 'cross'
+         }
+     },
+     grid: {
+         right: '20%'
+     },
+     toolbox: {
+         feature: {
+             dataView: {show: true, readOnly: false},
+             restore: {show: true},
+             saveAsImage: {show: true}
+         }
+     },
+     legend: {
+         data:['订单额','销售额']
+     },
+     xAxis: [
+         {
+             type: 'category',
+             axisTick: {
+                 alignWithLabel: true
+             },
+             data: []
+         }
+     ],
+     yAxis: [
+        {
+            type: 'value',
+            name: '订单额',
+            position: 'left',
+            axisLine: {
+                lineStyle: {
+                    color: colors[0]
+                }
+            }
+        },
+        {
+            type: 'value',
+            name: '销售额',
+            position: 'right',
+            offset: 80,
+            axisLine: {
+                lineStyle: {
+                    color: colors[1]
+                }
+            }
+        }
+     ],
+     series: [
+         {
+             name:'订单量',
+             type:'bar',
+             data:[]
+         },
+         {
+             name:'订单额',
+             type:'line',
+             yAxisIndex: 1,
+             data:[]
+         }
+     ]
+ };
+ 
+    $.ajax({
+    	type: 'POST',
+    	url: "#(base_path)/admin/getYearOrderInfo",
+    	success: function(data){
+    		myChart.setOption({
+    			xAxis: {
+    				data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+    	        },
+    	        yAxis:[{
+    	             axisLabel: {
+    	                 formatter: '{value} 单'
+    	             }
+    	         },
+    	         {
+    	             axisLabel: {
+    	                 formatter: '{value}元'
+    	             }
+    	         }],
+				series:[
+			        {
+			        	name:'订单量',
+			        	type:'bar',
+			        	data:data.counts
+			        },
+			        {
+			            name:'订单额',
+			            type:'line',
+			            yAxisIndex: 1,
+			            data:data.prices
+			        }
+		        ]
+    		});
+    	},error: function (XMLHttpRequest) {
+    	}
+    });
+    
+	jQuery(function($) {
+		if(window.Notification && Notification.permission !== "denied") {
+	        Notification.requestPermission(function(status) {// 请求权限
+	            if(status === 'granted') {
+	                // 弹出一个通知
+	                var n = new Notification('蜂鸟', {
+	                    body : '欢迎使用蜂鸟订单助手',
+	                    icon : '#(base_path)/assets/i/favicon.png'
+	                });
+	                // 两秒后关闭通知
+	                setTimeout(function() {
+	                    n.close();
+	                }, 3000);
+	            }
+	        });
+	    }
+	})
+});
+</script>
 #end

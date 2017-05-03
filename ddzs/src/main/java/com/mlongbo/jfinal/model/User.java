@@ -25,6 +25,7 @@ public class User extends Model<User> {
 	public static String PERSONINFO = "personInfo";
 	public static String SALT = "salt";
 	public static String ACTIVITY = "activity";
+	public static String EXPIRYDATE = "expiryDate";
 
 	
 	private static final long serialVersionUID = 1L;
@@ -33,7 +34,7 @@ public class User extends Model<User> {
      * 获取用户id*
      * @return 用户id
      */
-    public String userId() {
+    public String getUserId() {
         return getStr(USER_ID);
         
     }
@@ -68,7 +69,13 @@ public class User extends Model<User> {
 	public java.lang.Integer getStatus() {
 		return get(STATUS);
 	}
-	
-
+    
+    public static String getACTIVITY() {
+        return ACTIVITY;
+    }
+    
+    public static void setACTIVITY(String aCTIVITY) {
+        ACTIVITY = aCTIVITY;
+    }
 	
 }

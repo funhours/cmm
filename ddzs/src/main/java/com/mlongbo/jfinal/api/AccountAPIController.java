@@ -1,27 +1,40 @@
 package com.mlongbo.jfinal.api;
 
-import com.jfinal.aop.Before;
-import com.jfinal.aop.Clear;
-import com.jfinal.kit.HashKit;
-import com.jfinal.plugin.activerecord.Db;
-import com.mlongbo.jfinal.common.bean.*;
-import com.mlongbo.jfinal.common.utils.SMSUtils;
-import com.mlongbo.jfinal.common.Require;
-import com.mlongbo.jfinal.common.token.TokenManager;
-import com.mlongbo.jfinal.common.utils.DateUtils;
-import com.mlongbo.jfinal.common.utils.RandomUtils;
-import com.mlongbo.jfinal.common.utils.StringUtils;
-import com.mlongbo.jfinal.config.AppProperty;
-import com.mlongbo.jfinal.interceptor.TokenInterceptor;
-import com.mlongbo.jfinal.model.RegisterCode;
-import com.mlongbo.jfinal.model.User;
+import static com.mlongbo.jfinal.model.User.AVATAR;
+import static com.mlongbo.jfinal.model.User.EMAIL;
+import static com.mlongbo.jfinal.model.User.NICK_NAME;
+import static com.mlongbo.jfinal.model.User.PASSWORD;
 
-import static com.mlongbo.jfinal.model.User.*;
-
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
+import com.jfinal.kit.HashKit;
+import com.jfinal.plugin.activerecord.Db;
+import com.mlongbo.jfinal.common.Require;
+import com.mlongbo.jfinal.common.bean.BaseResponse;
+import com.mlongbo.jfinal.common.bean.Code;
+import com.mlongbo.jfinal.common.bean.Constant;
+import com.mlongbo.jfinal.common.bean.DatumResponse;
+import com.mlongbo.jfinal.common.bean.LoginResponse;
+import com.mlongbo.jfinal.common.token.TokenManager;
+import com.mlongbo.jfinal.common.utils.DateUtils;
+import com.mlongbo.jfinal.common.utils.RandomUtils;
+import com.mlongbo.jfinal.common.utils.SMSUtils;
+import com.mlongbo.jfinal.common.utils.StringUtils;
+import com.mlongbo.jfinal.config.AppProperty;
+import com.mlongbo.jfinal.interceptor.TokenInterceptor;
+import com.mlongbo.jfinal.model.InitUseCount;
+import com.mlongbo.jfinal.model.OrderStore;
+import com.mlongbo.jfinal.model.RegisterCode;
+import com.mlongbo.jfinal.model.SmsStore;
+import com.mlongbo.jfinal.model.User;
+import com.mlongbo.jfinal.vo.AjaxResult;
 
 /**
  * 用户账号相关的接口*
@@ -40,7 +53,7 @@ import org.apache.log4j.Logger;
 @Before(TokenInterceptor.class)
 public class AccountAPIController extends BaseAPIController {
 	private static Logger log = Logger.getLogger(AccountAPIController.class);
-
+	private final AjaxResult result = new AjaxResult();
     /**
      * 检查用户账号是否被注册*
      */
@@ -114,6 +127,7 @@ public class AccountAPIController extends BaseAPIController {
         int userType = getParaToInt("userType", 0);//用户类型
         String password = getPara("password");//密码
 		String nickName = getPara("nickName");//昵称
+		int userStatus = 0; //帐号状态. 1表示开启 ，0表示禁用
     	//头像信息，为空则使用默认头像地址
     	String avatar = getPara("avatar", AppProperty.me().defaultUserAvatar());
 
@@ -141,16 +155,48 @@ public class AccountAPIController extends BaseAPIController {
 		//保存用户数据
 		String userId = RandomUtils.randomCustomUUID();
 		String saltPassword = HashKit.sha256("kyddzs" + password);
+		
+		
+		InitUseCount initUseCount = InitUseCount.dao.findById(1);
+		
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, + initUseCount.getInt("useDay"));//今天的时间加初始使用时间
+        date = calendar.getTime();
 
-		new User()
-                .set("userId", userId)
+		new User().set("userId", userId)
                 .set(User.LOGIN_NAME, loginName)
 		        .set(User.PASSWORD, saltPassword)
                 .set(User.NICK_NAME, nickName)
 		        .set(User.CREATION_DATE, DateUtils.getNowTimeStamp())
 		        .set(User.USERTYPE, userType)
                 .set(User.AVATAR, avatar)
+                .set(User.STATUS, userStatus)
+                .set(User.ACTIVITY, userStatus)
+                .set("parentUserId", userId)
+                .set("expiryDate", date)
                 .save();
+		
+		//分配免费订单量,短信量
+		if(userType == 2){
+		    int smsCount = initUseCount.getInt("smsCount");
+		    int orderCount = initUseCount.getInt("orderCount");
+		    
+		    new OrderStore()
+		            .set("id", RandomUtils.randomCustomUUID())
+		            .set("userId", userId)
+		            .set("remaining", orderCount)
+		            .set("warningValue",10)
+		            .save();
+		    
+		    new SmsStore()
+		    .set("id", RandomUtils.randomCustomUUID())
+		    .set("userId", userId)
+		    .set("remaining", smsCount)
+		    .set("warningValue",10)
+		    .save();
+		}
 		
         //删除验证码记录
         Db.update("DELETE FROM t_register_code WHERE mobile=? AND code = ?", loginName, code);
@@ -309,5 +355,9 @@ public class AccountAPIController extends BaseAPIController {
     	getUser().set(User.AVATAR, avatar).update();
     	renderSuccess("success");
     }
+    
+
+    
+    
 }
 

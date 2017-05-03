@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
@@ -82,8 +82,8 @@
 
 #end
 #define js()
-<script src="/static/amazeui/assets/js/jquery.min.js"></script>
-<script src="/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
 <script type="text/javascript">
 	jQuery(function($) {	
 		
@@ -99,13 +99,13 @@
 			  	layer.close(index);
 			  	$.ajax({
 				    type : "POST",
-				    url : "/feedback/reply",
+				    url : "#(base_path)/feedback/reply",
 				    data: {"feedbackId":feedbackId,"replyContent":replyContent,"userId":#(loginUser.nickName)},
 				    dataType : "json",
 				    success : function(data) {
 				    	if(data){
 					    	layer.msg("回复成功", {shift: 1});
-							setTimeout(function(){window.location.href = "/feedback?userId=#(loginUser.nickName)";}, 600);
+							setTimeout(function(){window.location.href = "#(base_path)/feedback?userId=#(loginUser.nickName)";}, 600);
 				    	}
 				    },
 				    error : function(data) {
@@ -121,13 +121,13 @@
 			var feedbackId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/feedback/delById",
+			    url : "#(base_path)/feedback/delById",
 			    data: {"feedbackId":feedbackId},
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/feedback?userId=#(loginUser.nickName)";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/feedback?userId=#(loginUser.nickName)";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -152,12 +152,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/feedback/delByIds",
+				    url : "#(base_path)/feedback/delByIds",
 				    data: {"delsList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/feedback?userId=#(loginUser.nickName)";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/feedback?userId=#(loginUser.nickName)";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});

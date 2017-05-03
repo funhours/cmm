@@ -14,6 +14,9 @@
 
 package com.mlongbo.jfinal.login;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.jfinal.kit.HashKit;
@@ -22,6 +25,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.mlongbo.jfinal.model.OrderStore;
 import com.mlongbo.jfinal.model.Session;
 import com.mlongbo.jfinal.model.User;
 
@@ -50,8 +54,7 @@ public class LoginService {
 			return Ret.fail("msg", "用户名或密码不正确");
 		}
 
-		String salt = loginUser.getSalt();
-		String hashedPass = HashKit.sha256(salt + password);
+		String hashedPass = HashKit.sha256("kyddzs" + password);
 		// 未通过密码验证
 		if (loginUser.getPassword().equals(hashedPass) == false) {
 			return Ret.fail("msg", "用户名或密码不正确");
@@ -67,7 +70,7 @@ public class LoginService {
 		Session session = new Session();
 		String sessionId = StrKit.getRandomUUID();
 		session.setId(sessionId);
-		session.setUserId(loginUser.userId());
+		session.setUserId(loginUser.getUserId());
 		session.setExpireAt(expireAt);
 		if ( ! session.save()) {
 			return Ret.fail("msg", "保存 session 到数据库失败，请联系管理员");
@@ -76,10 +79,30 @@ public class LoginService {
 		loginUser.put("sessionId", sessionId);                          // 保存一份 sessionId 到 loginUser 备用
 		CacheKit.put(loginUserCacheName, sessionId, loginUser);
 
-		createLoginLog(loginUser.userId(), loginIp);
-
+		createLoginLog(loginUser.getUserId(), loginIp);
+		
+		//查询订单剩余量
+        String orderRemainingSql = "select * from order_store where 1=1 and userId = ?";
+        OrderStore orderStore = OrderStore.dao.findFirst(orderRemainingSql,loginUser.getUserId());
+        
+        //判断使用时间是否过期
+        boolean isExpired = false;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        String expiryDate = loginUser.get("expiryDate").toString();
+        try {
+            Date date = df.parse(expiryDate);
+            long diff  = date.getTime() - System.currentTimeMillis(); 
+            if(diff<=1000*60){
+                isExpired = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
 		return Ret.ok(sessionIdName, sessionId)
 						.set(loginUserCacheName, loginUser)
+						.set("orderStore", orderStore)
+						.set("isExpired", isExpired)
 						.set("maxAgeInSeconds", maxAgeInSeconds);   // 用于设置 cookie 的最大存活时间
 	}
 
@@ -107,12 +130,12 @@ public class LoginService {
 
 		User loginUser = UserDao.findById(session.getUserId());
 		// 找到 loginUser 并且 是正常状态 才允许登录
-		if (loginUser != null && loginUser.getStatus() == 1) {
+		if (loginUser != null && "1".equals(loginUser.getACTIVITY()) ) {
 			loginUser.removeSensitiveInfo();                                 // 移除 password 与 salt 属性值
 			loginUser.put("sessionId", sessionId);                          // 保存一份 sessionId 到 loginUser 备用
 			CacheKit.put(loginUserCacheName, sessionId, loginUser);
 
-			createLoginLog(loginUser.userId(), loginIp);
+			createLoginLog(loginUser.getUserId(), loginIp);
 			return loginUser;
 		}
 		return null;
@@ -142,7 +165,7 @@ public class LoginService {
 	 */
 	public void reloadLoginUser(User loginUserOld) {
 		String sessionId = loginUserOld.get("sessionId");
-		User loginUser = UserDao.findFirst("select * from t_user where userId=? limit 1", loginUserOld.userId());
+		User loginUser = UserDao.findFirst("select * from t_user where userId=? limit 1", loginUserOld.getUserId());
 		loginUser.removeSensitiveInfo();               // 移除 password 与 salt 属性值
 		loginUser.put("sessionId", sessionId);        // 保存一份 sessionId 到 loginUser 备用
 

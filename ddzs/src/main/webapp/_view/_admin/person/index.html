@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
@@ -13,8 +13,6 @@
               <div class="widget am-cf">
                   <div class="widget-head am-cf">
                       <div class="widget-title  am-cf">微商团队人员管理</div>
-
-
                   </div>
                   <div class="widget-body  am-fr">
 
@@ -54,9 +52,9 @@
                               <thead>
                                   <tr>
                                       <th class="table-check"><input type="checkbox" class="allCheck"/></th>
+						              <th style="width: 5%;">头像</th>
 						              <th>名称</th>
 						              <th>角色</th>
-						              <th>头像</th>
 						              <th>QQ</th>
 						              <th>微博</th>
 						              <th>简介</th>
@@ -69,6 +67,7 @@
 					            	#for(x : page.list)
 						            <tr>
 						              <td><input type="checkbox" value="#(x.userId)" name="spCodeId"/></td>
+						              <td style="overflow:hidden"><img alt="" src="#(base_path)#(x.avatar)" style="width: 100%;"></td>
 						              <td style="overflow:hidden">#(x.nickName)</td>
 						              <td style="overflow:hidden">
 						              	#if((x.userType) == 1)
@@ -81,7 +80,6 @@
 						              		商家代理
 						              	#end
 						              </td>
-						              <td style="overflow:hidden"><img alt="" src="#(x.avatar)" style="width: 5%;"></td>
 						              <td style="overflow:hidden">#(x.QQ)</td>
 						              <td style="overflow:hidden">#(x.weiBo)</td>
 						              <td style="overflow:hidden">#(x.personInfo)</td>
@@ -111,7 +109,7 @@
                         <div class="am-u-lg-12 am-cf">
 
                             <div class="am-fr">
-                                #@paginate(page.pageNumber, page.totalPage, "/person?p=")
+                                #@paginate(page.pageNumber, page.totalPage, "#(base_path)/person?p=")
                             </div>
                         </div>
                     </div>
@@ -125,14 +123,14 @@
 
 #end
 #define js()
-<script src="/static/amazeui/assets/js/jquery.min.js"></script>
-<script src="/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
 <script type="text/javascript">
 	jQuery(function($) {	
 		//添加
 		$(".addPerson").unbind("click");
 		$(".addPerson").bind("click",function(){
-			window.location.href = "/person/toEdit?editType=0";
+			window.location.href = "#(base_path)/person/toEdit?editType=0";
 		});
 		
 		//审核
@@ -152,12 +150,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/review",
+				    url : "#(base_path)/person/review",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("审核成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/person";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -182,12 +180,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/disable",
+				    url : "#(base_path)/person/disable",
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("禁用成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/person";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -200,7 +198,7 @@
 		$(".userEdit").unbind("click");
 		$(".userEdit").bind("click",function(){
 			var userId = this.id;
-			window.location.href = "/person/toEdit?editType=1&userId="+userId;
+			window.location.href = "#(base_path)/person/toEdit?editType=1&userId="+userId;
 		});
 		
 		//单个删除
@@ -209,13 +207,13 @@
 			var userId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "person/delById",
+			    url : "#(base_path)/person/delById",
 			    data: {"userId":userId},
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/person";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -240,12 +238,12 @@
 				 
 				 $.ajax({
 				    type : "POST",
-				    url : "/person/delByIds",
+				    url : "#(base_path)/person/delByIds",
 				    data: {"delsList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
 				    	layer.msg("删除成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/person";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/person";}, 600);
 				    },
 				    error : function(data) {
 				    	layer.msg(data.message, {shift: 6});
@@ -260,7 +258,7 @@
 		$(".search").bind("click",function(){
 		    var searchRole = $(".searchRole").val();
 		    var searchName = $(".searchName").val();
-		    window.location.href = "/person/search?searchRole="+searchRole+"&searchName="+searchName;
+		    window.location.href = "#(base_path)/person/search?searchRole="+searchRole+"&searchName="+searchName;
 		});
 		
 		//全选反选

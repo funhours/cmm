@@ -25,6 +25,14 @@ public class IndexAction extends Controller {
     public void CreateAccount(){
     	render("html/CreateAccount.html");
     }
+    
+    /**
+     * 
+     * @Description (物流查询)
+     */
+    public void express(){
+        render("express/PlatformQuery.html");
+    }
 
     /**
      * 查询手机验证码 *

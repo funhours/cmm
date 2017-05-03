@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>创建账号</title>
-		<link rel="stylesheet" href="/view/css/CreateAccount.css" />
+		<link rel="stylesheet" href="#(base_path)/view/css/CreateAccount.css" />
 		
 	</head>
 	<body>
@@ -18,7 +18,7 @@
 				<div class="header">
 					<div class="tit-left">
 						<a class="logo" href="#">
-							<h1>logo</h1>
+							<h1><img alt="" src="#(base_path)/assets/i/favicon.png"></h1>
 						</a>
 					</div>
 					<div class="tit-login">
@@ -59,7 +59,8 @@
 									<!-- <a id="send" class="fasong">免费获取验证码</a> -->
 									<input id="send" class="fasong" type="button"  value="免费获取验证码"  />
 								</div>
-								<div class="type">
+								<input type="hidden" class="userType" value="1">
+								<!-- <div class="type">
 									<i class="icon-type"></i>
 									<select required="required" class="userType">
 										<option selected="selected" value="-1">-请选择用户类型-</option>
@@ -69,7 +70,7 @@
 										<option value="3">商家代理</option>
 									</select>
 									<i class="icon-fail"></i>
-								</div>
+								</div> -->
 								<div class="name">
 									<i class="icon-user"></i>
 									<input type="text" class="nickName" placeholder="真实姓名" name="user" id="username" autocomplete="off">
@@ -82,7 +83,7 @@
 								</div>
 								<div class="remember">
 									<input id="my_agree" class="input-checkbok" type="checkbox" checked="checked" autocomplete="off" />
-									<label class="text">我接受并同意<a class="tiaok" href="">《订单助手使用条款》</a> </label>
+									<label class="text">我接受并同意<a class="tiaok" href="">《蜂鸟订单助手使用条款》</a> </label>
 								</div>
 								<a class="button registerBtn" id="register_now" >立即注册</a>
 							</div>
@@ -120,32 +121,37 @@
 			</footer>
 		</div>	
 	</body>
-	<script src="/view/js/jquery-1.11.3.min.js"></script>
-	<script src="/assets/layer/layer.js"></script>
+	<script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
+	<script src="#(base_path)/assets/layer/layer.js"></script>
 	<script type="text/javascript">
 		//登录
 		$(".SignInBtn").unbind("click");
 		$(".SignInBtn").bind("click",function(){
-			window.location.href='/login';
+			window.location.href='#(base_path)/login';
 		});
 		
 		//发送验证码
 		$('.fasong').unbind('click').click(function () {
 			var loginName = $(".loginName").val();
-			var url = "/api/account/sendCode";
+			var url = "#(base_path)/api/account/sendCode";
 			$.ajax({
 			  type: 'POST',
 			  url: url,
 			  data: {loginName:loginName},
 			  success: function(data){
-				layer.msg("验证码发送成功！请在一分钟内完成注册", {shift: 1});
+				  if(data.code == 1){
+					layer.msg("验证码发送成功！请在一分钟内完成注册", {shift: 1});
+					addCookie("secondsremained",60,60);//添加cookie记录,有效时间60s
+			        settime($('.fasong'));//开始倒计时
+				  }else{
+				  	layer.msg(data.message, {shift: 1});
+					return;
+				  }
 			  },error: function (XMLHttpRequest) {
 				  layer.msg("Ajax请求失败，错误状态为："+XMLHttpRequest.status,{shift: 1});
 			}
 			});
 			
-			addCookie("secondsremained",60,60);//添加cookie记录,有效时间60s
-	        settime($('.fasong'));//开始倒计时
 	        
 		});
 		
@@ -156,23 +162,23 @@
 			var userType = $(".userType").val();
 			var nickName = $(".nickName").val();
 			var password = $(".userPassword").val();
-			var url = "/api/account/register";
+			var url = "#(base_path)/api/account/register";
 			$.ajax({
 			  type: 'POST',
 			  url: url,
 			  data: {
 				  loginName:loginName,
 				  code:code,
-				  userType:userType,
+				  userType:2,
 				  nickName:nickName,
 				  password:password
 				  },
 			  success: function(data){
 				 if(data.code == 1){
 					 layer.msg("注册成功", {shift: 1});
-					 setTimeout(function(){window.location.href='/login';}, 600);
+					 setTimeout(function(){window.location.href='#(base_path)/login';}, 600);
 				 }else{
-					 alert(data.message);
+					 layer.msg(data.message, {shift: 1});
 				 }
 			  },error: function (XMLHttpRequest) {
 				  layer.msg("注册失败请稍后再试", {shift: 1});
@@ -225,7 +231,7 @@
 		        obj.removeAttr("disabled");    
 		        obj.val("免费获取验证码"); 
 		        return;
-		    } else { 
+		    } else {
 		        obj.attr("disabled", true); 
 		        obj.val("重新发送(" + countdown + ")"); 
 		        countdown--;

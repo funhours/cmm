@@ -2,8 +2,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>登录</title>
-<link rel="stylesheet" href="/view/css/SignIn.css" />
+<title>蜂鸟订单助手</title>
+<link rel="stylesheet" href="#(base_path)/view/css/SignIn.css" />
+<link rel="icon" type="image/png" href="#(base_path)/assets/i/favicon.png">
 </head>
 <body>
 	<div class="wapper">
@@ -16,7 +17,8 @@
 		<div class="header">
 			<div class="tit-left">
 				<a class="logo" href="#">
-					<h1>logo</h1>
+					<img class="pic" src="#(base_path)/assets/i/favicon.png">
+					<img class="tit" src="#(base_path)/assets/img/title-index.png">
 				</a>
 			</div>
 			<div class="tit-right">
@@ -35,11 +37,11 @@
 				<!--左边广告-->
 				<div class="advert">
 					<div class="pic">
-						<img src="/view/img/SignIn/guanggao.png" />
+						<img src="#(base_path)/view/img/SignIn/guanggao.png" />
 					</div>
 					<div class="weixin">
-						<img class="anzhuo" src="/view/img/SignIn/anzhuo.png" /> <img
-							class="apple" src="/view/img/SignIn/apple.png" />
+						<img class="anzhuo" src="#(base_path)/view/img/SignIn/anzhuo.png" /> <img
+							class="apple" src="#(base_path)/view/img/SignIn/apple.png" />
 					</div>
 				</div>
 				<!--右边from表单，用户登录模块-->
@@ -62,7 +64,7 @@
 							</div>
 							<div class="remember">
 								<div class="holdon">
-									<input id="cbx_keep" class="input-checkbok" type='checkbox' autocomplete="off" name='keepLogin' value='1' checked='checked'/>
+									<input id="cbx_keep" class="input-checkbok" type='checkbox' name='keepLogin'/>
 									<label class="text">保持登录</label>
 								</div>
 								<div class="forget">
@@ -71,7 +73,7 @@
 							</div>
 							<a class="button login" id="btn_login" >登录</a>
 							<p class="no-account">
-								<span class="no">没有账号?</span> <span class="color zhuce" >立即注册</span>
+								<span class="no">没有账号?</span> <a href="#" class="color zhuce" >立即注册</a>
 							</p>
 						</div>
 					</div>
@@ -109,39 +111,93 @@
 	</div>
 
 </body>
-<script src="/view/js/jquery-1.11.3.min.js"></script>
-<script src="/assets/layer/layer.js"></script>
+<script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
+<script src="#(base_path)/assets/layer/layer.js"></script>
 <script type="text/javascript">
 	$(".zhuce").unbind("click");
 	$(".zhuce").bind("click",function(){
-		window.location.href='/CreateAccount';
+		window.location.href='#(base_path)/CreateAccount';
 	});
 	
 	$(".CreateAccountBtn").unbind("click");
 	$(".CreateAccountBtn").bind("click",function(){
-		window.location.href='/CreateAccount';
+		window.location.href='#(base_path)/CreateAccount';
 	});
 	
 	$(".login").unbind("click");
 	$(".login").bind("click",function(){
+		var keepLogin = $("#cbx_keep").is(':checked');
 		var loginName = $(".userName").val();
 		var password = $(".userPassword").val();
-		//var url = "/api/account/login";
-		var url = "/login/doLogin?returnUrl=#(returnUrl)";
+		var url = "#(base_path)/login/doLogin?returnUrl=#(returnUrl)";
 		$.ajax({
 		  type: 'POST',
 		  url: url,
 		  data: {
 			  loginName:loginName,
-			  password:password
+			  password:password,
+			  keepLogin:keepLogin
 			  },
 		  success: function(data){
-			  if(data.isOk){
-				  layer.msg("登录成功", {shift: 1});
-				 
-				  setTimeout(function(){window.location.href="/admin";}, 600);
+		  	if(data.isOk){
+				  
+			  //判断用户状态
+			  if(data.loginUser.activity == 0){
+				  layer.msg("当前用户未激活，请联系管理员", {shift: 1});
+				  return;
+			  }
+			  //判断订单剩余量
+				var oRemaining = data.orderStore.remaining;
+				if(oRemaining <= 0){
+					layer.open({
+				        type: 1
+				        ,title: false //不显示标题栏
+				        ,closeBtn: false
+				        ,area: '300px;'
+				        ,shade: 0.8
+				        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+				        ,btn: ['前去充值', '暂时不买']
+				        ,moveType: 1 //拖拽模式，0或者1
+				        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br><br>你的订单使用条数余额已不足，为避免你的业务流程请及时充值。<br><br>你可以直接在本平台购买订单条数使用</div>'
+				        ,success: function(layero){
+				          var btn = layero.find('.layui-layer-btn');
+				          btn.css('text-align', 'center');
+				          btn.find('.layui-layer-btn0').attr({
+				            href: '#(base_path)/smsManage/toAloneBuyPage?userId='+loginName
+				          });
+				        }
+			      });
+					return;
+				}
+
+				  
+			  //判断时长剩余量
+				if(data.isExpired){
+					layer.open({
+				        type: 1
+				        ,title: false //不显示标题栏
+				        ,closeBtn: false
+				        ,area: '300px;'
+				        ,shade: 0.8
+				        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+				        ,btn: ['前去充值', '暂时不买']
+				        ,moveType: 1 //拖拽模式，0或者1
+				        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br><br>你的账号已过期，为避免你的业务流程请及时充值。<br><br>你可以直接在本平台购买订单条数使用</div>'
+				        ,success: function(layero){
+				          var btn = layero.find('.layui-layer-btn');
+				          btn.css('text-align', 'center');
+				          btn.find('.layui-layer-btn0').attr({
+				            href: '#(base_path)/smsManage/toAloneBuyPage?userId='+loginName
+				          });
+				        }
+			      });
+					return;
+				}
+				 layer.msg("登录成功", {shift: 1});
+				 var userId = data.loginUser.userId
+				 setTimeout(function(){window.location.href="#(base_path)/admin";}, 600);
 			  }else{
-				  layer.msg(data.message, {shift: 1});
+				 layer.msg(data.msg, {shift: 1});
 			 }
 		  },error: function (XMLHttpRequest) {
 			alert("Ajax请求失败，错误状态为："+XMLHttpRequest.status);

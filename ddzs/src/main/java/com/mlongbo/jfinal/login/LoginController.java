@@ -41,6 +41,7 @@ public class LoginController extends Controller {
 			int maxAgeInSeconds = ret.getAs("maxAgeInSeconds");
 			setCookie(LoginService.sessionIdName, sessionId, maxAgeInSeconds, true);
 			setAttr(LoginService.loginUserCacheName, ret.get(LoginService.loginUserCacheName));
+            setAttr("orderStore", ret.get("orderStore"));
 
 			ret.set("returnUrl", getPara("returnUrl", "/"));    // 如果 returnUrl 存在则跳过去，否则跳去首页
 		}
@@ -55,7 +56,7 @@ public class LoginController extends Controller {
 	public void logout() {
 		srv.logout(getCookie(LoginService.sessionIdName));
 		removeCookie(LoginService.sessionIdName);
-		redirect("/");
+		redirect("/login");
 	}
 
 	/**

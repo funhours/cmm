@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
@@ -15,49 +15,46 @@
                       <div class="widget-title  am-cf">订单导入</div>
                   </div>
                   <div class="widget-body  am-fr">
-
                       <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
                           <div class="am-form-group am-form-file">
                             <div class="am-btn-group am-btn-group-xs">
-                            <form class="am-form " id="js_excel_form" action="/order/importExcel?userId=#(loginUser.userId)" method="post" enctype="multipart/form-data">
-                               	<button type="button" class="am-btn am-btn-danger am-btn-sm">
-								<i class="am-icon-cloud-upload"></i> 导入系统订单
-								</button>
-                              	<input id="orderFile" type="file" multiple="" name="orderFile">  
-                             </form>    
+	                            <form class="am-form " id="js_excel_form" action="#(base_path)/order/importExcel" method="post" enctype="multipart/form-data">
+	                               	<button type="button" class="am-btn am-btn-danger am-btn-sm">
+									<i class="am-icon-cloud-upload"></i> 导入系统订单
+									</button>
+	                              	<input id="orderFile" type="file" multiple="" name="orderFile">  
+	                             </form>    
 						  	</div>
 						  	<div class="am-btn-group am-btn-group-xs">
-						  	 <form class="am-form " id="js_jd_excel_form" method="post" enctype="multipart/form-data">
-                               	<button type="button" class="am-btn am-btn-danger am-btn-sm">
-								<i class="am-icon-cloud-upload"></i> 导入京东订单
-								</button>
-                              	<input id="jdOrderFile" type="file" multiple="" name="jdOrderFile">  
-                             </form>    
+							  	 <form class="am-form " id="js_jd_excel_form" method="post" enctype="multipart/form-data">
+	                               	<button type="button" class="am-btn am-btn-danger am-btn-sm">
+									<i class="am-icon-cloud-upload"></i> 导入京东订单
+									</button>
+	                              	<input id="jdOrderFile" type="file" multiple="" name="jdOrderFile">  
+	                             </form>    
                              </div>
                              <div class="am-btn-group am-btn-group-xs">
-                             <form class="am-form " id="js_tb_excel_form"  method="post" enctype="multipart/form-data">
-                               	<button type="button" class="am-btn am-btn-danger am-btn-sm">
-								<i class="am-icon-cloud-upload"></i> 导入淘宝订单
-								</button>
-                              	<input id="csvOrderFile" type="file" multiple="" name="csvOrderFile">  
-                             </form>    
+	                             <form class="am-form " id="js_tb_excel_form"  method="post" enctype="multipart/form-data">
+	                               	<button type="button" class="am-btn am-btn-danger am-btn-sm">
+									<i class="am-icon-cloud-upload"></i> 导入淘宝订单
+									</button>
+	                              	<input id="csvOrderFile" type="file" multiple="" name="csvOrderFile">  
+	                             </form>    
                              </div>
                           </div>
-                             	<button class="am-btn am-btn-primary am-btn-sm downLoadOrderTemplateBtm" >
+	                          <div class="am-btn-group am-btn-group-xs">
+	                           	<button class="am-btn am-btn-primary am-btn-sm downLoadOrderTemplateBtm" >
 								  	下载模板
 								  <i class="am-icon-cloud-download"></i>
 								</button>
+							</div>
                       </div>
-                      <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                          <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                              <input type="text" class="am-form-field searchName" placeholder="请输入人员名字以搜索">
-                              <span class="am-input-group-btn">
-								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
-							  </span>
-                          </div>
-                      </div>
-
+                      
                       <div class="am-u-sm-12">
+                      	<div class="widget-head am-cf">
+                                <div class="widget-title  am-cf">系统订单</div>
+                            </div>
+                            <div class="widget-body  am-fr">
                           <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                               <thead>
                                   <tr>
@@ -66,9 +63,13 @@
 						              <th>商品名称</th>
 						              <th>商品数量</th>
 						              <th>商品金额</th>
+						              <th>商品重量</th>
 						              <th>收货人</th>
 						              <th>收货人电话</th>
-						              <th>收货人地址</th>
+						              <th>收货省</th>
+						              <th>收货市</th>
+						              <th>收货区</th>
+						              <th>收货地址</th>
 						              <th>发货人</th>
 						              <th>发货人电话</th>
 						              <th>订单录入人</th>
@@ -81,18 +82,22 @@
                               		#for(x : ordersPage.list)
                               		<tr>
                               			<td><input type="checkbox" value="#(x.orderId??)" name="xtOrderId"/></td>
-                              			<td>#(x.orderId??)</td>
-                              			<td>#(x.productName??)</td>
-                              			<td>#(x.productCount??)</td>
-                              			<td>#(x.productPrice??)</td>
-                              			<td>#(x.recipient??)</td>
-                              			<td>#(x.recipientTel??)</td>
-                              			<td>#(x.recipientAddress??)</td>
-                              			<td>#(x.shipper??)</td>
-                              			<td>#(x.shipperTel??)</td>
-                              			<td>#(x.orderEntry??)</td>
-                              			<td>#(x.remarks??)</td>
-                              			<td>
+                              			<td style="overflow:hidden">#(x.orderId??)</td>
+                              			<td style="overflow:hidden">#(x.productName??)</td>
+                              			<td style="overflow:hidden">#(x.productCount??)</td>
+                              			<td style="overflow:hidden">#(x.productPrice??)</td>
+                              			<td style="overflow:hidden">#(x.productWeight??)</td>
+                              			<td style="overflow:hidden">#(x.recipient??)</td>
+                              			<td style="overflow:hidden">#(x.recipientTel??)</td>
+                              			<td style="overflow:hidden">#(x.provinceName??)</td>
+                              			<td style="overflow:hidden">#(x.cityName??)</td>
+                              			<td style="overflow:hidden">#(x.expAreaName??)</td>
+                              			<td style="overflow:hidden">#(x.recipientAddress??)</td>
+                              			<td style="overflow:hidden">#(x.shipper??)</td>
+                              			<td style="overflow:hidden">#(x.shipperTel??)</td>
+                              			<td style="overflow:hidden">#(x.orderEntry??)</td>
+                              			<td style="overflow:hidden">#(x.remarks??)</td>
+                              			<td style="overflow:hidden">
                               				#if((x.orderStatus) == 1)
 							              		未分配
 							              	#elseif((x.orderStatus) == 2)
@@ -126,18 +131,23 @@
                               		#end
 				            	</tbody>
                             </table>
+                       	</div>
                         </div>
                         <div class="am-u-lg-12 am-cf">
 
                             <div class="am-fr">
                                 <!-- 分页 -->
-								#@paginate(ordersPage.pageNumber, ordersPage.totalPage, "/order?p=")
+								#@paginate(ordersPage.pageNumber, ordersPage.totalPage, "/order/excelPage?xp=")
                             </div>
                         </div>
 <!-- ****************************淘宝订单***************************************** -->
 
 
-						<div class="am-u-sm-12">
+				<div class="am-u-sm-12">
+					<div class="widget-head am-cf">
+                         <div class="widget-title  am-cf">淘宝订单</div>
+                    </div>
+                        <div class="widget-body  am-fr">
                           <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                               <thead>
                                   <tr>
@@ -178,13 +188,68 @@
 				            	</tbody>
                             </table>
                         </div>
+                       </div>
                         <div class="am-u-lg-12 am-cf">
-
                             <div class="am-fr">
-                                ###@paginate(page.pageNumber, page.totalPage, "/person?p=")
+                                #@paginate(ordersTbPage.pageNumber, ordersTbPage.totalPage, "/order/excelPage?tp=")
                             </div>
                         </div>
 
+<!-- ****************************京东订单***************************************** -->
+
+
+				<div class="am-u-sm-12">
+					<div class="widget-head am-cf">
+                         <div class="widget-title  am-cf">京东订单</div>
+                    </div>
+                        <div class="widget-body  am-fr">
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                              <thead>
+                                  <tr>
+                                      <th class="table-check"><input type="checkbox" class="jdAllCheck"/></th>
+						              <th>订单编号</th>
+						              <th>商品名称</th>
+						              <th>商品数量</th>
+						              <th>商品金额</th>
+						              <th>收货人</th>
+						              <th>收货人电话</th>
+						              <th>收货人地址</th>
+						              <th>发货人</th>
+						              <th>发货人电话</th>
+						              <th>订单录入人</th>
+						              <th>备注</th>
+						              <th>状态</th>
+						              <th>操作</th>
+                                  </tr>
+                              </thead>
+                              	<tbody class="jdOrderItem">
+                              		#for(x : ordersJdPage.list)
+                              		<tr>
+                              			<td>#(x.id)</td>
+                              			<td>#(x.orderId??)</td>
+                              			<td>#(x.productName??)</td>
+                              			<td>#(x.productCount??)</td>
+                              			<td>#(x.productPrice??)</td>
+                              			<td>#(x.recipient??)</td>
+                              			<td>#(x.recipientTel??)</td>
+                              			<td>#(x.recipientAddress??)</td>
+                              			<td>#(x.shipper??)</td>
+                              			<td>#(x.shipperTel??)</td>
+                              			<td>#(x.orderEntry??)</td>
+                              			<td>#(x.remarks??)</td>
+                              			<td>#(x.orderStatus??)</td>
+                              		</tr>
+                              		#end
+				            	</tbody>
+                            </table>
+                        </div>
+                       </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                #@paginate(ordersJdPage.pageNumber, ordersJdPage.totalPage, "/order/excelPage?jp=")
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -197,9 +262,9 @@
 
 #end
 #define js()
-<script src="/static/amazeui/assets/js/jquery.min.js"></script>
-<script src="/static/front/jquery.form.js"></script>
-<script src="/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/front/jquery.form.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
 <script type="text/javascript">
 	jQuery(function($) {	
 		//模板上傳訂單
@@ -231,7 +296,7 @@
 				    type: "POST", 
 				    dataType: "json",
 				    contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-				    url:"/order/importJdExcel?userId=#(loginUser.userId)&shipperInfo="+shipperInfo,
+				    url:"#(base_path)/order/importJdExcel?userId=#(loginUser.userId)&shipperInfo="+shipperInfo,
 				    success: function(data) {
 				    	var code = data.code;
 				    	if(code == 0){
@@ -257,7 +322,7 @@
 			  $("#js_tb_excel_form").ajaxSubmit({
 			  	type: "POST", 
 			    dataType: "json",
-			    url:"/order/csvReader?userId=#(loginUser.userId)&shipperInfo="+shipperInfo,
+			    url:"#(base_path)/order/csvReader?userId=#(loginUser.userId)&shipperInfo="+shipperInfo,
 			    success: function(data) {
 			    	var code = data.code;
 			    	if(code == 0){
@@ -274,7 +339,7 @@
 		
 		//下载订单模板
 		$(".downLoadOrderTemplateBtm").bind("click",function(){
-			window.location.href="/order/downLoadOrderTemplateExcel";
+			window.location.href="#(base_path)/order/downLoadOrderTemplateExcel";
 		});
 		
 		//订单作废
@@ -283,13 +348,13 @@
 			var orderId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/order/invalidById",
+			    url : "#(base_path)/order/invalidById",
 			    data: {"orderId":orderId,"orderFrom":1},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
 				    	layer.msg("作废成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/order/excelPage?userId=#(loginUser.userId)";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -304,13 +369,13 @@
 			var orderId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/order/invalidById",
+			    url : "#(base_path)/order/invalidById",
 			    data: {"orderId":orderId,"orderFrom":2},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
 				    	layer.msg("作废成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/order/excelPage?userId=#(loginUser.userId)";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -325,13 +390,13 @@
 			var orderId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/order/invalidById",
+			    url : "#(base_path)/order/invalidById",
 			    data: {"orderId":orderId,"orderFrom":3},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
 				    	layer.msg("作废成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+						setTimeout(function(){window.location.href = "#(base_path)/order/excelPage?userId=#(loginUser.userId)";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -346,13 +411,13 @@
 			var orderId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/order/deleteById",
+			    url : "#(base_path)/order/deleteById",
 			    data: {"orderId":orderId,"orderFrom":1},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
-				    	layer.msg("作废成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/excelPage?userId=#(loginUser.userId)";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -367,13 +432,13 @@
 			var orderId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/order/deleteById",
+			    url : "#(base_path)/order/deleteById",
 			    data: {"orderId":orderId,"orderFrom":2},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
-				    	layer.msg("作废成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/excelPage?userId=#(loginUser.userId)";}, 600);
 			    	}
 			    },
 			    error : function(data) {
@@ -389,13 +454,13 @@
 			var orderId = this.id;
 			$.ajax({
 			    type : "POST",
-			    url : "/order/deleteById",
+			    url : "#(base_path)/order/deleteById",
 			    data: {"orderId":orderId,"orderFrom":3},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
 			    dataType : "json",
 			    success : function(data) {
 			    	if(data){
-				    	layer.msg("作废成功", {shift: 1});
-						setTimeout(function(){window.location.href = "/order/excelPage?userId=#(loginUser.userId)";}, 600);
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/excelPage?userId=#(loginUser.userId)";}, 600);
 			    	}
 			    },
 			    error : function(data) {

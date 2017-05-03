@@ -11,6 +11,7 @@ import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
+import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.json.MixedJsonFactory;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -22,6 +23,7 @@ import com.mlongbo.jfinal.config.Context;
 import com.mlongbo.jfinal.handler.APINotFoundHandler;
 import com.mlongbo.jfinal.handler.ContextHandler;
 import com.mlongbo.jfinal.interceptor.ErrorInterceptor;
+import com.mlongbo.jfinal.interceptor.LoginSessionInterceptor;
 import com.mlongbo.jfinal.model._MappingKit;
 import com.mlongbo.jfinal.router.APIRouter;
 import com.mlongbo.jfinal.router.ActionRouter;
@@ -40,7 +42,7 @@ public class AppConfig extends JFinalConfig {
 		/**
 		 * 特别注意：Eclipse 之下建议的启动方式
 		 */
-		JFinal.start("src/main/webapp", 8183, "/", 5);
+		JFinal.start("src/main/webapp", 8184, "/", 5);
 		
 	}
 	
@@ -62,7 +64,7 @@ public class AppConfig extends JFinalConfig {
 		me.setDevMode(p.getBoolean("devMode", false));//开启开发模式
 		me.setJsonFactory(MixedJsonFactory.me());
 		me.setEncoding("UTF-8");
-//        me.setViewType(ViewType.JSP);
+		me.setError500View("/common/404.html");
 
 	}
 
@@ -121,6 +123,7 @@ public class AppConfig extends JFinalConfig {
      */
 	@Override
 	public void configInterceptor(Interceptors me) {
+	    me.add(new LoginSessionInterceptor());
 		me.add(new ErrorInterceptor());
 		
 	}
@@ -132,6 +135,7 @@ public class AppConfig extends JFinalConfig {
 	public void configHandler(Handlers me) {
         me.add(new ContextHandler());
 		me.add(new APINotFoundHandler());
+		me.add(new ContextPathHandler("base_path"));
 	}
 
     @Override

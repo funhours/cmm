@@ -88,6 +88,25 @@ public class SMSUtils {
 		}
 		return false;
 	}
+	
+	/**
+     * 发送短信验证码*
+     * @param mobiles 手机号码数组
+     * @param content 验证码
+     * @return 是否发送成功
+     */
+    public static boolean sendOrderSms(String[] mobiles, String content) {
+        String rcontent = "【蜂鸟订单助手】："+content;
+        try {
+            int i=getClient().sendSMS(mobiles, rcontent,"凯优科技",3);//带扩展码
+            if(i == 0){
+                return  true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
    
     public synchronized static Client getClient(){

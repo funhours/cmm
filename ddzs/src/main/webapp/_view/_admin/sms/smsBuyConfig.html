@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="/assets/layer/skin/default/layer.css">
+<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
 </head>
 <body>
 	<form class="am-form tpl-form-border-form tpl-form-border-br"
 		id="smsBuyConfigForm">
 		<div class="am-form-group">
-			<label class="am-u-sm-3 am-form-label">条数 <span
+			<label class="am-u-sm-3 am-form-label">短信量 <span
 				class="tpl-form-line-small-title">/ count</span></label>
 			<div class="am-u-sm-9">
 				<input type="text" required class="tpl-form-input"
@@ -25,12 +25,12 @@
 		</div>
 		<div class="am-form-group">
 			<div class="am-u-sm-9 am-u-sm-push-3">
-				<button type="button"
-					class="am-btn am-btn-secondary saveSmsBuyConfigEdit">保存信息</button>
+				<button type="button" class="am-btn am-btn-secondary saveSmsBuyConfigEdit">保存信息</button>
 			</div>
 		</div>
 	</form>
-	<script src="/assets/js/jquery.min.js"></script>
+	<script src="#(base_path)/assets/js/jquery.min.js"></script>
+	<script src="#(base_path)/assets/layer/layer.js"></script>
 	<script type="text/javascript">
 
 		$(function($) {
@@ -41,11 +41,14 @@
 
 				$.ajax({
 					type : "POST",
-					url : "/smsManage/editBuyConfig",
+					url : "#(base_path)/smsManage/editBuyConfig?sbcEditType=0",
 					data : $form.serialize(),
 					dataType : "json",
 					success : function(data) {
-						alert("添加成功");
+						layer.msg(data.data);
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	    				parent.layer.close(index);
+	    				setTimeout(function(){window.location.href = "#(base_path)/smsManage/template";}, 600);
 					},
 					error : function(data) {
 					}

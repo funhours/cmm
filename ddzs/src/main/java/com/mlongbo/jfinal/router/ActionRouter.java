@@ -12,6 +12,5 @@ public class ActionRouter extends Routes{
     @Override
     public void config() {
         add("/", IndexAction.class, "/view");
-        
     }
 }

@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import com.mlongbo.jfinal.common.httpclient.HttpUtil;
 
 public class WeiXinPayUtil {
-    public String weixin_pay() throws Exception {  
+    public String weixin_pay(String order_price, String body, String out_trade_no) throws Exception {  
         // 账号信息  
         String appid = PayConfigUtil.APP_ID;  // appid
         //String appsecret = PayConfigUtil.APP_SECRET; // appsecret  
@@ -19,9 +19,9 @@ public class WeiXinPayUtil {
         String strRandom = PayCommonUtil.buildRandom(4) + "";  
         String nonce_str = strTime + strRandom;  
           
-        String order_price = "1"; // 价格   注意：价格的单位是分  
-        String body = "goodssssss";   // 商品名称  
-        String out_trade_no = "1134346344"; // 订单号  
+//        String order_price = "1"; // 价格   注意：价格的单位是分  
+//        String body = "goodssssss";   // 商品名称  
+//        String out_trade_no = "11454305462344"; // 订单号  
           
         // 获取发起电脑 ip  
         String spbill_create_ip = PayConfigUtil.CREATE_IP;  

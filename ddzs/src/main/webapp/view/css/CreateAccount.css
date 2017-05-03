@@ -41,13 +41,13 @@ ul,li{list-style-type: none;}
 		{font-size: 14px;width: 238px;height: 40px;line-height: 40px;color: #333; background-color: transparent;margin: 0 15px 0 10px;border: 0;}
 .register .type select{appearance: none;-moz-appearance:none;-webkit-appearance:none;}
 .register .number input:focus,.verification input:focus,.type input:focus,.name input:focus,.password input:focus,.type select:focus{outline: none;}
-.register .name .icon-user{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(/view/img/CreateAccount/user.png) no-repeat center center;}
-.register .password .icon-pwd{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(/view/img/CreateAccount/password.png) no-repeat center center;}
-.register .number .icon-num{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(/view/img/CreateAccount/phone.png) no-repeat center center;}
-.register .verification .yanz .icon-yanz{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(/view/img/CreateAccount/mo_code.png) no-repeat center center;}
-.register .type .icon-type{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(/view/img/CreateAccount/icon-type.png) no-repeat center center;}
+.register .name .icon-user{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(../img/CreateAccount/user.png) no-repeat center center;}
+.register .password .icon-pwd{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(../img/CreateAccount/password.png) no-repeat center center;}
+.register .number .icon-num{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(../img/CreateAccount/phone.png) no-repeat center center;}
+.register .verification .yanz .icon-yanz{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(../img/CreateAccount/mo_code.png) no-repeat center center;}
+.register .type .icon-type{display: inline-block;vertical-align: text-top;width: 14px;height: 14px;background: url(../img/CreateAccount/icon-type.png) no-repeat center center;}
 /*账号或者密码输入错误的图片提示，调用的时候直接修改属性为：visibility: visible;即可显示出来*/
-.register .icon-fail{visibility: visible; display: inline-block; vertical-align: text-top;width: 14px;height: 14px;background: url(/view/img/CreateAccount/fail.png) no-repeat center center;}
+.register .icon-fail{visibility: visible; display: inline-block; vertical-align: text-top;width: 14px;height: 14px;background: url(../img/CreateAccount/fail.png) no-repeat center center;}
 .register .remember{width: 100%;height: 20px;line-height: 20px;margin-top: 16px;position: relative;text-align: left;}
 .register .remember .input-checkbok{cursor: pointer;vertical-align: text-top;}
 .register .remember .input-checkbok + label{position: relative;display: inline-block;cursor: pointer;padding-left: 4px;}

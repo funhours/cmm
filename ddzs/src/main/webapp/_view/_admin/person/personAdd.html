@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
@@ -7,7 +7,7 @@
 	#@staffLayout()
 #end
 #define main()
-<link rel="stylesheet" type="text/css" href="/static/cityselect/css/hzw-city-picker.css">
+<link rel="stylesheet" type="text/css" href="#(base_path)/static/cityselect/css/hzw-city-picker.css">
 
 
     
@@ -27,18 +27,18 @@
 	            <div class="widget am-cf">
 				<div class="widget-body am-fr">
 
-				<form class="am-form tpl-form-line-form" id="js_images_form" action="/api/fs/upload" method="post" enctype="multipart/form-data">
+			<form class="am-form tpl-form-line-form" id="js_images_form" action="#(base_path)/api/fs/upload" method="post" enctype="multipart/form-data">
 				<div class="am-form-group">
                    <label for="user-avatar" class="am-u-sm-3 am-form-label">头像 <span class="tpl-form-line-small-title">Images</span></label>
                    <small>你可以使用系统提供的头像或者使用本地上传头像。</small>
                    <div class="am-u-sm-9">
                        <div class="am-form-group am-form-file">
                            <div class="tpl-form-file-img">
-                               <img class="am-img-circle am-img-thumbnail avatar" src="/upload/avatar/0/localhost.jpg" alt="" style="width: 15%;" >
+                               <img class="am-img-circle am-img-thumbnail avatar" src="#(base_path)/images/defaultUserAvatar.jpg" alt="" style="width: 15%;" >
                            </div>
                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
-								<i class="am-icon-cloud-upload"></i> 添加头像图片</button>
-                           <input type="file" id="imageFile" name="imgFile" multiple="multiple">
+								<i class="am-icon-cloud-upload"></i> 添加头像图片
+                           <input type="file" id="imageFile" name="imgFile" multiple="multiple"></button>
                        </div>
 
                    </div>
@@ -81,8 +81,6 @@
 		           <label for="role" class="am-u-sm-3 am-form-label">角色 <span class="tpl-form-line-small-title">/ Role</span></label>
 		           <div class="am-u-sm-9">
 		          	 <select data-am-selected name="user.userType">
-				      	<option value="0">-请选择用户类型-</option>
-						<option value="2">供应源商家</option>
 						<option value="3">商家员工</option>
 						<option value="4">商家代理</option>
 				    </select>
@@ -148,10 +146,10 @@
     
 #end
 #define js()
-<script src="/static/amazeui/assets/js/jquery.min.js"></script>
-<script src="/static/front/jquery.form.js"></script>
-<script type="text/javascript" src="/static/cityselect/js/city-data.js"></script>
-<script type="text/javascript" src="/static/cityselect/js/hzw-city-picker.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/front/jquery.form.js"></script>
+<script type="text/javascript" src="#(base_path)/static/cityselect/js/city-data.js"></script>
+<script type="text/javascript" src="#(base_path)/static/cityselect/js/hzw-city-picker.min.js"></script>
 <script  type="text/javascript">
 $(function($) {
 	//提交保存
@@ -202,7 +200,7 @@ $(function($) {
 		    dataType : "json",
 		    success : function(data) {
 		    	layer.msg("保存成功", {shift: 1});
-		    	setTimeout(function(){window.location.href = "/person";}, 600);
+		    	setTimeout(function(){window.location.href = "#(base_path)/person";}, 600);
 		    },
 		    error : function(data) {
 		    	layer.msg(data.message, {shift: 6});
@@ -213,7 +211,7 @@ $(function($) {
 	//返回
 	$(".back").unbind("click");
 	$(".back").bind("click",function(){
-    	window.location.href = "/person";
+    	window.location.href = "#(base_path)/person";
 	});
 	
 	
@@ -233,7 +231,7 @@ $(function($) {
 		        var percentVal = "100%";
 		        $('.am-progress-bar').css("width", percentVal).text(percentVal);
 		        layer.msg("上传成功", {shift: 1});
-		        var url = "/upload"+data.datum.imgFile;
+		        var url = "#(base_path)/upload"+data.datum.imgFile;
 		        $(".avatar").attr("src",url);
 		        $(".avatar").val(url);
 		        $(".formAvatar").val(url);

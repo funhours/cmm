@@ -1,4 +1,4 @@
-#set(seoTitle="订单助手")
+#set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
@@ -7,7 +7,7 @@
 	#@staffLayout()
 #end
 #define main()
-<link rel="stylesheet" type="text/css" href="/static/cityselect/css/hzw-city-picker.css">
+<link rel="stylesheet" type="text/css" href="#(base_path)/static/cityselect/css/hzw-city-picker.css">
     <div class="container-fluid am-cf">
         <div class="row">
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
@@ -88,10 +88,10 @@
     
 #end
 #define js()
-<script src="/static/amazeui/assets/js/jquery.min.js"></script>
-<script src="/static/front/jquery.form.js"></script>
-<script type="text/javascript" src="/static/cityselect/js/city-data.js"></script>
-<script type="text/javascript" src="/static/cityselect/js/hzw-city-picker.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/front/jquery.form.js"></script>
+<script type="text/javascript" src="#(base_path)/static/cityselect/js/city-data.js"></script>
+<script type="text/javascript" src="#(base_path)/static/cityselect/js/hzw-city-picker.min.js"></script>
 <script  type="text/javascript">
 $(function($) {
 	//提交保存
@@ -101,12 +101,12 @@ $(function($) {
 		
 		$.ajax({
 			type : "POST",
-		    url : "saveProductEdit",
+		    url : "#(base_path)/product/saveProductEdit",
 		    data: $form.serialize(),
 		    dataType : "json",
 		    success : function(data) {
 		    	layer.msg("保存成功", {shift: 1});
-		    	setTimeout(function(){window.location.href = "/product";}, 600);
+		    	setTimeout(function(){window.location.href = "#(base_path)/product";}, 600);
 		    },
 		    error : function(data) {
 		    	layer.msg(data.message, {shift: 6});
@@ -117,7 +117,7 @@ $(function($) {
 	//返回
 	$(".back").unbind("click");
 	$(".back").bind("click",function(){
-    	window.location.href = "/product";
+    	window.location.href = "#(base_path)/product";
 	});
 	
 });

@@ -17,13 +17,6 @@ package com.mlongbo.jfinal.kit;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import com.jfinal.plugin.druid.DruidStatViewHandler;
-import com.jfinal.plugin.druid.IDruidStatViewAuth;
-import com.mlongbo.jfinal.interceptor.AdminAuthInterceptor;
-import com.mlongbo.jfinal.login.LoginService;
-import com.mlongbo.jfinal.model.Account;
-import com.mlongbo.jfinal.model.User;
-
 /**
  * 创建 DruidStatViewHandler 的工具类
  * 
