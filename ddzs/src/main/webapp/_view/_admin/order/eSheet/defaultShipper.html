@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网点参数配置</title>
+<link rel="stylesheet" href="#(base_path)/assets/css/amazeui.min.css" />
+<link rel="stylesheet" href="#(base_path)/assets/css/amazeui.datatables.min.css" />
+<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+<script src="#(base_path)/assets/js/jquery.min.js"></script>
+</head>
+<body>
+	<div class="am-form-group tpl-table-list-select"> 
+       <select data-am-selected="{btnSize: 'sm'}" class="ShipperCode">
+	    #for(s : shipper)
+       		<option value="#(s.shipperCode)">#(s.shipperName)</option>
+       	#end
+	  </select>
+    </div>
+    <button type="button" class="am-btn am-btn-secondary saveDShipperPara">保存</button>
+   	<script src="#(base_path)/assets/js/amazeui.min.js"></script>
+	<script src="#(base_path)/assets/js/amazeui.datatables.min.js"></script>
+	<script src="#(base_path)/assets/layer/layer.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			//默认快递配置
+			$(".saveDShipperPara").unbind("click");
+			$(".saveDShipperPara").bind("click",function(){
+				var shipperCode = $(".ShipperCode").val();
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/order/eSheet/saveDShipperPara",
+				    data: {"shipperCode":shipperCode,"userId":"#(loginUser.userId)"},
+				    dataType : "json",
+				    success : function(data) {
+				    	if(data.code == 0){
+					    	layer.msg(data.data,{time:1000},function(){
+					    		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+			    				parent.layer.close(index);
+					    	});
+					    	
+				    	}else if(data.code == 500){
+					    	layer.closeAll();
+				    		layer.msg("服务器错误", {shift: 1});
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+
+	</script>
+</body>
+</html>

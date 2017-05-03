@@ -1,0 +1,151 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+<link rel="stylesheet" type="text/css" href="#(base_path)/static/cityselect/css/hzw-city-picker.css">
+    <div class="container-fluid am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+                <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 商品增加 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-content am-cf">
+	    <div class="row">
+	        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+	            <div class="widget am-cf">
+				<div class="widget-body am-fr">
+		<form class="am-form tpl-form-line-form accountBookForm" data-am-validator>
+           <div class="am-form-group">
+               <label class="am-u-sm-3 am-form-label">时间 <span class="tpl-form-line-small-title">/ data</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" class="am-form-field" placeholder="日历组件" data-am-datepicker readonly required name="inputDate"/>
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">采购成本 <span class="tpl-form-line-small-title">/ ProcurementCost</span></label>
+               <div class="am-u-sm-9">
+                   <input type="number" required class="tpl-form-input" placeholder="请输入采购成本 / ProcurementCost" name="accountBook.procurementCost" value="#(aBook.procurementCost)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">采购成本备注 <span class="tpl-form-line-small-title">/ ProcurementRemark</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入采购成本备注 / ProcurementRemark" name="accountBook.procurementRemark" value="#(aBook.procurementRemark)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">包装成本 <span class="tpl-form-line-small-title">/ PackingCost</span></label>
+               <div class="am-u-sm-9">
+                   <input type="number" required class="tpl-form-input" placeholder="请输入包装成本 / PackingCost" name="accountBook.packingCost" value="#(aBook.packingCost)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">包装成本备注 <span class="tpl-form-line-small-title">/ PackingRemark</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入包装成本备注 / PackingRemark" name="accountBook.packingRemark" value="#(aBook.packingRemark)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">人工成本 <span class="tpl-form-line-small-title">/ LaborCost</span></label>
+               <div class="am-u-sm-9">
+                   <input type="number" required class="tpl-form-input" placeholder="请输入人工成本 / LaborCost" name="accountBook.laborCost" value="#(aBook.laborCost)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">人工成本备注 <span class="tpl-form-line-small-title">/ LaborRemark</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入人工成本备注 / LaborRemark" name="accountBook.laborRemark" value="#(aBook.laborRemark)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">快递成本 <span class="tpl-form-line-small-title">/ ExpressCost</span></label>
+               <div class="am-u-sm-9">
+                   <input type="number" required class="tpl-form-input" placeholder="请输入快递成本 / ExpressCost" name="accountBook.expressCost" value="#(aBook.expressCost)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">快递成本备注 <span class="tpl-form-line-small-title">/ ExpressRemark</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入快递成本备注 / ExpressRemark" name="accountBook.expressRemark" value="#(aBook.expressRemark)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">其它支出 <span class="tpl-form-line-small-title">/ OtherExpenditure</span></label>
+               <div class="am-u-sm-9">
+                   <input type="number" required class="tpl-form-input" placeholder="请输入其它支出 / OtherExpenditure" name="accountBook.otherExpenditure" value="#(aBook.otherExpenditure)">
+               </div>
+           </div>
+           
+           <div class="am-form-group">
+               <label for="product-spec" class="am-u-sm-3 am-form-label">其它支出备注<span class="tpl-form-line-small-title">/ OtherExpenditureRemark</span></label>
+               <div class="am-u-sm-9">
+                   <input type="text" required class="tpl-form-input" placeholder="请输入其它支出备注 / OtherExpenditureRemark" name="accountBook.otherExpenditureRemark" value="#(aBook.otherExpenditureRemark)">
+               </div>
+           </div>
+         
+                
+         <div class="am-form-group">
+           <div class="am-u-sm-9 am-u-sm-push-3">
+             <button type="button" class="am-btn am-btn-secondary saveABookEdit">保存信息</button>
+             &nbsp;&nbsp;&nbsp;&nbsp;
+             <button type="button" class="am-btn am-btn-primary back">返回</button>
+           </div>
+         </div>
+	</div>
+		<input type="hidden" name="accountBook.id" value="#(aBook.id)">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/front/jquery.form.js"></script>
+<script  type="text/javascript">
+$(function($) {
+	//提交保存
+	$(".saveABookEdit").unbind("click");
+	$(".saveABookEdit").bind("click",function(){
+		var $form = $(".accountBookForm");
+		$.ajax({
+			type : "POST",
+		    url : "saveABookEdit?userId=#(loginUser.userId)&editType=1",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "#(base_path)/accountBook?userId=#(loginUser.userId)";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	
+	//返回
+	$(".back").unbind("click");
+	$(".back").bind("click",function(){
+    	window.location.href = "#(base_path)/accountBook?userId=#(loginUser.userId)";
+	});
+});
+</script>
+
+#end

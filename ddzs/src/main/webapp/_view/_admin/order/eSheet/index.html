@@ -1,0 +1,523 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+<div class="container-fluid am-cf">
+     <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 电子面单</small></div>
+           <button type="button" class="page-header-button dtoParaConfig"><span class="am-icon-gear"></span> 网点参数设置</button>
+           <button type="button" class="page-header-button senderTemplateConfig"><span class="am-icon-gear"></span> 发件信息设置</button>
+           <button type="button" class="page-header-button defautShipperConfig"><span class="am-icon-gear"></span> 设置默认快递</button>
+         </div>
+     </div>
+
+ </div>
+ 
+  <div class="row-content am-cf">
+      <div class="row">
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+              	<div class="widget-head am-cf">
+                      <div class="widget-title am-cf">未分配面单</div>
+                  </div>
+                  
+                  <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+	                 <!--  <div class="am-btn-group am-btn-group-xs">
+				                        邮寄费用：<input type="number" class="Cost" placeholder="请输入邮寄费用"><br/>
+	                       	其它费用： <input type="number" class="OtherCost" placeholder="请输入其它费用">
+				      </div> -->
+				      
+				      <div class="am-input-group am-input-group-sm">
+						  <span class="am-input-group-label">邮寄费用</span>
+						  <input type="number" class="am-form-field Cost" placeholder="请输入邮寄费用">
+						</div>
+
+                      <div class="am-btn-group am-btn-group-sm">
+                          <div class="am-form-group tpl-table-list-select">
+                              <select data-am-selected="{btnSize: 'sm'}" class="ShipperCode">
+                              	#for(s : shipper)
+                              		<option value="#(s.shipperCode)">#(s.shipperName)</option>
+                              	#end
+							  </select>
+                          </div>
+                      </div>
+                      <div class="am-btn-group am-btn-group-xs">
+                        <button type="button" class="am-btn am-btn-danger am-btn-sm batchDistributionNumber">
+						<i class="am-icon-cloud-upload"></i> 批量分配面单
+						</button>
+                      </div>
+                   	</div>
+                  <div class="widget-body  am-fr">
+                 <div class="am-u-sm-12">
+                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                         <thead>
+                             <tr>
+                                 <th class="table-check"><input type="checkbox" class="eSheetAllCheck"/></th>
+					              <th>订单编号</th>
+					              <th>商品名称</th>
+					              <th>商品数量</th>
+					              <th>商品金额</th>
+					              <th>收货人</th>
+					              <th>收货人电话</th>
+					              <th>收货人地址</th>
+					              <th>发货人</th>
+					              <th>发货人电话</th>
+					              <th>订单录入人</th>
+					              <th>备注</th>
+					              <th>状态</th>
+					              <th>操作</th>
+                             </tr>
+                         </thead>
+                         	<tbody class="eSheetItem">
+                         		#for(x : eSheetOrdersPage.list??)
+                         		<tr>
+                         			<td><input type="checkbox" value="#(x.orderId??)" name="eSheet"/></td>
+                         			<td>#(x.orderId??)</td>
+                         			<td>#(x.productName??)</td>
+                         			<td>#(x.productCount??)</td>
+                         			<td>#(x.productPrice??)</td>
+                         			<td>#(x.recipient??)</td>
+                         			<td>#(x.recipientTel??)</td>
+                         			<td>#(x.recipientAddress??)</td>
+                         			<td>#(x.shipper??)</td>
+                         			<td>#(x.shipperTel??)</td>
+                         			<td>#(x.orderEntry??)</td>
+                         			<td>#(x.remarks??)</td>
+                         			<td>未分配</td>
+                         			
+       								<td style="overflow:hidden">
+	                				 <div class="tpl-table-black-operation">
+                                        <a href="javascript:;" class="distributionNumber" id="#(x.orderId)">
+                                            <i class="am-icon-pencil"></i> 分配面单
+                                        </a>
+                                    </div>
+	                				
+	              					</td>
+                         		</tr>
+                         		#end
+           					</tbody>
+                       </table>
+                   </div>
+                  <div class="am-u-lg-12 am-cf">
+                      <div class="am-fr">
+                          <!-- 分页 -->
+						#@paginate(eSheetOrdersPage.pageNumber, eSheetOrdersPage.totalPage, "/orderSearch?p=")
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    <div class="row">
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+              	<div class="widget-head am-cf">
+                      <div class="widget-title  am-cf">面单分配结果</div>
+                  </div>
+                  <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                  	<div class="am-btn-group am-btn-group-xs">
+                        <button type="button" class="am-btn am-btn-danger am-btn-sm batchPrintTempBtn">
+						<i class="am-icon-cloud-upload"></i> 批量打印面单
+						</button>
+						
+                        <button type="button" class="am-btn am-btn-danger am-btn-sm batchSendSms">
+						<i class="am-icon-cloud-upload"></i> 批量短信通知
+						</button>
+                      </div>
+                  </div>
+                  
+                  <div class="widget-body  am-fr">
+                 <div class="am-u-sm-12">
+                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                         <thead>
+                             <tr>
+                                 <th class="table-check"><input type="checkbox" class="printAllCheck"/></th>
+					              <th>订单编号</th>
+					              <th>商品名称</th>
+					              <th>商品数量</th>
+					              <th>商品金额</th>
+					              <th>收货人</th>
+					              <th>收货人电话</th>
+					              <th>收货人地址</th>
+					              <th>订单录入人</th>
+					              <th>快递单号</th>
+					              <th>快递公司</th>
+					              <th>备注</th>
+					              <th>状态</th>
+					              <th>操作</th>
+                             </tr>
+                         </thead>
+                         	<tbody class="printTempItem">
+                         		#for(y : eSheetNoPrintOrdersPage.list??)
+                         		<tr>
+                         			<td><input type="checkbox" value="#(y.orderId??)" name="printTemp"/></td>
+                         			<td>#(y.orderId??)</td>
+                         			<td>#(y.productName??)</td>
+                         			<td>#(y.productCount??)</td>
+                         			<td>#(y.productPrice??)</td>
+                         			<td>#(y.recipient??)</td>
+                         			<td>#(y.recipientTel??)</td>
+                         			<td>#(y.recipientAddress??)</td>
+                         			<td>#(y.orderEntry??)</td>
+                         			<td>#(y.originCode??)</td>
+                         			<td>#(y.shipperName??)</td>
+                         			<td>#(y.remarks??)</td>
+                         			<td>未打印</td>
+                         			
+       								<td style="overflow:hidden">
+	                				 <div class="tpl-table-black-operation">
+                                        <a href="javascript:;" class="printBtn" id="#(y.orderId)" >
+                                            <i class="am-icon-print"></i> 打印预览/打印
+                                        </a>
+                                      <a href="javascript:;" class="sendSms" id="#(y.orderId)">
+                                            <i class="am-icon-comment"></i> 短信通知
+                                        </a>
+                                    </div>
+	              					</td>
+                         		</tr>
+                         		#end
+           					</tbody>
+                       </table>
+                   </div>
+                  <div class="am-u-lg-12 am-cf">
+                      <div class="am-fr">
+                          <!-- 分页 -->
+						#@paginate(eSheetNoPrintOrdersPage.pageNumber, eSheetNoPrintOrdersPage.totalPage, "/orderSearch?p=")
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/js/amazeui.tree.min.js"></script>
+<script src="#(base_path)/static/webPrint/webPrint.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {	
+		//默认快递设置
+		$(".defautShipperConfig").unbind();
+		$(".defautShipperConfig").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			layer.open({
+			  type: 2,
+			  title: "默认快递设置",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['250px', '400px'],
+			  content: '#(base_path)/order/eSheet/toDefaultShipper?userId=#(loginUser.userId)'
+			});
+		});
+		
+		//网点参数配置
+		$(".dtoParaConfig").unbind();
+		$(".dtoParaConfig").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			layer.open({
+			  type: 2,
+			  title: "网点参数配置",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['800px', '300px'],
+			  content: '#(base_path)/order/eSheet/dotPara?shipperCode='+shipperCode+"&userId=#(loginUser.userId)"
+			});
+		});
+		
+		//发件信息参数配置
+		$(".senderTemplateConfig").unbind();
+		$(".senderTemplateConfig").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			layer.open({
+			  type: 2,
+			  title: "网点参数配置",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['800px', '500px'],
+			  content: '#(base_path)/order/eSheet/toTemplate?shipperCode='+shipperCode+"&userId=#(loginUser.userId)"
+			});
+		});
+		
+		//预览模板
+		$(".tempBtn").unbind();
+		$(".tempBtn").bind("click",function(){
+			var orderId = this.id; 
+			var template = orderId+"temp";
+			var warpper = document.getElementById(template);
+			layer.open({
+			  type: 1,
+			  title: "面单模板",
+			  content: warpper,
+			  maxmin: true
+			});
+			
+		});
+		
+		//打印
+		$(".printBtn").unbind();
+		$(".printBtn").bind("click",function(){
+			var orderId = this.id; 
+			layer.open({
+			  type: 2,
+			  title: "面单打印",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['385px', '820px'],
+			  content: '#(base_path)/order/eSheet/toPrint?orderId='+orderId
+			});
+		});
+		
+		
+		//批量打印
+		$(".batchPrintTempBtn").unbind();
+		$(".batchPrintTempBtn").bind("click",function(){
+			var orderIdArr = "";
+			 $(".printTempItem :checkbox[name=printTemp]:checked").each(function(i){
+		       if(0==i){
+		    	   orderIdArr = $(this).val();
+		       }else{
+		    	   orderIdArr += (","+$(this).val());
+		       }
+		      });
+			 
+			 layer.open({
+			  type: 2,
+			  title: "面单打印",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['385px', '820px'],
+			  content: '#(base_path)/order/eSheet/toBatchPrint?orderIdArr='+orderIdArr,
+			  cancel: function(index, layero){ 
+				  layer.confirm('是否成功打印？', {
+					  btn: ['是','否'] //按钮
+					}, function(){
+					  //是
+						$.ajax({
+						    type : "POST",
+						    url : "#(base_path)/order/eSheet/setStatus24",
+						    data: {"orderId":"#(orderId)"},
+						    dataType : "json",
+						    success : function(data) {
+						    	if(data){
+							    	layer.msg("删除成功", {shift: 1});
+									setTimeout(function(){window.location.href = "#(base_path)/order/invalid?userId=#(loginUser.userId??)";}, 600);
+						    	}
+						    },
+						    error : function(data) {
+						    	layer.msg(data.message, {shift: 6});
+						    }
+						});
+					}, function(){
+					  //否
+					  layer.msg("亲，网络不稳定，请多试几次或联系管理员");
+					});
+				}  
+			});
+		});
+		
+		//单个分配面单
+		$(".distributionNumber").unbind();
+		$(".distributionNumber").bind("click",function(){
+		  	var orderId = this.id;
+			var shipperCode = $(".ShipperCode").val();
+			var cost = $(".Cost").val();
+			if(cost == ""){
+				layer.msg("请填写邮费");
+				return;
+			}
+			var index = layer.load(1, {
+			  shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
+			layer.prompt(
+			{
+			  formType: 2, 
+			  value: '1', 
+			  maxlength: 10,
+			  title:'请输入申请面单份数',
+			  area: ['500px', '100px']
+			},function(val, index){
+			  var eSheetCount = val;
+			  if(eSheetCount != null){
+				  layer.close(index);
+				//var otherCost = $(".OtherCost").val();
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/order/eSheet/distributionNumber",
+				    data: {"orderId":orderId,
+				    	"shipperCode":shipperCode,
+				    	"cost":cost,
+				    	//"otherCost":otherCost,
+				    	"eSheetCount":eSheetCount,
+				    	"userId":"#(loginUser.userId)"},
+				    dataType : "json",
+				    success : function(data) {
+				    	if(data.data == 1){
+					    	layer.msg("分配成功,分配信息在下面列表查看", {shift: 1});
+					    	layer.close(index);
+							setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+				    	}else{
+				    		layer.msg(data.message, {shift: 1});
+							setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+			
+			
+			
+		});
+		
+		//批量分配面单
+		$(".batchDistributionNumber").unbind();
+		$(".batchDistributionNumber").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			var cost = $(".Cost").val();
+			if(cost == ""){
+				layer.msg("请填写邮费");
+				return;
+			}
+			var orderIdArr = "";
+			 $(".eSheetItem :checkbox[name=eSheet]:checked").each(function(i){
+		       if(0==i){
+		    	   orderIdArr = $(this).val();
+		       }else{
+		    	   orderIdArr += (","+$(this).val());
+		       }
+		      });
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/batchDistributionNumber",
+			    data: {"orderIdArr":orderIdArr,
+			    	"shipperCode":shipperCode,
+			    	"cost":cost,
+			    	//"otherCost":otherCost,
+			    	"userId":"#(loginUser.userId)"},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data.data == 1){
+				    	layer.msg("分配成功,分配信息在下面列表查看", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}else{
+			    		layer.msg(data.message, {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		
+		
+		//单个发送短信
+		$(".sendSms").unbind();
+		$(".sendSms").bind("click",function(){
+			layer.load(0, {shade: false}); 
+			var orderId = this.id;
+			var shipperCode = $(".ShipperCode").val();
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/sendSms",
+			    data: {"orderId":orderId,
+			    	"shipperCode":shipperCode,
+			    	"userId":"#(loginUser.userId)"},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data.data == 1){
+				    	layer.msg("信息发送成功！", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}else{
+			    		layer.msg(data.message, {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		
+		//批量发送短信
+		$(".batchSendSms").unbind();
+		$(".batchSendSms").bind("click",function(){
+			layer.load(0, {shade: false}); 
+			var orderId = "";
+			 $(".printTempItem :checkbox[name=printTemp]:checked").each(function(i){
+		       if(0==i){
+		    	   orderId = $(this).val();
+		       }else{
+		    	   orderId += (","+$(this).val());
+		       }
+		      });
+			var shipperCode = $(".ShipperCode").val();
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/sendSms",
+			    data: {"orderId":orderId,
+			    	"shipperCode":shipperCode,
+			    	"userId":"#(loginUser.userId)"},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data.data == 1){
+				    	layer.msg("信息发送成功！", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}else{
+			    		layer.msg(data.message, {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//分配面单全选反选
+		$(".eSheetAllCheck").click(function(){
+		    if(this.checked){   
+		        $(".eSheetItem :checkbox").prop("checked", true);  
+		    }else{   
+				$(".eSheetItem :checkbox").prop("checked", false);
+		    }   
+		});
+		
+		//打印订单全选反选
+		$(".printAllCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".printTempItem :checkbox").prop("checked", true);  
+		    }else{   
+				$(".printTempItem :checkbox").prop("checked", false);
+		    }   
+		});
+	});
+	
+
+</script>
+
+#end

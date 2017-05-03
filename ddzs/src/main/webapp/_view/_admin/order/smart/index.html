@@ -1,0 +1,185 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+ <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<form role="form">
+        <div class="form-group">
+            <textarea class="form-control" rows="10" placeholder="请输入您需要识别的内容"></textarea>
+        </div>
+    </form>
+    <div style="text-align:right;">
+        <button id="fat-btn" class="btn btn-primary" data-loading-text="Loading..." type="button"> 点击分析 </button>
+    </div>
+    <table class="table" id="myTable">
+        <caption><h3>订单列表 温馨提示：点击可修改，修改完之后请回车</h3></caption>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="goods"/>商品名称</th>
+                <th><input type="checkbox" id="goodsNum"/>商品数量</th>
+                <th><input type="checkbox" id="goodsPrice"/>商品金额</th>
+                <th><input type="checkbox" id="goodsWeight"/>商品重量</th>
+                <th><input type="checkbox" id="toPeople"/>收货人</th>
+                <th><input type="checkbox" id="telephone"/>收货人联系方式</th>
+                <th>省</th>
+                <th>市</th>
+                <th>区县</th>
+                <th>详细地址</th>
+                <th>发货人</th>
+                <th>发货人联系方式</th>
+                <th>备注</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div style="text-align:right;">
+        <button id="submit-btn" class="btn btn-primary" data-loading-text="Loading..." type="button">提交订单</button>
+    </div>
+
+ 
+#end
+#define js()
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="#(base_path)/static/orderInput/smart.js"></script>
+<script type="text/javascript" src="#(base_path)/static/orderInput/matchGoods.js"></script>
+<script type="text/javascript" src="#(base_path)/static/orderInput/matchAddress.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {
+		 $("textarea").blur(function () {
+             if($("#inlineCheckbox1").is(':checked')){
+                 confirm("请配置默认信息");
+             }
+             var inputInfo = $(this).val();
+             if(undefined != inputInfo && 0 != inputInfo.length)
+                 getOrdersInfo(inputInfo);
+         });
+
+         $("#fat-btn").click(function () {
+             if($("#inlineCheckbox1").is(':checked')){
+                 confirm("请配置默认信息");
+             }
+             var inputInfo = $(this).val();
+             if(undefined != inputInfo && 0 != inputInfo.length)
+                 getOrdersInfo(inputInfo);
+         });
+
+         $("#submit-btn").click(function () {
+        	 var submitOrders = new Array();      ///提交后台数据
+        	 var count = 0;
+			$("#myTable tbody tr").each(function ()    
+				{
+					var productName= $(this).find("td").eq(0).html();    
+					var productCount= $(this).find("td").eq(1).html();    
+					var productPrice= $(this).find("td").eq(2).html();    
+					var productWeight= $(this).find("td").eq(3).html();    
+					var recipient= $(this).find("td").eq(4).html();    
+					var recipientTel= $(this).find("td").eq(5).html();    
+					var provinceName= $(this).find("td").eq(6).html();    
+					var cityName= $(this).find("td").eq(7).html();    
+					var expAreaName= $(this).find("td").eq(8).html();    
+					var recipientAddress= $(this).find("td").eq(9).html();    
+					var shipper= $(this).find("td").eq(10).html();    
+					var shipperTel= $(this).find("td").eq(11).html();    
+					var remarks= $(this).find("td").eq(12).html();    
+					var orderInfo = {
+						 productName: productName,
+	                     productCount: productCount,
+	                     productPrice: productPrice,
+	                     productWeight: productWeight,
+	                     recipient: recipient,
+	                     recipientTel: recipientTel,
+	                     provinceName: provinceName,
+	                     cityName: cityName,
+	                     expAreaName: expAreaName,
+	                     recipientAddress: recipientAddress,
+	                     shipper: shipper,
+	                     shipperTel: shipperTel,
+	                     remarks: remarks
+					}
+					
+					submitOrders[count] = orderInfo;
+					count++;
+				})  
+				var params = {  
+		            reserveOrderNoList:submitOrders
+		         };  
+        	 
+             if(0 != submitOrders.length){//提交保存
+				console.log(submitOrders);
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/order/smart/addOrder?userId=#(loginUser.userId)",
+				    data: {"params":JSON.stringify(params)},   
+				    dataType : "json",
+				    success : function(data) {
+				    	var code = data.code;
+				    	if(code == 0){
+					        layer.msg("上传完成，成功:"+data.data.successCount+"个，已存在或未完成："+data.data.failCount+"个", {shift: 1});
+							setTimeout(function(){window.location.href = "#(base_path)/order/allOrder?userId=#(loginUser.userId??)";}, 600);
+				    	}else if(code == 1){
+				    		layer.msg(data.message, {shift: 1});
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+             }
+         });
+     });
+
+     function getOrdersInfo(inputInfo) { ///获取订单信息并填入table中
+         smartAnalysis(inputInfo, function(err, orderOs) { ///智能分析
+             if(err)
+                 return;
+             var tbody = $("table").find("tbody");
+             tbody.empty();
+             for(var i in orderOs){
+                 var orderInfo = "<tr><td class=goods value=goods>"
+                     + orderOs[i].goods +"</td><td class=goodsNum value=goodsNum>"
+                     + orderOs[i].goodsNum + "</td><td class=goodsPrice value=goodsPrice>"
+                     + 1 + "</td><td class=goodsWeight value=goodsWeight>"
+                     + orderOs[i].goodsWeight + "</td><td class=toPeople value=toPeople>"
+                     + orderOs[i].toPeople + "</td><td class=telephone value=telephone>"
+                     + orderOs[i].toContact + "</td><td>"
+                     + orderOs[i].adds.province + "</td><td>"
+                     + orderOs[i].adds.city + "</td><td>"
+                     + orderOs[i].adds.area + "</td><td>"
+                     + orderOs[i].adds.detail + "</td><td>"
+                     + orderOs[i].fromPeople + "</td><td>"
+                     + orderOs[i].fromContact + "</td><td></td></tr>";
+                 tbody.append(orderInfo);
+             }
+
+             $("table td").attr("contenteditable", true);
+             $("table td").attr("oninput", "changeThis(this)");
+         });
+     }
+
+     function changeThis(temp){
+         var selectTh = temp.getAttribute("value");
+            if (document.getElementById(selectTh).checked){
+                var list = $("." + selectTh);
+                for (var i=0; 0<list.length; i++)
+                    if (temp !== list[i]) {
+                        console.log(list[i]);
+                        list[i].innerHTML = temp.innerHTML;
+                    }
+            }
+     }
+</script>
+
+#end

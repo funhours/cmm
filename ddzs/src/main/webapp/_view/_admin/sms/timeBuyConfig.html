@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+</head>
+<body>
+	<form class="am-form tpl-form-border-form tpl-form-border-br"
+		id="timeBuyConfigForm">
+		<div class="am-form-group">
+			<label class="am-u-sm-3 am-form-label">天数 <span
+				class="tpl-form-line-small-title">/ day</span></label>
+			<div class="am-u-sm-9">
+				<input type="text" required class="tpl-form-input"
+					placeholder="请输入使用天数 / count" name="timeBuyConfig.day">
+			</div>
+		</div>
+		<div class="am-form-group">
+			<label class="am-u-sm-3 am-form-label">价格 <span
+				class="tpl-form-line-small-title">/ price</span></label>
+			<div class="am-u-sm-9">
+				<input type="text" required class="tpl-form-input"
+					placeholder="请输入相应价格 / price" name="timeBuyConfig.price">
+			</div>
+		</div>
+		<div class="am-form-group">
+			<div class="am-u-sm-9 am-u-sm-push-3">
+				<button type="button" class="am-btn am-btn-secondary saveTimeBuyConfigEdit">保存信息</button>
+			</div>
+		</div>
+	</form>
+	<script src="#(base_path)/assets/js/jquery.min.js"></script>
+	<script src="#(base_path)/assets/layer/layer.js"></script>
+	<script type="text/javascript">
+
+		$(function($) {
+			//提交保存
+			$(".saveTimeBuyConfigEdit").unbind("click");
+			$(".saveTimeBuyConfigEdit").bind("click",function() {
+				var $form = $("#timeBuyConfigForm");
+
+				$.ajax({
+					type : "POST",
+					url : "#(base_path)/smsManage/timeEditBuyConfig?tbcEditType=0",
+					data : $form.serialize(),
+					dataType : "json",
+					success : function(data) {
+						layer.msg(data.data);
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	    				parent.layer.close(index);
+	    				setTimeout(function(){window.location.href = "#(base_path)/smsManage/template";}, 600);
+					},
+					error : function(data) {
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+html,body{height: 100%;width: 100%;margin: 0;-webkit-overflow-scrolling:touch;overflow: hidden;}
+body{font: 12px "微软雅黑";color: #FFFFFF;text-align: center; background: url(/view/express/mmmm-bg.jpg) no-repeat;background-size: 100% 100%; margin:0 auto;min-width:320px;max-width: 960px;-webkit-overflow-scrolling: touch;}
+*{margin: 0;padding: 0;border: 0;}
+a{text-decoration: none;}
+input:focus{outline: none;}
+select:focus{outline: none;}
+/*=========
+     头部样式
+ ==========*/
+.title{width: 100%;font-size: 22px;position: absolute;top: 13%;left: 0;}
+.search{position: absolute;top: 28%;left: 10%;width: 80%;height: 41px; overflow: hidden;border-radius: 20px;background: rgba(255,255,255,.3);box-shadow: 0 0 10px #FFFFFF;}
+.search label{position: absolute;right: 5px; color: black;margin-top: 0px; font-size: 16px;width: 37px;height: 39px;background: url(/view/express/sous.png) no-repeat center center;background-size: 100%;}
+.search input{width: 80%;position: absolute;left: 10px; margin-top: 2px;border:0;font-size: 18px;color: #FFFFFF; border-radius: 10px;height: 39px;line-height: 39px;padding-left: 5px;background: none;}
+.logistics{width: 100%;position: absolute;left: 0;top:39%;color: #FFFFFF;font-size: 14px;line-height: 22px;text-align: left;}
+.slogan{width: 90%;text-align: center;font-size: 14px; position: absolute;top: 92%; left: 5%;}
+.drop-down{position: absolute;top: 21%;left: 50%;margin-left: -30px; width: 100px;height: 24px;background: rgba(255,255,255,.3);border-radius: 5px;color: #000;box-shadow: 0 0 5px #FFFFFF;}

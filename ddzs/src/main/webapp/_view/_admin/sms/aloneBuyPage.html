@@ -1,0 +1,209 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+
+ <div class="row-content am-cf">
+     <div class="row  am-cf">
+      <div class="widget-head am-cf">
+           <div class="widget-title am-fl">短信购买</div>
+           <div class="widget-function am-fr">
+               <a href="javascript:;" class="am-icon-cog"></a>
+           </div>
+       </div>
+        <div class="widget-body  am-fr">
+            <div class="am-scrollable-horizontal ">
+                <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                    <thead>
+                        <tr>
+                            <th>短信条数</th>
+                            <th>价格</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	#for(x : sbConfig??)
+                        <tr class="gradeX">
+                            <td>#(x.count)</td>
+                            <td>#(x.price)</td>
+                            <td>
+                                <div class="tpl-table-black-operation">
+                                    <a href="javascript:;" class="tpl-table-black-operation-del buySms" id="#(x.id)">
+                                        <i class="am-icon-cart-plus"></i> 购买
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                       #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="widget-head am-cf">
+           <div class="widget-title am-fl">订单购买</div>
+           <div class="widget-function am-fr">
+               <a href="javascript:;" class="am-icon-cog"></a>
+           </div>
+       </div>
+        <div class="widget-body  am-fr">
+            <div class="am-scrollable-horizontal ">
+                <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                    <thead>
+                        <tr>
+                            <th>订单条数</th>
+                            <th>价格</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	#for(o : obConfig??)
+                        <tr class="gradeX">
+                            <td>#(o.count)</td>
+                            <td>#(o.price)</td>
+                            <td>
+                                <div class="tpl-table-black-operation">
+                                    <a href="javascript:;" class="tpl-table-black-operation-del buyOrder" id="#(o.id)">
+                                        <i class="am-icon-cart-plus"></i> 购买
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                       #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+           
+        <div class="widget-head am-cf">
+           <div class="widget-title am-fl">使用时间购买</div>
+           <div class="widget-function am-fr">
+               <a href="javascript:;" class="am-icon-cog"></a>
+           </div>
+       </div>
+        <div class="widget-body  am-fr">
+            <div class="am-scrollable-horizontal ">
+                <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                    <thead>
+                        <tr>
+                            <th>使用天数</th>
+                            <th>价格</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	#for(t : tbConfig??)
+                        <tr class="gradeX">
+                            <td>#(t.day)</td>
+                            <td>#(t.price)</td>
+                            <td>
+                                <div class="tpl-table-black-operation">
+                                    <a href="javascript:;" class="tpl-table-black-operation-del buyTime" id="#(t.id)">
+                                        <i class="am-icon-cart-plus"></i> 购买
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                       #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+     </div>
+ </div>
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {
+		
+		//购买短信
+		$(".buySms").unbind("click");
+		$(".buySms").bind("click",function(){
+			var id = this.id;
+			
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/smsManage/buySms",
+			    data: {"smsBuyId":id},
+			    dataType : "json",
+			    success : function(data) {
+			    	layer.open({
+		    		  type: 1,
+		    		  title: false,
+		    		  closeBtn: 0,
+		    		  skin: 'layui-layer-nobg', //没有背景色
+		    		  shadeClose: true,
+		    		  content: '<img src="#(base_path)/upload/'+data.data+'"/>'
+		    		});
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//购买订单
+		$(".buyOrder").unbind("click");
+		$(".buyOrder").bind("click",function(){
+			var id = this.id;
+			
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/buyOrder",
+			    data: {"orderBuyId":id},
+			    dataType : "json",
+			    success : function(data) {
+			    	layer.open({
+		    		  type: 1,
+		    		  title: false,
+		    		  closeBtn: 0,
+		    		  skin: 'layui-layer-nobg', //没有背景色
+		    		  shadeClose: true,
+		    		  content: '<img src="#(base_path)/upload/'+data.data+'"/>'
+		    		});
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+	
+		
+
+		//购买时长
+		$(".buyTime").unbind("click");
+		$(".buyTime").bind("click",function(){
+			var id = this.id;
+			
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/smsManage/buyTime",
+			    data: {"TimeBuyId":id},
+			    dataType : "json",
+			    success : function(data) {
+			    	layer.open({
+		    		  type: 1,
+		    		  title: false,
+		    		  closeBtn: 0,
+		    		  skin: 'layui-layer-nobg', //没有背景色
+		    		  shadeClose: true,
+		    		  content: '<img src="#(base_path)/upload/'+data.data+'"/>'
+		    		});
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+	});	
+</script>
+
+#end

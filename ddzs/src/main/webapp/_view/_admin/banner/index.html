@@ -1,0 +1,274 @@
+#set(seoTitle="蜂鸟订单助手")
+#set(adminActive = 'class="active"')
+#@adminLayout()
+#define main()
+<div class="container-fluid am-cf">
+     <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 部件首页 <small>Amaze UI</small></div>
+             <p class="page-header-description">Amaze UI 含近 20 个 CSS 组件、20 余 JS 组件，更有多个包含不同主题的 Web 组件。</p>
+         </div>
+         <div class="am-u-lg-3 tpl-index-settings-button">
+             <button type="button" class="page-header-button"><span class="am-icon-paint-brush"></span> 设置</button>
+         </div>
+     </div>
+
+ </div>
+
+ <div class="row-content am-cf">
+     <div class="row  am-cf">
+         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-2 am-thumbnails">
+		  <li>
+			  <div class="am-form-group am-form-file">
+	          	<div class="am-btn-group am-btn-group-xs">
+	          		<div class="am-form-group am-form-file">
+					  	<form class="am-form " id="js_images_form1" action="#(base_path)#(base_path)/api/fs#(base_path)/upload" method="post" enctype="multipart/form-data">
+						  	<button type="button" class="am-btn am-btn-danger">
+							<i class="am-icon-file-picture-o"></i> 更换banner图1
+							</button>
+			               	<input type="file" id="imageFile1" name="imgFile" multiple="multiple"></button>
+		               	</form>
+	          		</div>
+
+					<div class="am-form-group am-form-file">
+	          		
+		               	<form class="bannerForm1">
+		               		<input type="hidden" name="banner.id" value="1">
+		               		<input type="hidden" name="banner.imgUrl" class="bImg1" >
+		               		<input type="hidden" name="banner.sort" value="1" >
+		               		<input type="text" required class="tpl-form-input content1" id="content1" placeholder="请输入内容 / content" name="banner.content">
+		               		<button type="button" class="am-btn am-btn-secondary saveBanner1">保存信息</button>
+		               	</form>
+	               	
+	          		</div>	               	
+	               	
+				  	<img class="am-thumbnail b1" src="#(banner1.imgUrl??banner1.defaultImg)" id="1"/>
+	           	</div>
+	          </div>
+		  </li>
+		  <li>
+		  	 <div class="am-form-group am-form-file">
+	          	<div class="am-btn-group am-btn-group-xs">
+	          	<div class="am-form-group am-form-file">
+				  	<form class="am-form " id="js_images_form2" action="#(base_path)/api/fs#(base_path)/upload" method="post" enctype="multipart/form-data">
+					  	<button type="button" class="am-btn am-btn-danger">
+						<i class="am-icon-file-picture-o"></i> 更换banner图2
+						</button>
+		               	<input type="file" id="imageFile2" name="imgFile" multiple="multiple"></button>
+	               	</form>
+				  	<img class="am-thumbnail b2" src="#(banner2.imgUrl??banner2.defaultImg)" id="1"/>
+				  	</div>
+				  	<div class="am-form-group am-form-file">
+	          		
+		               	<form class="bannerForm2">
+		               		<input type="hidden" name="banner.id" value="2">
+		               		<input type="hidden" name="banner.imgUrl" class="bImg2" >
+		               		<input type="hidden" name="banner.sort" value="2" >
+		               		<input type="text" required class="tpl-form-input content2" id="content2" placeholder="请输入内容 / content" name="banner.content">
+		               		<button type="button" class="am-btn am-btn-secondary saveBanner2">保存信息</button>
+		               	</form>
+	               	
+	          		</div>	
+	           	</div>
+	          </div>	
+		  </li>
+		  <li>
+		  	 <div class="am-form-group am-form-file">
+	          	<div class="am-btn-group am-btn-group-xs">
+	          	<div class="am-form-group am-form-file">
+				  	<img class="am-thumbnail b3" src="#(banner3.imgUrl??banner3.defaultImg)" id="1"/>
+				  	<form class="am-form " id="js_images_form3" action="#(base_path)/api/fs#(base_path)/upload" method="post" enctype="multipart/form-data">
+					  	<button type="button" class="am-btn am-btn-danger">
+						<i class="am-icon-file-picture-o"></i> 更换banner图3
+						</button>
+		               	<input type="file" id="imageFile3" name="imgFile" multiple="multiple"></button>
+	               	</form>
+	               	</div>
+	               	<div class="am-form-group am-form-file">
+	          		
+		               	<form class="bannerForm3">
+		               		<input type="hidden" name="banner.id" value="3">
+		               		<input type="hidden" name="banner.imgUrl" class="bImg3" >
+		               		<input type="hidden" name="banner.sort" value="3" >
+		               		<input type="text" required class="tpl-form-input content3" id="content3" placeholder="请输入内容 / content" name="banner.content">
+		               		<button type="button" class="am-btn am-btn-secondary saveBanner3">保存信息</button>
+		               	</form>
+	               	
+	          		</div>	
+	               	
+	           	</div>
+	          </div>	
+		  </li>
+		  <li>
+		  	 <div class="am-form-group am-form-file">
+	          	<div class="am-btn-group am-btn-group-xs">
+	          	<div class="am-form-group am-form-file">
+				  	<img class="am-thumbnail b4" src="#(banner4.imgUrl??banner4.defaultImg)" id="1"/>
+				  	<form class="am-form " id="js_images_form4" action="#(base_path)/api/fs#(base_path)/upload" method="post" enctype="multipart/form-data">
+					  	<button type="button" class="am-btn am-btn-danger">
+						<i class="am-icon-file-picture-o"></i> 更换banner图4
+						</button>
+		               	<input type="file" id="imageFile4" name="imgFile" multiple="multiple"></button>
+	               	</form>
+	               	</div>
+               		<div class="am-form-group am-form-file">
+	          		
+		               	<form class="bannerForm4">
+		               		<input type="hidden" name="banner.id" value="4">
+		               		<input type="hidden" name="banner.imgUrl" class="bImg4" >
+		               		<input type="hidden" name="banner.sort" value="4" >
+		               		<input type="text" required class="tpl-form-input content4" id="content4" placeholder="请输入内容 / content" name="banner.content">
+		               		<button type="button" class="am-btn am-btn-secondary saveBanner4">保存信息</button>
+		               	</form>
+	               	
+	          		</div>	
+	           	</div>
+	          </div>	
+		  </li>
+		</ul>
+     </div>
+ </div>
+
+#end
+
+#define js()
+<script src="/static/front/jquery.form.js"></script>
+<script type="text/javascript">
+jQuery(function($) {
+	//上传图片
+	$("#imageFile1").bind("change",function(){
+		$("#js_images_form1").ajaxSubmit({
+		    dataType: "json",
+		    success: function(data) {
+		        layer.msg("上传成功", {shift: 1});
+		        var url = "#(base_path)#(base_path)/upload"+data.datum.imgFile;
+		        $(".b1").attr("src",url);
+		        $(".bImg1").attr("value",url);
+		    }
+		});
+	});
+	$("#imageFile2").bind("change",function(){
+		$("#js_images_form2").ajaxSubmit({
+		    dataType: "json",
+		    success: function(data) {
+		        layer.msg("上传成功", {shift: 1});
+		        var url = "#(base_path)/upload"+data.datum.imgFile;
+		        $(".b2").attr("src",url);
+		        $(".bImg2").attr("value",url);
+		    }
+		});
+	});
+	$("#imageFile3").bind("change",function(){
+		$("#js_images_form3").ajaxSubmit({
+		    dataType: "json",
+		    success: function(data) {
+		        layer.msg("上传成功", {shift: 1});
+		        var url = "#(base_path)/upload"+data.datum.imgFile;
+		        $(".b3").attr("src",url);
+		        $(".bImg3").attr("value",url);
+		    }
+		});
+	});
+	$("#imageFile4").bind("change",function(){
+		$("#js_images_form4").ajaxSubmit({
+		    dataType: "json",
+		    success: function(data) {
+		        layer.msg("上传成功", {shift: 1});
+		        var url = "#(base_path)/upload"+data.datum.imgFile;
+		        $(".b4").attr("src",url);
+		        $(".bImg4").attr("value",url);
+		    }
+		});
+	});
+	
+	
+	//提交保存
+	$(".saveBanner1").unbind("click");
+	$(".saveBanner1").bind("click",function(){
+		
+		var $form = $(".bannerForm1");
+		
+		$.ajax({
+			type : "POST",
+		    url : "#(base_path)/banner/saveBanner",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "#(base_path)/banner";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	
+	//提交保存
+	$(".saveBanner2").unbind("click");
+	$(".saveBanner2").bind("click",function(){
+		
+		var $form = $(".bannerForm2");
+		
+		$.ajax({
+			type : "POST",
+		    url : "#(base_path)/banner/saveBanner",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "#(base_path)/banner";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	
+	//提交保存
+	$(".saveBanner3").unbind("click");
+	$(".saveBanner3").bind("click",function(){
+		
+		var $form = $(".bannerForm3");
+		
+		$.ajax({
+			type : "POST",
+		    url : "#(base_path)/banner/saveBanner",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "#(base_path)/banner";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	
+	//提交保存
+	$(".saveBanner4").unbind("click");
+	$(".saveBanner4").bind("click",function(){
+		
+		var $form = $(".bannerForm4");
+		
+		$.ajax({
+			type : "POST",
+		    url : "#(base_path)/banner/saveBanner",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "#(base_path)/banner";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	
+	
+	
+	
+});
+</script>
+#end

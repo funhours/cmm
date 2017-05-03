@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="#(base_path)/assets/css/amazeui.min.css" />
+<link rel="stylesheet" href="#(base_path)/assets/css/amazeui.datatables.min.css" />
+<link rel="stylesheet" href="#(base_path)/assets/assets/layer/skin/default/layer.css">
+<div class="tpl-table-black-operation">
+    <a href="javascript:;" class="batchPrintBtn">
+        <i class="am-icon-print"></i> 打印面单
+    </a>
+</div>
+<div id="batchPrintContent">
+#for(x : tempLates)
+	#(x)<br/>
+#end
+
+</div>
+
+</body>
+<script src="#(base_path)/assets/js/jquery.min.js"></script>
+<script src="/static/webPrint/webPrint.js"></script>
+<script src="#(base_path)/assets/layer/layer.js"></script>
+<script type="text/javascript">
+	//打印
+	$(".batchPrintBtn").unbind();
+	$(".batchPrintBtn").bind("click",function(){
+		$("#batchPrintContent").printArea();
+		layer.confirm('是否成功打印？', {
+		  btn: ['是','否'] //按钮
+		}, function(){
+		  //是
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/batchSetStatus24",
+			    data: {"orderIdArr":"#(orderIdArr)"},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/invalid?userId=#(loginUser.userId??)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		}, function(){
+		  //否
+		  layer.msg("亲，网络不稳定，请多试几次或联系管理员");
+		});
+	});
+</script>

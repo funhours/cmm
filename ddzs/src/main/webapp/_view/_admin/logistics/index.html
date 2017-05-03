@@ -1,0 +1,152 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+  <div class="row-content am-cf">
+      <div class="row">
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+                  <div class="widget-head am-cf">
+                      <div class="widget-title  am-cf">物流查询</div>
+                      <div class="row">
+				         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+				           <button type="button" class="page-header-button defautShipperConfig"><span class="am-icon-gear"></span> 设置默认快递</button>
+				         </div>
+				     </div>
+                  </div>
+                 <div class="widget-body  am-fr">
+                      <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                          <div class="am-form-group tpl-table-list-select">
+                              <select data-am-selected="{btnSize: 'sm'}" class="ShipperCode">
+							   <!--  <option value="YD">韵达</option>
+							    <option value="SF">顺丰</option>
+							    <option value=HTKY">百世汇通</option>
+							    <option value="ZTO">中通</option>
+							    <option value="STO">申通</option>
+							    <option value="YTO">圆通</option>
+							    <option value="YZPY">邮政平邮</option>
+							    <option value="EMS">EMS</option>
+							    <option value="HHTT">天天</option>
+							    <option value="JD">京东</option>
+							    <option value="QFKD">全峰</option>
+							    <option value="GTO">国通</option>
+							    <option value="UC">优速</option>
+							    <option value="DBL">德邦</option>
+							    <option value="FAST">快捷</option>
+							    <option value="AMAZON">亚马逊</option>
+							    <option value="ZJS">宅急送</option> -->
+							    #for(s : shipper)
+                              		<option value="#(s.shipperCode)">#(s.shipperName)</option>
+                              	#end
+							  </select>
+                          </div>
+                      </div>
+                      <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                          <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                              <input type="number" class="am-form-field LogisticCode" placeholder="请输入订单编号以搜索" >
+                              <span class="am-input-group-btn">
+								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
+							  </span>
+                          </div>
+                      </div>
+                 
+                 <div class="am-u-sm-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title am-fl">物流信息</div>
+                        </div>
+                        <div class="widget-body widget-body-md am-fr logisticInfo">
+                        </div>
+                    </div>
+                </div>
+                 
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {
+		
+		//默认快递设置
+		$(".defautShipperConfig").unbind();
+		$(".defautShipperConfig").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			layer.open({
+			  type: 2,
+			  title: "默认快递设置",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['250px', '400px'],
+			  content: '#(base_path)/order/eSheet/toDefaultShipper?userId=#(loginUser.userId)'
+			});
+		});
+		
+		//搜索
+		$(".search").unbind("click");
+		$(".search").bind("click",function(){
+			var index = layer.load(2); //又换了种风格，并且设定最长等待10秒 
+		    var shipperCode = $(".ShipperCode").val();
+		    var logisticCode = $(".LogisticCode").val();	
+		    
+		    if(shipperCode == null || shipperCode == ""){
+		    	layer.msg("请选择快递公司，若无您使用的快递公司请联系客服", {shift: 1});
+				return;
+		    }
+		    if(logisticCode == null || logisticCode == ""){
+		    	layer.msg("请填写快递单号", {shift: 1});
+				return;
+		    }
+		    
+		    $.ajax({
+			    type : "POST",
+			    url : "#(base_path)/logistics/getOrderTraces",
+			    data: {"ShipperCode":shipperCode,"LogisticCode":logisticCode},
+			    dataType : "json",
+			    success : function(data) {
+		    		var result = JSON.parse(data.data);
+		    		var state = result.State;
+		    		var traces= result.Traces;
+		    		var html = "";
+			    	if(state == 2){//在途中
+			    		for(var i=0;i<traces.length;i++){
+			    			var acceptStation = traces[i].AcceptStation;
+			    			var acceptTime = traces[i].AcceptTime;
+			    			html += "<div class='am-progress-title'>"+acceptStation+" <span class='am-fr am-progress-title-more'>"+acceptTime+"</span></div>";
+			    		}
+	    				$(".logisticInfo").html(html);
+			    	}else if(state == 3){//签收
+			    		for(var i=0;i<traces.length;i++){
+			    			var acceptStation = traces[i].AcceptStation;
+			    			var acceptTime = traces[i].AcceptTime;
+			    			html += "<div class='am-progress-title'>"+acceptStation+" <span class='am-fr am-progress-title-more'>"+acceptTime+"</span></div>";
+			    		}
+	    				$(".logisticInfo").html(html);
+			    	}else if(state == 4){//问题件
+			    		layer.msg("问题件");
+			    	}
+			    	layer.close(index);
+		    	}
+			});
+		    
+		    
+		});
+	});
+
+</script>
+
+#end

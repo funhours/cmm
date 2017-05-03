@@ -1,0 +1,278 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+  <div class="row-content am-cf">
+  
+  <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 订单审核</small></div>
+         </div>
+     </div>
+  </div>
+  <div class="row-content am-cf">
+      <div class="row">
+      	<div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+           <div class="am-form-group">
+               <div class="am-btn-toolbar">
+                   <div class="am-btn-group am-btn-group-xs">
+                       <button type="button" class="am-btn am-btn-default am-btn-success revieweds"><span class="am-icon-pencil"></span> 审核</button>
+                       <button type="button" class="am-btn am-btn-default am-btn-warning refuses"><span class="am-icon-pencil"></span> 拒绝</button>
+                       <button type="button" class="am-btn am-btn-default am-btn-danger dels"><span class="am-icon-trash-o"></span> 删除</button>
+                   </div>
+               </div>
+           </div>
+       </div>
+      
+      
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+                 <div class="am-u-sm-12">
+                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                         <thead>
+                             <tr>
+                                 <th class="table-check"><input type="checkbox" class="xtAllCheck"/></th>
+					              <th>订单编号</th>
+					              <th>商品名称</th>
+					              <th>商品数量</th>
+					              <th>商品金额</th>
+					              <th>收货人</th>
+					              <th>收货人电话</th>
+					              <th>收货人地址</th>
+					              <th>发货人</th>
+					              <th>发货人电话</th>
+					              <th>订单录入人</th>
+					              <th>备注</th>
+					              <th>状态</th>
+					              <th>操作</th>
+                             </tr>
+                         </thead>
+                         	<tbody class="xtOrderItem">
+                         		#for(x : reviewedPage.list??)
+                         		<tr>
+                         			<td><input type="checkbox" value="#(x.orderId??)" name="xtOrderId"/></td>
+                         			<td>#(x.orderId??)</td>
+                         			<td>#(x.productName??)</td>
+                         			<td>#(x.productCount??)</td>
+                         			<td>#(x.productPrice??)</td>
+                         			<td>#(x.recipient??)</td>
+                         			<td>#(x.recipientTel??)</td>
+                         			<td>#(x.recipientAddress??)</td>
+                         			<td>#(x.shipper??)</td>
+                         			<td>#(x.shipperTel??)</td>
+                         			<td>#(x.orderEntry??)</td>
+                         			<td>#(x.remarks??)</td>
+                         			<td>未审核</td>
+                         			
+       								<td style="overflow:hidden">
+	                				 <div class="tpl-table-black-operation">
+                                        <a href="javascript:;" class="reviewed" id="#(x.orderId)">
+                                            <i class="am-icon-pencil"></i> 审核
+                                        </a>
+                                        <a href="javascript:;" class="refuse" id="#(x.orderId)">
+                                            <i class="am-icon-pencil"></i> 拒绝
+                                        </a>
+                                        <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(x.orderId)">
+                                            <i class="am-icon-trash"></i> 删除
+                                        </a>
+                                    </div>
+	              					</td>
+                         		</tr>
+                         		#end
+           					</tbody>
+                       </table>
+                   </div>
+                  <div class="am-u-lg-12 am-cf">
+                      <div class="am-fr">
+                          <!-- 分页 -->
+						#@paginate(reviewedPage.pageNumber, reviewedPage.totalPage, "#(base_path)/unReviewedOrder?p=")
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {	
+		//订单审核通过
+		$(".reviewed").unbind("click");
+		$(".reviewed").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/reviewedById",
+			    data: {"orderId":orderId},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("审核成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/unReviewedOrder?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		//订单审核拒绝
+		$(".refuse").unbind("click");
+		$(".refuse").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/refuseById",
+			    data: {"orderId":orderId},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("成功拒绝", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/unReviewedOrder";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		//系统删除
+		$(".delete").unbind();
+		$(".delete").bind("click",function(){
+			var orderId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/deleteById",
+			    data: {"orderId":orderId,"orderFrom":1},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/unReviewedOrder";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//删除选中
+		$(".dels").unbind("click");
+		$(".dels").bind("click",function(){
+			layer.confirm('确定删除选中订单?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+				 var spCodesTemp = "";
+				 $(".xtOrderItem :checkbox[name=xtOrderId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/order/delByIds",
+				    data: {"delsList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/unReviewedOrder";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		//审核选中
+		$(".revieweds").unbind("click");
+		$(".revieweds").bind("click",function(){
+			layer.confirm('确定审核通过选中订单?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+				 var spCodesTemp = "";
+				 $(".xtOrderItem :checkbox[name=xtOrderId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/order/reviewedByIds",
+				    data: {"delsList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("审核成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/unReviewedOrder";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		//拒绝选中
+		$(".refuses").unbind("click");
+		$(".refuses").bind("click",function(){
+			layer.confirm('确定拒绝选中订单?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+				 var spCodesTemp = "";
+				 $(".xtOrderItem :checkbox[name=xtOrderId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/order/refuseByIds",
+				    data: {"delsList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("拒绝成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/unReviewedOrder";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		
+		//全选反选
+		$(".xtAllCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".xtOrderItem :checkbox").prop("checked", true);  
+		    }else{   
+			$(".xtOrderItem :checkbox").prop("checked", false);
+		    }   
+		});
+		
+		
+		
+	});
+
+</script>
+
+#end

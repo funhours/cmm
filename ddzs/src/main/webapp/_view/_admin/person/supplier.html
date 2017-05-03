@@ -1,0 +1,261 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType?? == 1)
+	#@adminLayout()
+#elseif(loginUser.userType?? == 2)
+	#@layout()
+#elseif(loginUser.userType?? == 3)
+	#@staffLayout()
+#end
+#define main()
+  <div class="row-content am-cf">
+      <div class="row">
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+                  <div class="widget-head am-cf">
+                      <div class="widget-title  am-cf">微商团队人员管理</div>
+
+
+                  </div>
+                  <div class="widget-body  am-fr">
+
+                      <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                          <div class="am-form-group">
+                              <div class="am-btn-toolbar">
+                                  <div class="am-btn-group am-btn-group-xs">
+                                      <button type="button" class="am-btn am-btn-default am-btn-secondary review"><span class="am-icon-save"></span> 审核</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-warning disable"><span class="am-icon-archive"></span> 禁用</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-danger dels"><span class="am-icon-trash-o"></span> 删除</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                          <div class="am-form-group tpl-table-list-select">
+                              <select data-am-selected="{btnSize: 'sm'}" class="searchRole">
+							    <option value="0">所有</option>
+							    <option value="2">供应商</option>
+							    <option value="3">供应商员工</option>
+							    <option value="4">代理商</option>
+							  </select>
+                          </div>
+                      </div>
+                      <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                          <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                              <input type="text" class="am-form-field searchName" placeholder="请输入人员名字以搜索">
+                              <span class="am-input-group-btn">
+								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
+							  </span>
+                          </div>
+                      </div>
+
+                      <div class="am-u-sm-12">
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                              <thead>
+                                  <tr>
+                                      <th class="table-check"><input type="checkbox" class="allCheck"/></th>
+						              <th style="width: 5%;">头像</th>
+						              <th>名称</th>
+						              <th>角色</th>
+						              <th>QQ</th>
+						              <th>微博</th>
+						              <th>简介</th>
+						              <th>地区</th>
+						              <th>状态</th>
+						              <th>操作</th>
+                                  </tr>
+                              </thead>
+                              <tbody class="userItem">
+					            	#for(x : page.list)
+						            <tr>
+						              <td><input type="checkbox" value="#(x.userId??)" name="spCodeId"/></td>
+						              <td style="overflow:hidden"><img alt="" src="#(base_path)#(x.avatar??)" style="width: 100%;"></td>
+						              <td style="overflow:hidden">#(x.nickName??)</td>
+						              <td style="overflow:hidden">
+						              	#if((x.userType??) == 1)
+						              		系统管理员
+						              	#elseif((x.userType??) == 2)
+						              		供应源商家
+						              	#elseif((x.userType??) == 3)
+						              		商家员工
+						              	#elseif((x.userType??) == 4)
+						              		商家代理
+						              	#end
+						              </td>
+						              <td style="overflow:hidden">#(x.QQ??)</td>
+						              <td style="overflow:hidden">#(x.weiBo??)</td>
+						              <td style="overflow:hidden">#(x.personInfo??)</td>
+						              <td style="overflow:hidden">#(x.personArea??)</td>
+						              <td style="overflow:hidden"> 
+						              	#if(x.activity??)
+							            	<span class="am-icon-angellist"> 使用 </span>
+							            #else
+						              		<span class="am-warning am-icon-warning"> 禁用  </span>
+						              	#end
+						              </td>
+						              <td style="overflow:hidden">
+						                 <div class="tpl-table-black-operation">
+                                             <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(x.userId)">
+                                                 <i class="am-icon-trash"></i> 删除
+                                             </a>
+                                         </div>
+						              </td>
+						            </tr>
+						            #end
+					            </tbody>
+                            </table>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                #@paginate(page.pageNumber, page.totalPage, "#(base_path)/person?p=")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {	
+		//审核
+		$(".review").unbind("click");
+		$(".review").bind("click",function(){
+			layer.confirm('确定启用选中人员?', {icon: 3, title:'提示'}, function(index){
+		  		layer.close(index);
+				//获取所有选中的值
+				 var spCodesTemp = "";
+				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/person/review",
+				    data: {"reviewList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("审核成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/person/supplier";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		//禁用
+		$(".disable").unbind("click");
+		$(".disable").bind("click",function(){
+			layer.confirm('确定禁用选中人员?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+			//获取所有选中的值
+				 var spCodesTemp = "";
+				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/person/disable",
+				    data: {"reviewList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("禁用成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/person/supplier";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		//单个删除
+		$(".delete").unbind("click");
+		$(".delete").bind("click",function(e){
+			var userId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/person/delById",
+			    data: {"userId":userId},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/person/supplier";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//删除选中
+		$(".dels").unbind("click");
+		$(".dels").bind("click",function(){
+			layer.confirm('确定删除选中人员?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+				 var spCodesTemp = "";
+				 $(".userItem :checkbox[name=spCodeId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/person/delByIds",
+				    data: {"delsList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/person/supplier";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		
+		//搜索
+		$(".search").unbind("click");
+		$(".search").bind("click",function(){
+		    var searchRole = $(".searchRole").val();
+		    var searchName = $(".searchName").val();
+		    window.location.href = "#(base_path)/person/search?searchRole="+searchRole+"&searchName="+searchName;
+		});
+		
+		//全选反选
+		$(".allCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".userItem :checkbox").prop("checked", true);  
+		    }else{   
+				$(".userItem :checkbox").prop("checked", false);
+		    }   
+		});
+	});
+
+</script>
+
+#end

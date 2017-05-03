@@ -1,0 +1,247 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+  <div class="row-content am-cf">
+      <div class="row">
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+                  <div class="widget-head am-cf">
+                      <div class="widget-title  am-cf">订单搜索</div>
+                  </div>
+                  <div class="widget-body  am-fr">
+                      <div class="am-u-sm-12 am-u-md-12 ">
+                          <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                          	<form class = "orderSeachParaForm" action="#(base_path)/orderSearch/orderSeachByPara" method="post">
+                          	
+                          	<div class="am-g">
+                          		<div class="am-u-lg-3">
+	                              <input type="text" class="am-form-field" placeholder="订单编号" name="ordersSearch.orderId">
+	                              <input type="text" class="am-form-field" placeholder="商品名称" name="ordersSearch.productName">
+	                              <input type="text" class="am-form-field" placeholder="商品数量" name="ordersSearch.productCount">
+	                              </div>
+                             	<div class="am-u-lg-3">
+	                              <input type="text" class="am-form-field" placeholder="商品价格" name="ordersSearch.productPrice">
+	                              <input type="text" class="am-form-field" placeholder="收件人" name="ordersSearch.recipient">
+	                              <input type="text" class="am-form-field" placeholder="收件人电话" name="ordersSearch.recipientTel">
+                              	</div>
+                              	<div class="am-u-lg-3">
+	                              <input type="text" class="am-form-field" placeholder="收件人地址" name="ordersSearch.recipientAddress">
+	                              <input type="text" class="am-form-field" placeholder="发件人" name="ordersSearch.shipper">
+	                              <input type="text" class="am-form-field" placeholder="发件人电话" name="ordersSearch.shipperTel">
+	                              </div>
+                              	<div class="am-u-lg-3">
+	                              <input type="text" class="am-form-field" placeholder="订单录入人" name="ordersSearch.orderEntry">
+	                              <input type="text" class="am-form-field" placeholder="备注" name="ordersSearch.remarks">
+	                              <!-- <input type="text" class="am-form-field" placeholder="订单状态" name="ordersSearch.orderStatus"> -->
+	                              <select data-am-selected name="ordersSearch.orderStatus" placeholder="订单状态">
+							      	<option value="">请选择订单状态</option>
+							      	<option value="1">未分配</option>
+									<option value="2">已分配</option>
+									<!-- <option value="3">未打印</option> -->
+									<option value="4">已打印</option>
+									<option value="5">快递中</option>
+									<option value="6">已收件</option>
+									<option value="7">异常件</option>
+									<option value="8">已作废</option>
+									<option value="9">未审核</option>
+									<option value="0">审核未通过</option>
+							    </select>
+                              </div>
+	                              <input type="hidden" class="am-form-field year" placeholder="年" name="ordersSearch.year"/>
+	                              <input type="hidden" class="am-form-field month" placeholder="月" name="ordersSearch.month"/>
+	                              <input type="hidden" class="am-form-field day" placeholder="日" name="ordersSearch.day"/>
+	                              <input type="hidden" class="searchType" name="searchType">
+	                              
+	                              
+                             
+							 </form>
+                          </div>
+                      </div>
+                      <div class="am-g">
+                          <br/>
+  						<div class="am-u-lg-4">
+                          <input type="text" class="am-form-field searchDate" placeholder="选择日期" data-am-datepicker readonly required name="inputDate"/>
+                          </div>
+							  <button class="am-btn am-btn-primary am-round am-icon-search ordSearch" type="button">系统订单查询</button>
+							  <!-- <button class="am-btn am-btn-primary am-round am-icon-search ordersTbSearch" type="button">淘宝订单查询</button>
+							  <button class="am-btn am-btn-primary am-round am-icon-search ordersTbSearch" type="button">京东订单查询</button> -->
+							</div>
+                      	</div>
+                      	</div>
+                      	<br>
+                      <div class="am-u-sm-12">
+                      <div class="am-u-sm-12 am-u-md-6 ">
+			             <div class="widget widget-primary ">
+			                 <div class="widget-statistic-header">
+			                     	总金额
+			                 </div>
+			                 <div class="widget-statistic-body">
+			                     <div class="widget-statistic-value">
+		                             <span class="am-icon-rmb"> &nbsp;&nbsp;#(total.totalPrice??0)</span>
+			                     </div>
+			                     <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
+			                 </div>
+			             </div>
+			
+			         </div>
+			         <div class="am-u-sm-12 am-u-md-6 ">
+			             <div class="widget widget-primary am-cf">
+			                 <div class="widget-statistic-header">
+			                     	订单数
+			                 </div>
+			                 <div class="widget-statistic-body">
+			                     <div class="widget-statistic-value">
+			                         	<span class="am-icon-line-chart"> &nbsp;&nbsp;#(total.orderCount??0)</span>
+			                     </div>
+			                     <span class="widget-statistic-icon am-icon-list-ol"></span>
+			                 </div>
+			             </div>
+			         </div>
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                              <thead>
+                                  <tr>
+                                      <th class="table-check"><input type="checkbox" class="xtAllCheck"/></th>
+						              <th>订单编号</th>
+						              <th>年</th>
+						              <th>月</th>
+						              <th>日</th>
+						              <th>商品名称</th>
+						              <th>商品数量</th>
+						              <th>商品金额</th>
+						              <th>收货人</th>
+						              <th>收货人电话</th>
+						              <th>收货人地址</th>
+						              <th>发货人</th>
+						              <th>发货人电话</th>
+						              <th>订单录入人</th>
+						              <th>备注</th>
+						              <th>状态</th>
+						              <th>操作</th>
+                                  </tr>
+                              </thead>
+                              	<tbody class="xtOrderItem">
+                              		#for(x : orderSearchPage.list)
+                              		<tr>
+                              			<td><input type="checkbox" value="#(x.orderId??)" name="xtOrderId"/></td>
+                              			<td>#(x.orderId??)</td>
+                              			<td>#(x.year??)</td>
+                              			<td>#(x.month??)</td>
+                              			<td>#(x.day??)</td>
+                              			<td>#(x.productName??)</td>
+                              			<td>#(x.productCount??)</td>
+                              			<td>#(x.productPrice??)</td>
+                              			<td>#(x.recipient??)</td>
+                              			<td>#(x.recipientTel??)</td>
+                              			<td>#(x.recipientAddress??)</td>
+                              			<td>#(x.shipper??)</td>
+                              			<td>#(x.shipperTel??)</td>
+                              			<td>#(x.orderEntry??)</td>
+                              			<td>#(x.remarks??)</td>
+                              			<td>
+                              				#if((x.orderStatus) == 1)
+							              		未分配
+							              	#elseif((x.orderStatus) == 2)
+							              		已分配
+							              	#elseif((x.orderStatus) == 3)
+							              		未打印
+							              	#elseif((x.orderStatus) == 4)
+							              		已打印
+							              	#elseif((x.orderStatus) == 5)
+							              		快递中
+							              	#elseif((x.orderStatus) == 6)
+							              		已收件
+							              	#elseif((x.orderStatus) == 7)
+							              		异常件
+							              	#elseif((x.orderStatus) == 8)
+							              		作废
+							              	#elseif((x.orderStatus) == 9)
+							              		未审核
+							              	#elseif((x.orderStatus) == 0)
+							              		审核未通过
+							              	#end
+                              			</td>
+                              			
+                              			<td style="overflow:hidden">
+						                 <div class="tpl-table-black-operation">
+                                             <a href="javascript:;" class="xtInvalid" id="#(x.orderId)">
+                                                 <i class="am-icon-pencil"></i> 作废
+                                             </a>
+                                             <a href="javascript:;" class="tpl-table-black-operation-del xtDelete" id="#(x.orderId)">
+                                                 <i class="am-icon-trash"></i> 删除
+                                             </a>
+                                         </div>
+						              </td>
+                              		</tr>
+                              		#end
+				            	</tbody>
+                            </table>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                <!-- 分页 -->
+								#@paginate(orderSearchPage.pageNumber, orderSearchPage.totalPage, "/orderSearch?p=")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {	
+		$(".ordSearch").unbind("click");
+		$(".ordSearch").bind("click",function(){
+			$(".searchType").val(1);
+			var searchDate = $(".searchDate").val().split("-");
+			$(".year").val(searchDate[0]);
+			$(".month").val(searchDate[1]);
+			$(".day").val(searchDate[2]);
+			
+			$(".orderSeachParaForm").submit();
+		});
+		
+		$(".ordersTbSearch").unbind("click");
+		$(".ordersTbSearch").bind("click",function(){
+			$(".searchType").val(2);
+			var searchDate = $(".searchDate").val().split("-");
+			$(".year").val(searchDate[0]);
+			$(".month").val(searchDate[1]);
+			$(".day").val(searchDate[2]);
+			$(".orderSeachParaForm").submit();
+		});
+		
+		$(".ordersJdSearch").unbind("click");
+		$(".ordersJdSearch").bind("click",function(){
+			$(".searchType").val(3);
+			var searchDate = $(".searchDate").val().split("-");
+			$(".year").val(searchDate[0]);
+			$(".month").val(searchDate[1]);
+			$(".day").val(searchDate[2]);
+			$(".orderSeachParaForm").submit();
+		});
+		
+		/* $(".searchDate").unbind("input propertychange");
+		$(".searchDate").on('changeDate.datepicker.amui', function(event) {
+		      console.log(event.date);
+	    }); */
+		
+	});
+
+</script>
+
+#end
