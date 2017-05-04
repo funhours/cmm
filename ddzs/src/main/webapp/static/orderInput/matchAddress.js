@@ -13,41 +13,97 @@ function isAddress(temp) {
 * 获取地址详细信息
 * */
 function getAddress(orderTag) {
+    if (-1 < orderTag.indexOf("收货人："))
+        orderTag = orderTag.replace("收货人：", "");
     var adds = {};
     var city_key = getCityKey(orderTag);
     adds.province = getProvince(orderTag);
     
-    if(0 != adds.province.length && 0 != city_key.length) {///匹配到了省份信息
-        if(-1 < orderTag.indexOf("省")) {
-            adds.city =
-                orderTag.substring((orderTag.indexOf("省") + 1), orderTag.indexOf(city_key));
-        } else {
-            if ("北京" == adds.province || "天津" == adds.province
-                || "上海" == adds.province || "重庆" == adds.province)
-                adds.city = adds.province;
-            else
+    if(0 != adds.province.length) {///匹配到了省份信息
+        if (0 != city_key.length) {
+            if (-1 < orderTag.indexOf("省")) {
                 adds.city =
-                    orderTag.substring((orderTag.indexOf(adds.province) + adds.province.length), orderTag.indexOf(city_key));
-        }
-        var area_info = "";
-        if(-1 < orderTag.indexOf("区")) {
-            area_info = "区";
-            adds.area =
-                orderTag.substring((orderTag.indexOf(city_key) + 1), orderTag.indexOf(area_info));
-            adds.detail = orderTag.substring((orderTag.indexOf(area_info) + 1));
-        } else if(-1 < orderTag.indexOf("县")) {
-            area_info = "县";
-            adds.area =
-                orderTag.substring((orderTag.indexOf(city_key) + 1), orderTag.indexOf(area_info));
-            adds.detail = orderTag.substring((orderTag.indexOf(area_info) + 1));
-        } else {
-            adds.area = "";
-            adds.detail = orderTag.substring((orderTag.indexOf(city_key) + 1));
+                    orderTag.substring((orderTag.indexOf("省") + 1), orderTag.indexOf(city_key));
+            } else {
+                if ("北京" == adds.province || "天津" == adds.province
+                    || "上海" == adds.province || "重庆" == adds.province)
+                    adds.city = adds.province;
+                else
+                    adds.city =
+                        orderTag.substring((orderTag.indexOf(adds.province) + adds.province.length), orderTag.indexOf(city_key));
+            }
+            var area_info = "";
+            if (-1 < orderTag.indexOf("区")) {
+                area_info = "区";
+                adds.area =
+                    orderTag.substring((orderTag.indexOf(city_key) + 1), orderTag.indexOf(area_info));
+                adds.detail = orderTag.substring((orderTag.indexOf(area_info) + 1));
+            } else if (-1 < orderTag.indexOf("县")) {
+                area_info = "县";
+                adds.area =
+                    orderTag.substring((orderTag.indexOf(city_key) + 1), orderTag.indexOf(area_info));
+                adds.detail = orderTag.substring((orderTag.indexOf(area_info) + 1));
+            } else {
+                adds.area = "";
+                adds.detail = orderTag.substring((orderTag.indexOf(city_key) + 1));
+            }
+        } else {    ///未找到关键字市
+            if (isDirectCity(adds["province"])) {
+                adds["city"] = adds["province"];
+                var detailInfo = orderTag.replace(adds["city"], "");
+                var areaKeyIndex = getAreaIndex(detailInfo);
+                if (-1 < areaKeyIndex){
+                    adds["area"] = detailInfo.substring(0, areaKeyIndex);
+                    adds["detail"] = detailInfo.substring(areaKeyIndex + 1);
+                }
+            } else {    ///不是直辖市
+                if (-1 < orderTag.indexOf("省")){
+                    var detailInfo = orderTag.replace(adds["province"] + "省", "");
+                    var areaKeyIndex = getAreaIndex(detailInfo);
+                    adds["area"] = detailInfo.substring(0, areaKeyIndex);
+                    adds["detail"] = detailInfo.substring(areaKeyIndex + 1);
+                }
+            }
         }
     } else { ///没有省份信息
-
+        if (0 !== city_key.length ){
+            adds["city"] = orderTag.substring(0, orderTag.indexOf(city_key));
+            var detailInfo = orderTag.substring(orderTag.indexOf(city_key) + 1);
+            var areaKeyIndex = getAreaIndex(detailInfo);
+            adds["area"] = detailInfo.substring(0, areaKeyIndex);
+            adds["detail"] = detailInfo.substring(areaKeyIndex + 1);
+        }
     }
     return adds;
+}
+
+/*
+* 获取区或者县所在位置
+* @getAreaIndex
+* */
+function getAreaIndex(temp) {
+    if (-1 < temp.indexOf("区"))
+        return temp.indexOf("区");
+    else if (-1 < temp.indexOf("县"))
+        return temp.indexOf("县");
+    else if (-1 < temp.indexOf("州"))
+        return temp.indexOf("州");
+    else
+        return -1;
+}
+
+/*
+* 是否是直辖市
+* isDirectCity
+* */
+function isDirectCity(temp) {
+    if (-1 < temp.indexOf("重庆")
+        || -1 < temp.indexOf("北京")
+        || -1 < temp.indexOf("上海")
+        || -1 < temp.indexOf("天津"))
+        return true;
+    else
+        return false;
 }
 
 /*
@@ -138,8 +194,9 @@ function getProvince(orderTag){
         province = "广西";
     else if(-1 < orderTag.indexOf("内蒙古"))
         province = "内蒙古";
-    else
+    else if(-1 < orderTag.indexOf("宁夏"))
         province = "宁夏";
-
+    else
+        province = "";
     return province;
 }

@@ -222,7 +222,7 @@ public class AccountAPIController extends BaseAPIController {
         }
         
         String sql = "SELECT * FROM t_user WHERE loginName=? AND password=?";
-        User nowUser = User.user.findFirst(sql, loginName, StringUtils.encodePassword(password, "md5"));
+        User nowUser = User.dao.findFirst(sql, loginName, StringUtils.encodePassword(password, "md5"));
         LoginResponse response = new LoginResponse();
         if (nowUser == null) {
             response.setCode(Code.FAIL).setMessage("userName or password is error");
@@ -260,7 +260,7 @@ public class AccountAPIController extends BaseAPIController {
         String userId = getPara("userId");
         User resultUser = null;
         if (StringUtils.isNotEmpty(userId)) {
-            resultUser = User.user.findById(userId);
+            resultUser = User.dao.findById(userId);
         } else {
             resultUser = getUser();
         }

@@ -8,7 +8,8 @@ function smartAnalysis(input, callback) {
     orders.forEach(function(each) {
         if (undefined != each && 0 != each.length) {
             var orderTags = deleteNull(orderInfoSplit(each));
-            orderTags = deepSpilt(orderTags);
+            orderTags = deepSpilt(orderTags, "。");
+            orderTags = deepSpilt(orderTags, ",");
             var phones_nums = new Array();
             for (var j = 0; j < orderTags.length; j++) {
                 var posA = searchStrs(orderTags[j], "1");
@@ -65,6 +66,16 @@ function smartAnalysis(input, callback) {
                             else
                                 orderO.fromPeople = getFromPeople(2, shipper_info, phones_nums[0]);
                             break;
+                        } else if (-1 < orderTags[j + 2].indexOf(phones_nums[0])){
+                            x = j + 1;
+                            y = 0;
+                            z = 1;
+                            orderO.fromPeople = getFromPeople(2, orderTags[j + 1], phones_nums[0])
+                        } else if (-1 < orderTags[j + 2].indexOf(phones_nums[1])) {
+                            x = j + 1;
+                            y = 0;
+                            z = 1;
+                            orderO.fromPeople = getFromPeople(2, orderTags[j + 1], phones_nums[1])
                         } else {
 
                         }
@@ -141,11 +152,11 @@ function deleteNull(orders) {
 /*
 * 少见符号的分割例如"。"
 * */
-function deepSpilt(orderTags) {
+function deepSpilt(orderTags, mark) {
     var new_tags = new Array();
     for(var i in orderTags){
-        if(-1 < orderTags[i].indexOf("。")){
-            var deep_one = orderTags[i].split("。");
+        if(-1 < orderTags[i].indexOf(mark)){
+            var deep_one = orderTags[i].split(mark);
             for(var j in deep_one){
                 new_tags.push(deep_one[j]);
             }
@@ -153,7 +164,6 @@ function deepSpilt(orderTags) {
             new_tags.push(orderTags[i]);
         }
     }
-
     return new_tags;
 }
 
@@ -185,12 +195,15 @@ function isPhoneNum(temp) {
  * 匹配收货人信息
  * */
 function matchConsignee(phone_num, orderTags, orderO) {
+    var adds = "";
     orderO.toContact = phone_num;
     for (var j = 0; j < orderTags.length; j++) {
         if (phone_num == orderTags[j]) { ///电话号码为单独元素
             if (0 < j) {
                 if (!isAddress(orderTags[(j - 1)])) {
                     orderO.toPeople = getToPeople(orderTags[(j - 1)]);
+                    if (8 < orderO["toPeople"].length)
+                        orderO["toPeople"] = getToPeople(orderTags[(j + 1)]);
                 } else {
                     ///当地址和姓名在一起仍需分析
                 }
@@ -204,6 +217,8 @@ function matchConsignee(phone_num, orderTags, orderO) {
                     var temp = orderTags[j].substring(11);
                     if ("备注" == temp)
                         temp = "";
+                    if (-1 < temp.indexOf("（"))
+                        temp = orderTags[j - 1];
                     orderO.toPeople = getToPeople(temp);
                 }
                 else {
@@ -235,9 +250,11 @@ function matchConsignee(phone_num, orderTags, orderO) {
             orderO.goodsWeight = getGoodsWeight(orderTags[j]);
         }
         if (isAddress(orderTags[j])) {
-            orderO.adds = getAddress(orderTags[j]);
+            adds += orderTags[j];
+            ///orderO.adds = getAddress(orderTags[j]);
         }
     }
+    orderO.adds = getAddress(adds);
 }
 
 /*

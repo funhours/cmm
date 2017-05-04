@@ -113,6 +113,7 @@ public class ApiPersonController extends BaseController {
 		for (int i = 0; i < reviewList.length; i++) {
 			User user = dao.findById(reviewList[i]); 
 			user.set(User.ACTIVITY, 1);
+			user.set(User.STATUS, 1);
 			recordList.add(user);
 		}
 		int[] resultCount = Db.batchUpdate(recordList, reviewList.length);
@@ -127,6 +128,7 @@ public class ApiPersonController extends BaseController {
 		for (int i = 0; i < reviewList.length; i++) {
 			User user = dao.findById(reviewList[i]); 
 			user.set(User.ACTIVITY, 0);
+			user.set(User.STATUS, 0);
 			recordList.add(user);
 		}
 		int[] resultCount = Db.batchUpdate(recordList, reviewList.length);
@@ -153,6 +155,7 @@ public class ApiPersonController extends BaseController {
 		for (int i = 0; i < delsList.length; i++) {
 			User user = dao.findById(delsList[i]); 
 			user.set(User.ACTIVITY, 0);
+			user.set(User.STATUS, 0);
 			recordList.add(user);
 		}
 		String sql = "delete from t_user where 1=1 and userId = ?";

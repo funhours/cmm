@@ -42,7 +42,7 @@ public class AppConfig extends JFinalConfig {
 		/**
 		 * 特别注意：Eclipse 之下建议的启动方式
 		 */
-		JFinal.start("src/main/webapp", 8184, "/", 5);
+		JFinal.start("src/main/webapp", 8183, "/", 5);
 		
 	}
 	
