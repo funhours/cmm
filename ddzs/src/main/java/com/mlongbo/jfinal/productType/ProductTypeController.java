@@ -9,16 +9,18 @@ import com.jfinal.plugin.activerecord.Page;
 import com.mlongbo.jfinal.common.utils.DateUtils;
 import com.mlongbo.jfinal.common.utils.RandomUtils;
 import com.mlongbo.jfinal.common.utils.StringUtils;
+import com.mlongbo.jfinal.controller.BaseController;
 import com.mlongbo.jfinal.model.ProductType;
 import com.mlongbo.jfinal.model.User;
 import com.mlongbo.jfinal.vo.AjaxResult;
 
-public class ProductTypeController extends Controller {
+public class ProductTypeController extends BaseController {
 	static ProductType ptdao = new ProductType().dao();
 	private final AjaxResult result = new AjaxResult();
 	public void index() {
 		//分页参数
-		Page<ProductType> page = ptdao.paginate(getParaToInt("p", 1), 10,"select *","from product_type where 1=1 order by creationDate");
+	    String userId = getLoginUserId();
+		Page<ProductType> page = ptdao.paginate(getParaToInt("p", 1), 10,"select *","from product_type where 1=1 and userId = '"+userId+"' order by creationDate");
 		setAttr("page", page);
 		render("index.html");
 	}
@@ -31,12 +33,13 @@ public class ProductTypeController extends Controller {
 	    boolean saveOk = false;
 	    String typeName = getPara("typeName");
 	    int editType = getParaToInt("editType");
-	    
+	    String userId = getLoginUserId();
 	    if(editType == 0){//新增
 	        saveOk = new ProductType().set("id", RandomUtils.randomCustomUUID())
 	        .set("typeName", typeName)
 	        .set("status", 0)
-	        .set("creationDate", DateUtils.getNowTimeStamp()).save();
+	        .set("creationDate", DateUtils.getNowTimeStamp())
+	        .set("userId", userId).save();
 	        if(saveOk){
 	            result.success("保存成功");
 	        }else{
@@ -44,7 +47,6 @@ public class ProductTypeController extends Controller {
 	        }
 	    }else if(editType == 1){//修改
 	        String pTypeId = getPara("pTypeId");
-	        
 	        ProductType pType = ptdao.findById(pTypeId);
 	        saveOk = pType.set("typeName", typeName).update();
 	        
@@ -118,13 +120,13 @@ public class ProductTypeController extends Controller {
      * @Description (搜索)
      */
     public void search(){
-        
+        String userId = getLoginUserId();
         String searchTypeName = getPara("searchTypeName");
         if(StringUtils.isEmpty(searchTypeName)){//查询条件为空的查询所有
-            Page<ProductType> page = ptdao.paginate(getParaToInt("p", 1), 10,"select * ","from product_type where 1=1 order by creationDate");
+            Page<ProductType> page = ptdao.paginate(getParaToInt("p", 1), 10,"select * ","from product_type where 1=1 and userId = '"+userId+"' order by creationDate");
             setAttr("page", page);
         }else{
-            Page<ProductType> page = ptdao.paginate(getParaToInt("p", 1), 10,"select * ","from product_type where 1=1 and typeName like '%"+searchTypeName+"%' order by creationDate");
+            Page<ProductType> page = ptdao.paginate(getParaToInt("p", 1), 10,"select * ","from product_type where 1=1 and userId = '"+userId+"' and typeName like '%"+searchTypeName+"%' order by creationDate");
             setAttr("page", page);
         }
         render("index.html");

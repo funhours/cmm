@@ -23,8 +23,8 @@
       
           <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
               <div class="widget am-cf">
-                 <div class="am-u-sm-12">
-                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                 <div class="am-u-sm-12 am-scrollable-horizontal">
+                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black am-text-nowrap" id="example-r">
                          <thead>
                              <tr>
                                  <th class="table-check"><input type="checkbox" class="xtAllCheck"/></th>
@@ -61,6 +61,7 @@
                          			<td>异常件</td>
                          			
        								<td style="overflow:hidden">
+       								#if(x.orderStatus != 2 && x.orderStatus != 4)
 	                				 <div class="tpl-table-black-operation">
                                         <a href="javascript:;" class="xtInvalid" id="#(x.orderId)">
                                             <i class="am-icon-pencil"></i> 作废
@@ -69,6 +70,7 @@
                                             <i class="am-icon-trash"></i> 删除
                                         </a>
                                     </div>
+                                    #end
 	              					</td>
                          		</tr>
                          		#end

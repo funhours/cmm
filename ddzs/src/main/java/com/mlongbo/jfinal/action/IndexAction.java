@@ -26,6 +26,10 @@ public class IndexAction extends Controller {
     	render("html/CreateAccount.html");
     }
     
+    public void ForgetPassword(){
+        render("html/forget_password.html");
+    }
+    
     /**
      * 
      * @Description (物流查询)

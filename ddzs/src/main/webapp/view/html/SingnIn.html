@@ -114,6 +114,11 @@
 <script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
 <script src="#(base_path)/assets/layer/layer.js"></script>
 <script type="text/javascript">
+	$(".wangji").unbind("click");
+	$(".wangji").bind("click",function(){
+		window.location.href='#(base_path)/ForgetPassword';
+	});
+	
 	$(".zhuce").unbind("click");
 	$(".zhuce").bind("click",function(){
 		window.location.href='#(base_path)/CreateAccount';

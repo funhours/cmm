@@ -78,11 +78,11 @@ public class SmsController extends BaseController {
     	        Page<OrderBuyConfig> oBuyConfigPage = OrderBuyConfig.dao.paginate(getParaToInt("p", 1), 10,"select *","from order_buy_config where 1=1 ");
     	        setAttr("oBuyConfigPage", oBuyConfigPage);
     	        
-    	        //订单购买记录
+    	        //时长购买记录
     	        Page<TimeBuyLog> tBuyLogPage = TimeBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from time_buy_log where 1=1 and userId = '"+ userId+"'");
     	        setAttr("tBuyLogPage", tBuyLogPage);
     	        
-    	        //订单购买配置
+    	        //时长购买配置
     	        Page<TimeBuyConfig> tBuyConfigPage = TimeBuyConfig.dao.paginate(getParaToInt("p", 1), 10,"select *","from time_buy_config where 1=1 ");
     	        setAttr("tBuyConfigPage", tBuyConfigPage);
     	        
@@ -105,12 +105,27 @@ public class SmsController extends BaseController {
 	 * @Description (跳转到购买页)
 	 */
 	public void toBuyPage(){
+	    String userId = getLoginUserId();
+	    
+	    //购买配置
 	    List<SmsBuyConfig> sbConfig = sbcDao.find("select * from sms_buy_config where 1=1");
 	    setAttr("sbConfig", sbConfig);
 	    List<OrderBuyConfig> obConfig = obcDao.find("select * from order_buy_config where 1=1");
 	    setAttr("obConfig", obConfig);
 	    List<TimeBuyConfig> tbConfig = tbcDao.find("select * from time_buy_config where 1=1");
 	    setAttr("tbConfig", tbConfig);
+	    
+	    //购买记录
+	  //短信购买记录
+        Page<SmsBuyLog> buyLogPage = SmsBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from sms_buy_log where 1=1 and userId = '"+ userId+"'");
+        setAttr("buyLogPage", buyLogPage);
+        //订单购买记录
+        Page<OrderBuyLog> oBuyLogPage = OrderBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from order_buy_log where 1=1 and userId = '"+ userId+"'");
+        setAttr("oBuyLogPage", oBuyLogPage);
+        //时长购买记录
+        Page<TimeBuyLog> tBuyLogPage = TimeBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from time_buy_log where 1=1 and userId = '"+ userId+"'");
+        setAttr("tBuyLogPage", tBuyLogPage);
+	    
 	    render("buyPage.html");
 	}
 	

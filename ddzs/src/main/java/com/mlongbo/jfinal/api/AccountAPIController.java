@@ -1,8 +1,5 @@
 package com.mlongbo.jfinal.api;
 
-import static com.mlongbo.jfinal.model.User.AVATAR;
-import static com.mlongbo.jfinal.model.User.EMAIL;
-import static com.mlongbo.jfinal.model.User.NICK_NAME;
 import static com.mlongbo.jfinal.model.User.PASSWORD;
 
 import java.util.Calendar;
@@ -20,7 +17,6 @@ import com.mlongbo.jfinal.common.Require;
 import com.mlongbo.jfinal.common.bean.BaseResponse;
 import com.mlongbo.jfinal.common.bean.Code;
 import com.mlongbo.jfinal.common.bean.Constant;
-import com.mlongbo.jfinal.common.bean.DatumResponse;
 import com.mlongbo.jfinal.common.bean.LoginResponse;
 import com.mlongbo.jfinal.common.token.TokenManager;
 import com.mlongbo.jfinal.common.utils.DateUtils;
@@ -88,10 +84,10 @@ public class AccountAPIController extends BaseAPIController {
         }
 
         //检查手机号码是否被注册
-        if (Db.findFirst("SELECT * FROM t_user WHERE loginName=?", loginName) != null) {
-            renderJson(new BaseResponse(Code.ACCOUNT_EXISTS,"mobile already registered"));
-            return;
-        }
+//        if (Db.findFirst("SELECT * FROM t_user WHERE loginName=?", loginName) != null) {
+//            renderJson(new BaseResponse(Code.ACCOUNT_EXISTS,"mobile already registered"));
+//            return;
+//        }
 
         String smsCode = SMSUtils.randomSMSCode(6);
         //发送短信验证码
@@ -204,6 +200,53 @@ public class AccountAPIController extends BaseAPIController {
 		//返回数据
 		renderJson(new BaseResponse("success"));
 	}
+    
+    
+    /**
+     * 修改密码
+     */
+    @Clear
+    public void updatePassword(){
+        //必填信息
+        String loginName = getPara("loginName").trim();//登录帐号
+        int code = getParaToInt("code", 0);//手机验证码
+        String password = getPara("password");//密码
+        
+        String sql = "select * from t_user where loginName = ?";
+        User user = User.dao.findFirst(sql,loginName);
+        
+        //校验必填项参数
+        if(!notNull(Require.me()
+                .put(loginName, "loginName can not be null")
+                .put(code, "code can not be null")//根据业务需求决定是否使用此字段
+                .put(password, "password can not be null"))){
+            return;
+        }
+        
+        //检查账户是否已被注册
+        if (Db.findFirst("SELECT * FROM t_user WHERE loginName=?", loginName) == null) {
+            renderJson(new BaseResponse(Code.ACCOUNT_EXISTS, "该手机没有注册"));
+            return;
+        }
+        
+        //检查验证码是否有效
+        if (Db.findFirst("SELECT * FROM t_register_code WHERE mobile=? AND code = ?", loginName, code) == null) {
+            renderJson(new BaseResponse(Code.CODE_ERROR,"验证码未通过"));
+            return;
+        }
+        
+        //保存用户数据
+        String saltPassword = HashKit.sha256("kyddzs" + password);
+        
+        
+        user.set(User.PASSWORD, saltPassword).update();
+        
+        //删除验证码记录
+        Db.update("DELETE FROM t_register_code WHERE mobile=? AND code = ?", loginName, code);
+        
+        //返回数据
+        renderJson(new BaseResponse("success"));
+    }
 	
 	
     /**
@@ -238,80 +281,7 @@ public class AccountAPIController extends BaseAPIController {
         renderJson(response);
     }
 
-    /**
-     * 资料相关的接口
-     */
-    public void profile() {
-        String method = getRequest().getMethod();
-        if ("get".equalsIgnoreCase(method)) { //查询资料
-            getProfile();
-        } else if ("put".equalsIgnoreCase(method)) { //修改资料
-            updateProfile();
-        } else {
-            render404();
-        }
-    }
-
-
-    /**
-     * 查询用户资料
-     */
-    private void getProfile() {
-        String userId = getPara("userId");
-        User resultUser = null;
-        if (StringUtils.isNotEmpty(userId)) {
-            resultUser = User.dao.findById(userId);
-        } else {
-            resultUser = getUser();
-        }
-
-        DatumResponse response = new DatumResponse();
-        
-        if (resultUser == null) {
-            response.setCode(Code.FAIL).setMessage("user is not found");
-        } else {
-            HashMap<String, Object> map = new HashMap<String, Object>(resultUser.getAttrs());
-            map.remove(PASSWORD);
-            response.setDatum(map);
-        }
-
-        renderJson(response);
-    }
-
-    /**
-     * 修改用户资料
-     */
-    private void updateProfile() {
-        boolean flag = false;
-        BaseResponse response = new BaseResponse();
-        User user = getUser();
-        String nickName = getPara("nickName");
-        if (StringUtils.isNotEmpty(nickName)) {
-            user.set(NICK_NAME, nickName);
-            flag = true;
-        }
-
-        String email = getPara("email");
-        if (StringUtils.isNotEmpty(email)) {
-            user.set(EMAIL, email);
-            flag = true;
-        }
-        
-        String avatar = getPara("avatar");
-        if (StringUtils.isNotEmpty(avatar)) {
-            user.set(AVATAR, avatar);
-            flag = true;
-        }
-
-        //修改用户类型
-        if (flag) {
-            boolean update = user.update();
-            renderJson(response.setCode(update ? Code.SUCCESS : Code.FAIL).setMessage(update ? "update success" : "update failed"));
-        } else {
-            renderArgumentError("must set profile");
-        }
-    }
-
+   
     /**
      * 修改密码
      */

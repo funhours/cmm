@@ -11,6 +11,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.mlongbo.jfinal.common.utils.DateUtils;
 import com.mlongbo.jfinal.model.FeedBack;
 import com.mlongbo.jfinal.model.FeedBackReply;
 import com.mlongbo.jfinal.model.Product;
@@ -31,6 +32,16 @@ public class FeedBackController extends Controller {
         }
 
 		render("index.html");
+	}
+	
+	
+	public void addFeedBack(){
+	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+	    FeedBack feedBack = getModel(FeedBack.class);
+	    feedBack.set("creatDate", df.format(new Date()));
+	    Boolean isOk = feedBack.save();
+	    result.setData(isOk);
+	    renderJson(isOk);
 	}
 	
 	/**

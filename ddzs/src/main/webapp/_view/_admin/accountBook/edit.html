@@ -11,7 +11,7 @@
     <div class="container-fluid am-cf">
         <div class="row">
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
-                <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 商品增加 </div>
+                <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 收支记录 </div>
             </div>
         </div>
     </div>
@@ -127,12 +127,12 @@ $(function($) {
 		var $form = $(".accountBookForm");
 		$.ajax({
 			type : "POST",
-		    url : "saveABookEdit?userId=#(loginUser.userId)&editType=1",
+		    url : "saveABookEdit?editType=1",
 		    data: $form.serialize(),
 		    dataType : "json",
 		    success : function(data) {
 		    	layer.msg("保存成功", {shift: 1});
-		    	setTimeout(function(){window.location.href = "#(base_path)/accountBook?userId=#(loginUser.userId)";}, 600);
+		    	setTimeout(function(){window.location.href = "#(base_path)/accountBook";}, 600);
 		    },
 		    error : function(data) {
 		    	layer.msg(data.message, {shift: 6});
@@ -143,7 +143,7 @@ $(function($) {
 	//返回
 	$(".back").unbind("click");
 	$(".back").bind("click",function(){
-    	window.location.href = "#(base_path)/accountBook?userId=#(loginUser.userId)";
+    	window.location.href = "#(base_path)/accountBook";
 	});
 });
 </script>

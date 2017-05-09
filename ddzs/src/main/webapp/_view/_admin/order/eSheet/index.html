@@ -54,8 +54,8 @@
                       </div>
                    	</div>
                   <div class="widget-body  am-fr">
-                 <div class="am-u-sm-12">
-                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                 <div class="am-u-sm-12 am-scrollable-horizontal">
+                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black am-text-nowrap" id="example-r">
                          <thead>
                              <tr>
                                  <th class="table-check"><input type="checkbox" class="eSheetAllCheck"/></th>
@@ -179,9 +179,12 @@
                                         <a href="javascript:;" class="printBtn" id="#(y.orderId)" >
                                             <i class="am-icon-print"></i> 打印预览/打印
                                         </a>
-                                      <a href="javascript:;" class="sendSms" id="#(y.orderId)">
+                                      	<a href="javascript:;" class="sendSms" id="#(y.orderId)">
                                             <i class="am-icon-comment"></i> 短信通知
                                         </a>
+                                      <!-- 	<a href="javascript:;" class="noSendSms" id="#(y.orderId)">
+                                            <i class="am-icon-comment"></i> 不通知
+                                        </a> -->
                                     </div>
 	              					</td>
                          		</tr>
@@ -454,6 +457,34 @@
 			    	}else{
 			    		layer.msg(data.message, {shift: 1});
 						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet?userId=#(loginUser.userId)";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//单个不发送短信
+		$(".noSendSms").unbind();
+		$(".noSendSms").bind("click",function(){
+			layer.load(0, {shade: false}); 
+			var orderId = this.id;
+			var shipperCode = $(".ShipperCode").val();
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/noSendSms",
+			    data: {"orderId":orderId,
+			    	"shipperCode":shipperCode,
+			    	"userId":"#(loginUser.userId)"},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data.data == 1){
+				    	layer.msg("设置成功！", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet";}, 600);
+			    	}else{
+			    		layer.msg(data.message, {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet";}, 600);
 			    	}
 			    },
 			    error : function(data) {

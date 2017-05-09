@@ -31,6 +31,7 @@ public class _MappingKit {
         /*---------商品----------*/
         arp.addMapping("product", Product.class); //商品表
         arp.addMapping("product_type", ProductType.class); //商品类型表
+        arp.addMapping("product_spec", ProductSpec.class); //商品规格表
         /*---------短信----------*/
         arp.addMapping("sms_buy_log", SmsBuyLog.class); //短信购买记录
         arp.addMapping("sms_send_log", SmsSendLog.class); //短信使用记录

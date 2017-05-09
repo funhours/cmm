@@ -491,5 +491,11 @@ public class ESheetController extends BaseController {
         result.success("发送成功");
         renderJson(result);
     }
+    
+    public void noSendSms(){
+        String orderId= getPara("orderId");
+        Orders order = dao.findById(orderId);
+        order.set("orderStatus", 4).update();
+    }
 
 }

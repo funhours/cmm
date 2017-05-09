@@ -101,16 +101,13 @@
          </div>
      </div>
 
-     <div class="row am-cf">
-         <div class="am-u-sm-12 am-u-md-8">
-             <div class="widget am-cf">
+     <div class="row">
+         <div class="am-u-md-12">
+             <div class="widget">
                  <div class="widget-head am-cf">
                      <div class="widget-title am-fl">年度订单统计</div>
-                     <div class="widget-function am-fr">
-                         <a href="javascript:;" class="am-icon-cog"></a>
-                     </div>
                  </div>
-                <div class="widget-body-md widget-body tpl-amendment-echarts am-fr" id="tpl-echarts">
+                <div class="widget-body-md tpl-amendment-echarts" id="tpl-echarts">
 					
                  </div>
              </div>
@@ -148,9 +145,27 @@
 #end
 
 #define js()
-<script src="#(base_path)/_view/_admin/index/index.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
+	
+if(window.Notification && Notification.permission !== "denied") {
+       Notification.requestPermission(function(status) {// 请求权限
+           if(status === 'granted') {
+               // 弹出一个通知
+               var n = new Notification('蜂鸟', {
+                   body : '欢迎使用蜂鸟订单助手',
+                   icon : '#(base_path)/assets/i/favicon.png'
+               });
+               // 两秒后关闭通知
+               setTimeout(function() {
+                   n.close();
+               }, 3000);
+           }
+       });
+   }
+	
+	
+	
  // 使用刚指定的配置项和数据显示图表。
  var myChart = echarts.init(document.getElementById('tpl-echarts'));
 
@@ -158,12 +173,15 @@ jQuery(function($) {
 
  option = {
      color: colors,
-
      tooltip: {
          trigger: 'axis',
          axisPointer: {
              type: 'cross'
          }
+     },
+     legend:{
+    	 width : 'auto',
+    	 height : 'auto'
      },
      grid: {
          right: '20%'
@@ -261,23 +279,7 @@ jQuery(function($) {
     	}
     });
     
-	jQuery(function($) {
-		if(window.Notification && Notification.permission !== "denied") {
-	        Notification.requestPermission(function(status) {// 请求权限
-	            if(status === 'granted') {
-	                // 弹出一个通知
-	                var n = new Notification('蜂鸟', {
-	                    body : '欢迎使用蜂鸟订单助手',
-	                    icon : '#(base_path)/assets/i/favicon.png'
-	                });
-	                // 两秒后关闭通知
-	                setTimeout(function() {
-	                    n.close();
-	                }, 3000);
-	            }
-	        });
-	    }
-	})
+		
 });
 </script>
 #end

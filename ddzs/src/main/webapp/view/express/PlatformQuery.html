@@ -8,10 +8,10 @@
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 	    <meta name="format-detection" content="telephone=no" />
 		<title>平台查询</title>
-		<link rel="stylesheet" href="/view/express/PlatformQuery.css" />
-		<link rel="stylesheet" href="/assets/layer/skin/default/layer.css">
-		<script src="/assets/js/jquery.min.js"></script>
-		<script type="text/javascript" src="/view/express/index.js" ></script>
+		<link rel="stylesheet" href="#(base_path)/view/express/PlatformQuery.css" />
+		<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+		<script src="#(base_path)/assets/js/jquery.min.js"></script>
+		<script type="text/javascript" src="#(base_path)/view/express/index.js" ></script>
 	</head>
 	<body>
 		<p class="title">蜂鸟订单助手管理系统</p>
@@ -42,7 +42,7 @@
 		</div>
 		<p class="slogan">简化管理信息化过程，充分提升团队或个人工作效率</p>
 	</body>
-	<script src="/assets/layer/layer.js"></script>
+	<script src="#(base_path)/assets/layer/layer.js"></script>
 	<script>
 		$("#Determine").click(function(){
 
@@ -63,7 +63,7 @@
 		    
 		    $.ajax({
 			    type : "POST",
-			    url : "/logistics/getOrderTraces",
+			    url : "#(base_path)/logistics/getOrderTraces",
 			    data: {"ShipperCode":shipperCode,"LogisticCode":logisticCode},
 			    dataType : "json",
 			    success : function(data) {

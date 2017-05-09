@@ -3,29 +3,35 @@ package com.mlongbo.jfinal.product;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.mlongbo.jfinal.common.utils.DateUtils;
 import com.mlongbo.jfinal.common.utils.RandomUtils;
 import com.mlongbo.jfinal.common.utils.StringUtils;
+import com.mlongbo.jfinal.controller.BaseController;
 import com.mlongbo.jfinal.model.Product;
+import com.mlongbo.jfinal.model.ProductSpec;
 import com.mlongbo.jfinal.model.ProductType;
 import com.mlongbo.jfinal.vo.AjaxResult;
 
-public class ProductController extends Controller {
+public class ProductController extends BaseController {
 	static Product dao = new Product().dao();
 	static ProductType ptdao = new ProductType().dao();
+	static ProductSpec psdao = new ProductSpec().dao();
 	private final AjaxResult result = new AjaxResult();
 	
 	public void index() {
 		//分页参数
-		Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 order by p.creationDate");
+	    String userId = getLoginUserId();
+		Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName,ps.specName ","from product p inner join product_type pt on p.typeId = pt.id INNER JOIN product_spec ps ON p.specId = ps.id where 1=1 and p.userId = '"+userId+"' order by p.creationDate");
 		setAttr("page", page);
 		
-		List<ProductType> pTypeList = ptdao.find("select * from product_type where 1=1");
+		List<ProductType> pTypeList = ptdao.find("select * from product_type where 1=1 and userId='"+userId+"' and status = 1 order by creationDate");
 		setAttr("pTypeList", pTypeList);
+		
+		List<ProductSpec> pSpecList = psdao.find("select * from product_spec where 1=1 and userId='"+userId+"' and status = 1 order by creationDate");
+		setAttr("pSpecList", pSpecList);
 		
 		render("index.html");
 	}
@@ -35,18 +41,22 @@ public class ProductController extends Controller {
      * @author: FunHours
      */
     public void toEdit(){
+        String userId = getLoginUserId();
         int editType = getParaToInt("editType");
-        List<ProductType> pTypeList = ptdao.find("select * from product_type where 1=1");
+        List<ProductType> pTypeList = ptdao.find("select * from product_type where 1=1 and userId='"+userId+"' and status = 1 order by creationDate");
+        List<ProductSpec> pSpecList = psdao.find("select * from product_spec where 1=1 and userId='"+userId+"' and status = 1 order by creationDate");
         if(editType == 1){//1：编辑 0：新增
             String proId = getPara("proId");
             Record product = Db.findFirst("select * from product where id = '" + proId+"'"  );
             setAttr("product", product);
             setAttr("pTypeList", pTypeList);
+            setAttr("pSpecList", pSpecList);
             render("edit.html");
             return;
         }
         
         setAttr("pTypeList", pTypeList);
+        setAttr("pSpecList", pSpecList);
         render("add.html");
     }
     
@@ -55,10 +65,12 @@ public class ProductController extends Controller {
      */
     public void saveProductEdit(){
         boolean saveOk = false;
+        String userId = getLoginUserId();
         Product product = getModel(Product.class);
         //修改
         String productId = product.get("id");
         product.set("creationDate", DateUtils.getNowTimeStamp());
+        product.set("userId", userId);
         if(!StringUtils.isEmpty(productId)){//修改
             if(product.update()){
                 saveOk = true;
@@ -148,20 +160,20 @@ public class ProductController extends Controller {
      * @Description (搜索)
      */
     public void search(){
-        
+        String userId = getLoginUserId();
         String pType = getPara("pType");
         String searchName = getPara("searchName");
         if(pType.equals("0") && StringUtils.isNotEmpty(searchName)){//指定商品名所有
-            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.name like '%"+searchName+"%' order by 'creationDate'");
+            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.userId = '"+userId+"' and p.name like '%"+searchName+"%' order by 'creationDate'");
             setAttr("page", page);
         }else if(pType.equals("0") && StringUtils.isEmpty(searchName)){//商品名为空的所有
-            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 order by 'creationDate'");
+            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.userId = '"+userId+"' order by 'creationDate'");
             setAttr("page", page);
         }else if(StringUtils.isNotEmpty(pType) && StringUtils.isEmpty(searchName)){//商品名为空的指定类型
-            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.typeId = '"+pType+"' order by 'creationDate'");
+            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.userId = '"+userId+"' and p.typeId = '"+pType+"' order by 'creationDate'");
             setAttr("page", page);
         }else{//指定类型指定商品
-            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.typeId = '"+pType+"' and p.name like '%"+searchName+"%' order by 'creationDate'");
+            Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName ","from product p inner join product_type pt on p.typeId = pt.id where 1=1 and p.userId = '"+userId+"' and p.typeId = '"+pType+"' and p.name like '%"+searchName+"%' order by 'creationDate'");
             setAttr("page", page);
         }
         

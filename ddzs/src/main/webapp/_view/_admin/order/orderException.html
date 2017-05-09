@@ -71,6 +71,7 @@
                               			<td style="overflow:hidden">异常件</td>
                               			
                               			<td style="overflow:hidden">
+                              			#if(x.orderStatus != 2 && x.orderStatus != 4)
 						                 <div class="tpl-table-black-operation">
                                              <a href="javascript:;" class="xtInvalid" id="#(x.orderId)">
                                                  <i class="am-icon-pencil"></i> 作废
@@ -79,6 +80,7 @@
                                                  <i class="am-icon-trash"></i> 删除
                                              </a>
                                          </div>
+                                         #end
 						              </td>
                               		</tr>
                               		#end

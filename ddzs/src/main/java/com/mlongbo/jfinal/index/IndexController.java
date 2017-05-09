@@ -18,9 +18,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.aop.Clear;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.mlongbo.jfinal.controller.BaseController;
+import com.mlongbo.jfinal.model.User;
 
 /**
  * 首页控制器
@@ -35,11 +37,15 @@ import com.mlongbo.jfinal.controller.BaseController;
     System.out.println(now.getTime());  
  */
 public class IndexController extends BaseController {
-
+    User dao = new User().dao();
 	static IndexService srv = IndexService.me;
 	public void index() {
-	    //String userId = getLoginUserId();
 	    String userId = getLoginUserId();
+	    User user = dao.findById(userId);
+	    if(user.getInt("userType") == 1){
+	        adminIndex();
+	        return;
+	    }
 	    //获取订单数
 	    Calendar now = Calendar.getInstance(); 
         int year = now.get(Calendar.YEAR);
@@ -82,10 +88,58 @@ public class IndexController extends BaseController {
 		render("index.html");
 	}
 	
+	public void adminIndex(){
+	  //获取订单数
+        Calendar now = Calendar.getInstance(); 
+        int year = now.get(Calendar.YEAR);
+        int month = now.get(Calendar.MONTH) + 1;
+        int day = now.get(Calendar.DAY_OF_MONTH);
+        
+        String daySql = "select count(*) as dayCount from orders where 1=1  and year = "+year+" and month = "+month+" and day = "+day;
+        Record dayCount = Db.findFirst(daySql);
+        
+        String monthSql = "select count(*) as monthCount from orders where 1=1 and year = "+year+" and month = "+month;
+        Record monthCount = Db.findFirst(monthSql);
+        
+        String allSql = "select count(*) as allCount from orders where 1=1 ";
+        Record allCount = Db.findFirst(allSql);
+        
+        String daySumSql = "select SUM(ord.productPrice) as daySum from orders ord where 1=1 and year = "+year+" and month = "+month+" and day = "+day;
+        Record daySum = Db.findFirst(daySumSql);
+        
+        String monthSumSql = "select SUM(ord.productPrice) as monthSum from orders ord where 1=1 and year = "+year+" and month = "+month;
+        Record monthSum = Db.findFirst(monthSumSql);
+        
+        String allSumSql = "select SUM(ord.productPrice) as allSum from orders ord where 1=1";
+        Record allSum = Db.findFirst(allSumSql);
+        
+        JSONObject dayCountObj = JSONObject.parseObject(dayCount.toString());
+        JSONObject monthCountObj = JSONObject.parseObject(monthCount.toString());
+        JSONObject allCountObj = JSONObject.parseObject(allCount.toString());
+        
+        JSONObject daySumObj = JSONObject.parseObject(daySum.toString());
+        JSONObject monthSumObj = JSONObject.parseObject(monthSum.toString());
+        JSONObject allSumObj = JSONObject.parseObject(allSum.toString());
+        
+        setAttr("dayCount", dayCountObj.getString("dayCount"));
+        setAttr("monthCount", monthCountObj.getString("monthCount"));
+        setAttr("allCount", allCountObj.getString("allCount"));
+        
+        setAttr("daySum", daySumObj.getString("daySum"));
+        setAttr("monthSum", monthSumObj.getString("monthSum"));
+        setAttr("allSum", allSumObj.getString("allSum"));
+        render("index.html");
+	}
+	
 	public void getYearOrderInfo(){
 	    /*String userId = getLoginUserId();*/
 	    String userId = getLoginUserId();
-	    Calendar now = Calendar.getInstance(); 
+        User user = dao.findById(userId);
+        if(user.getInt("userType") == 1){
+            adminGetYearOrderInfo();
+            return;
+        }
+	    Calendar now = Calendar.getInstance();
         int year = now.get(Calendar.YEAR);
 	    String priceSql ="select SUM(productPrice) as prices from orders where 1=1 and relationUser = '"+userId+"' and year = "+year+" GROUP BY month"; 
 	    String countSql = "select count(*) as counts from orders where 1=1 and relationUser = '"+userId+"' and year = "+year+" GROUP BY month";
@@ -99,6 +153,7 @@ public class IndexController extends BaseController {
 	        JSONObject pricesObj = JSONObject.parseObject(prices.get(i).toString());
 	        _prices[i] = pricesObj.getString("prices");
         }
+	    
 	    for (int i = 0; i < _counts.length; i++) {
 	        JSONObject countsObj = JSONObject.parseObject(counts.get(i).toString());
 	        _counts[i] = countsObj.getString("counts");
@@ -111,5 +166,63 @@ public class IndexController extends BaseController {
 	    renderJson(resultObj);
 	    
 	}
+	
+	public void adminGetYearOrderInfo(){
+	    /*String userId = getLoginUserId();*/
+	    Calendar now = Calendar.getInstance(); 
+	    int year = now.get(Calendar.YEAR);
+	    String priceSql ="select SUM(productPrice) as prices from orders where 1=1 and year = "+year+" GROUP BY month"; 
+	    String countSql = "select count(*) as counts from orders where 1=1 and year = "+year+" GROUP BY month";
+	    
+	    List<Record> prices = Db.find(priceSql);
+	    List<Record> counts = Db.find(countSql);
+	    String _prices[] = new String[prices.size()];
+	    String _counts[] = new String[counts.size()];
+	    
+	    for (int i = 0; i < prices.size(); i++) {
+	        JSONObject pricesObj = JSONObject.parseObject(prices.get(i).toString());
+	        _prices[i] = pricesObj.getString("prices");
+	    }
+	    for (int i = 0; i < _counts.length; i++) {
+	        JSONObject countsObj = JSONObject.parseObject(counts.get(i).toString());
+	        _counts[i] = countsObj.getString("counts");
+	    }
+	    
+	    JSONObject resultObj = new JSONObject();
+	    resultObj.put("prices", _prices);
+	    resultObj.put("counts", _counts);
+	    
+	    renderJson(resultObj);
+	    
+	}
+	
+	@Clear
+	public void getYearOrderInfo4Supplier(){
+        String userId = getPara("userId");
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR);
+        String priceSql ="select SUM(productPrice) as prices from orders where 1=1 and relationUser = '"+userId+"' and year = "+year+" GROUP BY month"; 
+        String countSql = "select count(*) as counts from orders where 1=1 and relationUser = '"+userId+"' and year = "+year+" GROUP BY month";
+        
+        List<Record> prices = Db.find(priceSql);
+        List<Record> counts = Db.find(countSql);
+        String _prices[] = new String[prices.size()];
+        String _counts[] = new String[counts.size()];
+        
+        for (int i = 0; i < prices.size(); i++) {
+            JSONObject pricesObj = JSONObject.parseObject(prices.get(i).toString());
+            _prices[i] = pricesObj.getString("prices");
+        }
+        for (int i = 0; i < _counts.length; i++) {
+            JSONObject countsObj = JSONObject.parseObject(counts.get(i).toString());
+            _counts[i] = countsObj.getString("counts");
+        }
+        
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("prices", _prices);
+        resultObj.put("counts", _counts);
+        
+        renderJson(resultObj);
+    }
 
 }

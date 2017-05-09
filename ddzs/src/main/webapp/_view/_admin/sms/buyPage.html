@@ -7,11 +7,29 @@
 	#@staffLayout()
 #end
 #define main()
+ <div class="container-fluid am-cf">
+     <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 短信/订单/时长</div>
+             <p class="page-header-description">购买及购买记录</p>
+         </div>
+        #if(loginUser.userType == 1)
+			<div class="am-u-lg-3 tpl-index-settings-button">
+             <button type="button" class="page-header-button smsBuyConfig"><span class="am-icon-shopping-cart"></span> 短信购买设置</button>
+             <button type="button" class="page-header-button orderBuyConfig"><span class="am-icon-shopping-cart"></span> 订单购买设置</button>
+             <button type="button" class="page-header-button timeBuyConfig"><span class="am-icon-shopping-cart"></span> 使用时长购买设置</button>
+<!--              <button type="button" class="page-header-button initUseCountConfig"><span class="am-icon-shopping-cart"></span> 初始使用量设置</button> -->
+         	</div>
+		#end
+         
+     </div>
 
+ </div>
  <div class="row-content am-cf">
-     <div class="row  am-cf">
-      <div class="widget-head am-cf">
-           <div class="widget-title am-fl">短信购买</div>
+     <div class="row am-cf">
+     <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+      	<div class="widget-head ">
+      	<div class="page-header-heading"><span class="am-icon-cart-plus page-header-heading-icon"></span> 短信购买</div>
        </div>
         <div class="widget-body  am-fr">
             <div class="am-scrollable-horizontal ">
@@ -41,9 +59,10 @@
                 </table>
             </div>
         </div>
-        
+        </div>
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
         <div class="widget-head am-cf">
-           <div class="widget-title am-fl">订单购买</div>
+        <div class="page-header-heading"><span class="am-icon-cart-plus page-header-heading-icon"></span> 订单购买</div>
        </div>
         <div class="widget-body  am-fr">
             <div class="am-scrollable-horizontal ">
@@ -73,9 +92,10 @@
                 </table>
             </div>
         </div>
-        
+        </div>
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
         <div class="widget-head am-cf">
-           <div class="widget-title-black ">使用时间购买</div>
+        <div class="page-header-heading"><span class="am-icon-cart-plus page-header-heading-icon"></span> 使用时间购买</div>
        </div>
         <div class="widget-body  am-fr">
             <div class="am-scrollable-horizontal ">
@@ -105,6 +125,96 @@
                 </table>
             </div>
         </div>
+        </div>
+        </div>
+        <div class="row  am-cf">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+        <div class="widget-head am-cf">
+        <div class="page-header-heading">短信购买记录</div>
+        </div>
+         <div class="widget-body  am-fr">
+             <div class="am-scrollable-horizontal ">
+                 <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                     <thead>
+                         <tr>
+                             <th>数量</th>
+                             <th>金额</th>
+                             <th>时间</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                     	#for(x : buyLogPage.list)
+                     		<tr>
+                     			<td>#(x.buyCount)</td>
+                     			<td>#(x.buyPrice)</td>
+                     			<td>#(x.buyTime)</td>
+                     		</tr>
+                     	#end
+                         <!-- more data -->
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+        </div>
+        
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+        <div class="widget-head am-cf">
+        <div class="page-header-heading">订单购买记录</div>
+        </div>
+         <div class="widget-body  am-fr">
+             <div class="am-scrollable-horizontal ">
+                 <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                     <thead>
+                         <tr>
+                             <th>数量</th>
+                             <th>金额</th>
+                             <th>时间</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                     	#for(x : oBuyLogPage.list)
+                     		<tr>
+                     			<td>#(x.buyCount)条</td>
+                     			<td>#(x.buyPrice)</td>
+                     			<td>#(x.buyTime)</td>
+                     		</tr>
+                     	#end
+                         <!-- more data -->
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+        </div>
+        
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+        <div class="widget-head am-cf">
+        <div class="page-header-heading">时长购买记录</div>
+        </div>
+         <div class="widget-body  am-fr">
+             <div class="am-scrollable-horizontal ">
+                 <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black " id="example-r">
+                     <thead>
+                         <tr>
+                             <th>天数</th>
+                             <th>金额</th>
+                             <th>时间</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                     	#for(x : tBuyLogPage.list)
+                     		<tr>
+                     			<td>#(x.day)</td>
+                     			<td>#(x.buyPrice)</td>
+                     			<td>#(x.buyTime)</td>
+                     		</tr>
+                     	#end
+                         <!-- more data -->
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+         </div>
+         
      </div>
  </div>
 #end

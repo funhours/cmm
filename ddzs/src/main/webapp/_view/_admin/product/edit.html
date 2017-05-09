@@ -29,11 +29,19 @@
                </div>
            </div>
            
-           <div class="am-form-group">
+            <div class="am-form-group am-form-select">
                <label for="product-spec" class="am-u-sm-3 am-form-label">商品规格 <span class="tpl-form-line-small-title">/ Spec</span></label>
                <div class="am-u-sm-9">
-                   <input type="text" required class="tpl-form-input" placeholder="请输入商品规格 / spec" name="product.spec" value="#(product.spec)">
-               </div>
+	          	 <select data-am-selected name="product.specId">
+			      	<option value="0">-请选择商品规格-</option>
+					#for(s : pSpecList)
+						#if(s.id == product.specId)
+							<option value="#(s.id)" selected>#(s.specName)</option>
+						#else
+							<option value="#(s.id)">#(s.specName)</option>
+						#end
+					#end
+			    </select>
            </div>
            
            <div class="am-form-group">

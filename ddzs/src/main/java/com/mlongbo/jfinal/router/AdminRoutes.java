@@ -15,6 +15,7 @@ import com.mlongbo.jfinal.order.OrderSearchController;
 import com.mlongbo.jfinal.order.SmartInputController;
 import com.mlongbo.jfinal.person.PersonController;
 import com.mlongbo.jfinal.product.ProductController;
+import com.mlongbo.jfinal.productSpec.ProductSpecController;
 import com.mlongbo.jfinal.productType.ProductTypeController;
 import com.mlongbo.jfinal.sms.SmsController;
 
@@ -38,6 +39,8 @@ public class AdminRoutes extends Routes {
 		add("/product", ProductController.class, "/product");
 		//产品类型管理
 		add("/ptype", ProductTypeController.class, "/productType");
+		//产品规格管理
+		add("/pspec", ProductSpecController.class, "/productSpec");
 		//订单管理
 		add("/order", OrderController.class, "/order");
 		//订单搜索
@@ -54,7 +57,6 @@ public class AdminRoutes extends Routes {
         add("/feedback", FeedBackController.class, "/feedback");
         //物流查询
         add("/logistics", LogisticsController.class, "/logistics");
-        
         //账本管理
         add("/accountBook", AccountBookController.class, "/accountBook");
         //banner图管理

@@ -42,6 +42,7 @@ public class AccountBookController extends BaseController {
         int editType = getParaToInt("editType");
         AccountBook aBook = getModel(AccountBook.class);
         String userId = getLoginUserId();
+        //获取要保存的账本日期
         String inputDate = getPara("inputDate");
         //修改
         aBook.set("creationDate", DateUtils.getNowTimeStamp());

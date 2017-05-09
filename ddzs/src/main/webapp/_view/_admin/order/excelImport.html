@@ -54,8 +54,8 @@
                       	<div class="widget-head am-cf">
                                 <div class="widget-title  am-cf">系统订单</div>
                             </div>
-                            <div class="widget-body  am-fr">
-                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                            <div class="widget-body  am-fr am-scrollable-horizontal">
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black am-text-nowrap" id="example-r">
                               <thead>
                                   <tr>
                                       <th class="table-check"><input type="checkbox" class="xtAllCheck"/></th>
@@ -118,6 +118,7 @@
                               			</td>
                               			
                               			<td style="overflow:hidden">
+                              			#if(x.orderStatus != 2 && x.orderStatus != 4)
 						                 <div class="tpl-table-black-operation">
                                              <a href="javascript:;" class="xtInvalid" id="#(x.orderId)">
                                                  <i class="am-icon-pencil"></i> 作废
@@ -126,6 +127,7 @@
                                                  <i class="am-icon-trash"></i> 删除
                                              </a>
                                          </div>
+                                         #end
 						              </td>
                               		</tr>
                               		#end
@@ -147,8 +149,8 @@
 					<div class="widget-head am-cf">
                          <div class="widget-title  am-cf">淘宝订单</div>
                     </div>
-                        <div class="widget-body  am-fr">
-                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                        <div class="widget-body am-fr am-scrollable-horizontal">
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black am-text-nowrap" id="example-r">
                               <thead>
                                   <tr>
                                       <th class="table-check"><input type="checkbox" class="allCheck"/></th>
@@ -202,8 +204,8 @@
 					<div class="widget-head am-cf">
                          <div class="widget-title  am-cf">京东订单</div>
                     </div>
-                        <div class="widget-body  am-fr">
-                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                        <div class="widget-body am-fr am-scrollable-horizontal">
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black am-text-nowrap" id="example-r">
                               <thead>
                                   <tr>
                                       <th class="table-check"><input type="checkbox" class="jdAllCheck"/></th>
