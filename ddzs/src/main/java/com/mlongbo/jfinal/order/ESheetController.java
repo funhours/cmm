@@ -471,7 +471,7 @@ public class ESheetController extends BaseController {
                 Shipper shipper = Shipper.dao.findFirst("select * from shipper where shipperCode = '" + shipperCode+"'");
                 //2
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                String content = "亲，您购买的"+order.getStr("productName")+"已委托"+shipper.getStr("shipperName")+"镖局为您发货。镖号："+order.getStr("originCode")+".若想及时了解快递信息，请点击网址查询：http://fengniao.com 时间:"+df.format(new Date());
+                String content = "亲，您购买的"+order.getStr("productName")+"已委托"+shipper.getStr("shipperName")+"镖局为您发货。镖号："+order.getStr("originCode")+".若想及时了解快递信息，请点击：http://fengniao.com/logistics/getOrderTracesByOrderId?no="+orderIds[i]+" 时间:"+df.format(new Date());
                 String mobile[] = new String[]{order.get("recipientTel")+""} ;
                 //3
                 SMSUtils.sendOrderSms(mobile, content);

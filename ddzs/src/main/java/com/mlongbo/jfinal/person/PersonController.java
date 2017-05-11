@@ -11,6 +11,7 @@ import com.mlongbo.jfinal.common.utils.DateUtils;
 import com.mlongbo.jfinal.common.utils.RandomUtils;
 import com.mlongbo.jfinal.common.utils.StringUtils;
 import com.mlongbo.jfinal.controller.BaseController;
+import com.mlongbo.jfinal.model.ExtQuery;
 import com.mlongbo.jfinal.model.User;
 import com.mlongbo.jfinal.model.UserRole;
 import com.mlongbo.jfinal.vo.AjaxResult;
@@ -93,6 +94,12 @@ public class PersonController extends BaseController {
 			saveOk = new UserRole()
             .set(UserRole.USER_ID, userId)
             .set(UserRole.ROLE_ID, user.get(User.USERTYPE))
+            .save();
+			
+			//增加外部查询页信息
+            new ExtQuery().set("id", RandomUtils.randomCustomUUID())
+            .set("userId", userId)
+            .set("linkKey", RandomUtils.randomString(5))
             .save();
 			
 			if(saveOk){

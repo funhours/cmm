@@ -25,6 +25,7 @@ import com.mlongbo.jfinal.common.utils.SMSUtils;
 import com.mlongbo.jfinal.common.utils.StringUtils;
 import com.mlongbo.jfinal.config.AppProperty;
 import com.mlongbo.jfinal.interceptor.TokenInterceptor;
+import com.mlongbo.jfinal.model.ExtQuery;
 import com.mlongbo.jfinal.model.InitUseCount;
 import com.mlongbo.jfinal.model.OrderStore;
 import com.mlongbo.jfinal.model.RegisterCode;
@@ -192,6 +193,13 @@ public class AccountAPIController extends BaseAPIController {
 		    .set("remaining", smsCount)
 		    .set("warningValue",10)
 		    .save();
+		    
+		    //增加外部查询页信息
+		    new ExtQuery().set("id", RandomUtils.randomCustomUUID())
+		    .set("userId", userId)
+		    .set("linkKey", RandomUtils.randomString(5))
+		    .save();
+		    
 		}
 		
         //删除验证码记录

@@ -77,9 +77,9 @@ public class SMSUtils {
      * @return 是否发送成功
      */
 	public static boolean sendCode(String[] mobiles, String content) {
-		String regContent = "【凯优科技】你的验证是："+content+"，请及时完成注册即时短信";
+		String regContent = "【蜂鸟打单助手】你的验证是："+content+"，请及时完成注册.";
 		try {
-			int i=getClient().sendSMS(mobiles, regContent,"凯优科技",3);//带扩展码
+			int i=getClient().sendSMS(mobiles, regContent,"蜂鸟打单助手",3);//带扩展码
 			if(i == 0){
 				return  true;
 			}
@@ -96,9 +96,9 @@ public class SMSUtils {
      * @return 是否发送成功
      */
     public static boolean sendOrderSms(String[] mobiles, String content) {
-        String rcontent = "【蜂鸟订单助手】："+content;
+        String rcontent = "【蜂鸟打单助手】："+content;
         try {
-            int i=getClient().sendSMS(mobiles, rcontent,"凯优科技",3);//带扩展码
+            int i=getClient().sendSMS(mobiles, rcontent,"蜂鸟打单助手",3);//带扩展码
             if(i == 0){
                 return  true;
             }

@@ -3,10 +3,12 @@ package com.mlongbo.jfinal.router;
 import com.jfinal.config.Routes;
 import com.mlongbo.jfinal.accountBook.AccountBookController;
 import com.mlongbo.jfinal.banner.BannerController;
+import com.mlongbo.jfinal.extQuery.ExtQueryController;
 import com.mlongbo.jfinal.feedback.FeedBackController;
 import com.mlongbo.jfinal.index.IndexController;
 import com.mlongbo.jfinal.login.LoginController;
-import com.mlongbo.jfinal.logisticsController.LogisticsController;
+import com.mlongbo.jfinal.logistics.LogisticsController;
+import com.mlongbo.jfinal.logistics.LogisticsInquiryController;
 import com.mlongbo.jfinal.order.ESheetController;
 import com.mlongbo.jfinal.order.OrderAbnormalController;
 import com.mlongbo.jfinal.order.OrderController;
@@ -55,12 +57,16 @@ public class AdminRoutes extends Routes {
         add("/order/dist", OrderDistController.class);
         //留言管理
         add("/feedback", FeedBackController.class, "/feedback");
-        //物流查询
-        add("/logistics", LogisticsController.class, "/logistics");
         //账本管理
         add("/accountBook", AccountBookController.class, "/accountBook");
         //banner图管理
         add("/banner", BannerController.class, "/banner");
+        //物流查询
+        add("/logistics", LogisticsController.class, "/logistics");
+        //外部查询页管理
+        add("/extQuery",ExtQueryController.class,"/extQuery");
+        //外部查询页
+        add("/logisticsInquiry",LogisticsInquiryController.class,"/logisticsInquiry");
 	}
 
 }

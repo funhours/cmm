@@ -37,6 +37,16 @@ public class IndexAction extends Controller {
     public void express(){
         render("express/PlatformQuery.html");
     }
+    
+    /**
+     * 
+     * @Description (消费者物流查询)
+     */
+    public void express2(){
+        String orderId = getPara("no");
+        setAttr("orderId", orderId);
+        render("express/PlatformQuery2.html");
+    }
 
     /**
      * 查询手机验证码 *

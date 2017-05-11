@@ -52,7 +52,6 @@ public class _MappingKit {
         /*---------账本------------*/
         arp.addMapping("account_book", AccountBook.class);//账本
         
-        
         /*---------banner图设置-----*/
         arp.addMapping("banner", Banner.class);//banner图设置
         
@@ -62,6 +61,10 @@ public class _MappingKit {
         
         /*---------物流日志---------*/
         arp.addMapping("logistics_log", LogisticsLog.class);
+
+        /*---------外部查询页面---------*/
+        arp.addMapping("ext_query", ExtQuery.class);
+        
         
 	}
 }

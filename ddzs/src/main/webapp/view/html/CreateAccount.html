@@ -124,6 +124,9 @@
 	<script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
 	<script src="#(base_path)/assets/layer/layer.js"></script>
 	<script type="text/javascript">
+	jQuery(function($) {
+		var canSend = false;
+	
 		//登录
 		$(".SignInBtn").unbind("click");
 		$(".SignInBtn").bind("click",function(){
@@ -134,23 +137,25 @@
 		$('.fasong').unbind('click').click(function () {
 			var loginName = $(".loginName").val();
 			var url = "#(base_path)/api/account/sendCode";
-			$.ajax({
-			  type: 'POST',
-			  url: url,
-			  data: {loginName:loginName},
-			  success: function(data){
-				  if(data.code == 1){
-					layer.msg("验证码发送成功！请在一分钟内完成注册", {shift: 1});
-					addCookie("secondsremained",60,60);//添加cookie记录,有效时间60s
-			        settime($('.fasong'));//开始倒计时
-				  }else{
-				  	layer.msg(data.message, {shift: 1});
-					return;
-				  }
-			  },error: function (XMLHttpRequest) {
-				  layer.msg("Ajax请求失败，错误状态为："+XMLHttpRequest.status,{shift: 1});
+			if(canSend){
+				$.ajax({
+				  type: 'POST',
+				  url: url,
+				  data: {loginName:loginName},
+				  success: function(data){
+					  if(data.code == 1){
+						layer.msg("验证码发送成功！请在一分钟内完成注册", {shift: 1});
+						addCookie("secondsremained",60,60);//添加cookie记录,有效时间60s
+				        settime($('.fasong'));//开始倒计时
+					  }else{
+					  	layer.msg(data.message, {shift: 1});
+						return;
+					  }
+				  },error: function (XMLHttpRequest) {
+					  layer.msg("Ajax请求失败，错误状态为："+XMLHttpRequest.status,{shift: 1});
+				}
+				});
 			}
-			});
 			
 	        
 		});
@@ -239,5 +244,33 @@
 		    } 
 		    setTimeout(function() { settime(obj) },1000) //每1000毫秒执行一次
 		} 
+		
+		//检测是否注册过
+		$(".loginName").blur(function(){
+		  var loginName = $(".loginName").val();
+		  
+		  var checkUser = layer.load(2, {time: 10*1000},{shade: [0.8, '#393D49']});
+		  
+		  $.ajax({
+			  type: 'POST',
+			  url: '#(base_path)/api/account/checkUser',
+			  data: {
+				  loginName:loginName,
+				  },
+			  success: function(data){
+				 if(data.code == 1){
+					 layer.msg("手机号已注册过", {shift: 1});
+					 //TODO 让发送注册码按钮判断是否可以发送
+					 layer.close(checkUser);
+				 }else{
+					 canSend = true;
+					 layer.close(checkUser);
+				 }
+			  },error: function (XMLHttpRequest) {
+				  layer.msg("手机号验证失败请稍后再试", {shift: 1});
+			}
+			});
+		});
+	});
 	</script>
 </html>
