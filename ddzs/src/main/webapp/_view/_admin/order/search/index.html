@@ -4,25 +4,17 @@
 <div class="row-content am-cf">
 	<div class="row">
 		<div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
-        <div class="widget am-cf">
-            <div class="widget-head am-cf">
-                <div class="widget-title am-fl">常用查询</div>
-            </div>
-            <div class="widget-body ">
                 <table width="100%" class="am-table am-table-bordered ">
                     <thead>
                         <tr>
-                            <th>录入人</th>
-                            <th>(从)时间</th>
-                            <th>(到)时间</th>
-                            <th>产品</th>
+                            <th colspan="5">常用查询</th>
                         </tr>
                     </thead>
-                    <form class = "orderSeachParaForm" action="#(base_path)/orderSearch/orderSeachByPara" method="post">
+                    <form class = "am-form tpl-form-line-form orderSeachParaForm" action="#(base_path)/orderSearch/orderSeachByPara" method="post">
                     <tbody>
                         <tr class="gradeX">
                             <td>
-                            	<select data-am-selected="{btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.orderEntry" placeholder="请选择订单录入人" >
+                            	<select data-am-selected="{btnWidth: '85%',btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.orderEntry" placeholder="订单录入人" class="widget-body">
 	                              	<option value="">请选择订单录入人</option>
 							      		#for(u : uList)
 							      			<option value="#(u.nickName)"><p style="color: black;">#(u.nickName)</p></option>
@@ -36,7 +28,7 @@
                             	<input type="text" class="am-form-field endDate" placeholder="选择结束日期" data-am-datepicker readonly required name="inputDate"/>
                             </td>
                             <td>
-                               <select data-am-selected="{btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.productName" placeholder="请选择商品名称" onchange="chooesPtype()" class="chooesPtype">
+                               <select data-am-selected="{btnWidth: '85%',btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.productName" placeholder="商品名称" onchange="chooesPtype()" class="chooesPtype">
 	                              <option value="">请选择商品名称</option>
 						      	#for(p : ptList)
 					      			<option id="#(p.id)" value="#(p.typeName)">#(p.typeName)</option>
@@ -44,71 +36,68 @@
 						      </select>
                             </td>
                             <td>
-                               <select data-am-selected="{btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.productSpec" placeholder="请选择商品规格" class="productSpec">
+                               <select data-am-selected="{btnWidth: '85%',btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.productSpec" placeholder="商品规格" class="productSpec">
 						      </select>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
     </div>
     <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
-        <div class="widget am-cf">
-            <div class="widget-head am-cf">
-                <div class="widget-title am-fl">其它条件</div>
-            </div>
-            <div class="widget-body ">
-                <table width="100%" class="am-table am-table-bordered " id="example-r">
-                    
-                    <tbody>
-                        <tr class="gradeX">
-                            <td>
-                            	<input type="text" class="am-form-field" placeholder="订单编号" name="ordersSearch.orderId">
-	                             
-                            </td>
-                            <td>
-                            	<input type="text" class="am-form-field" placeholder="商品数量" name="ordersSearch.productCount">
-                            </td>
-                            <td>
-                            	<input type="text" class="am-form-field" placeholder="商品价格" name="ordersSearch.productPrice">
-                            </td>
-                            <td>
-                               <input type="text" class="am-form-field" placeholder="发件人" name="ordersSearch.shipper">
-                            </td>
-                            <td>
-                               <input type="text" class="am-form-field" placeholder="发件人电话" name="ordersSearch.shipperTel">
-                            </td>
-                        </tr>
-                        <tr class="gradeX">
-                            <td>
-                            	<input type="text" class="am-form-field" placeholder="收件人" name="ordersSearch.recipient">
-                            </td>
-                            <td>
-                            	<input type="text" class="am-form-field" placeholder="收件人电话" name="ordersSearch.recipientTel">
-                            </td>
-                            <td>
-                            	<input type="text" class="am-form-field" placeholder="收件人地址" name="ordersSearch.recipientAddress">
-                            </td>
-                            <td>
-                            	<select data-am-selected="{btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.orderStatus" placeholder="订单状态">
-							      	<option value="">请选择订单状态</option>
-							      	<option value="1"><p class="am-sans-serif">未分配</p></option>
-									<option value="2">已分配</option>
-									<option value="3">未打印</option>
-									<option value="4">已打印</option>
-									<option value="5">快递中</option>
-									<option value="6">已收件</option>
-									<option value="7">异常件</option>
-									<option value="8">已作废</option>
-							    </select>
-                            </td>
-                            <td>
-                               <input type="text" class="am-form-field searchDate" placeholder="订单日期" data-am-datepicker readonly required name="inputDate"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+           <table width="100%" class="am-table am-table-bordered " id="example-r">
+               <thead>
+                  <tr>
+                      <th colspan="5">其它条件</th>
+                  </tr>
+              </thead>
+               <tbody>
+                   <tr class="gradeX">
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="订单编号" name="ordersSearch.orderId">
+                         
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="商品数量" name="ordersSearch.productCount">
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="商品价格" name="ordersSearch.productPrice">
+                       </td>
+                       <td>
+                          <input type="text" class="am-form-field" placeholder="发件人" name="ordersSearch.shipper">
+                       </td>
+                       <td>
+                          <input type="text" class="am-form-field" placeholder="发件人电话" name="ordersSearch.shipperTel">
+                       </td>
+                   </tr>
+                   <tr class="gradeX">
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="收件人" name="ordersSearch.recipient">
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="收件人电话" name="ordersSearch.recipientTel">
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="收件人地址" name="ordersSearch.recipientAddress">
+                       </td>
+                       <td>
+                       	<select data-am-selected="{btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.orderStatus" placeholder="订单状态">
+					      	<option value="">请选择订单状态</option>
+					      	<option value="1"><p class="am-sans-serif">未分配</p></option>
+							<option value="2">已分配</option>
+							<option value="3">未打印</option>
+							<option value="4">已打印</option>
+							<option value="5">快递中</option>
+							<option value="6">已收件</option>
+							<option value="7">异常件</option>
+							<option value="8">已作废</option>
+					    </select>
+                       </td>
+                       <td>
+                          <input type="text" class="am-form-field searchDate" placeholder="订单日期" data-am-datepicker readonly required name="inputDate"/>
+                       </td>
+                   </tr>
+               </tbody>
+           </table>
                          
              				<input type="hidden" class="am-form-field year" placeholder="年" name="ordersSearch.year"/>
                             <input type="hidden" class="am-form-field month" placeholder="月" name="ordersSearch.month"/>
@@ -118,8 +107,6 @@
                             <input type="hidden" class="am-form-field _endDate" name="endDate"/>
                             <input type="hidden" class="searchType" name="searchType">
               </form>
-            </div>
-        </div>
     </div>
 	
 	</div>
@@ -629,8 +616,7 @@
 			},
 			dataType : "json",
 			success : function(data) {
-				console.log(data);
-				var str = '<option value="">请选择商品规格</option>';
+				$("<option value=''>请选择商品规格</option>").appendTo(".productSpec");
 				for(var i = 0; i< data.length; i++){
 					$("<option value="+data[i].spec+">"+data[i].spec+"</option>").appendTo(".productSpec");
 				}

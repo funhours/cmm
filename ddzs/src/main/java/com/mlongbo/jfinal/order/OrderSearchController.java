@@ -107,9 +107,12 @@ public class OrderSearchController extends BaseController {
             break;
         }
         // 查询所有产品
-        String psql = "select * from product where 1=1 and userId = '" + userId + "'";
+        /*String psql = "select * from product where 1=1 and userId = '" + userId + "'";
         List<Product> pList = pdao.find(psql);
-        setAttr("pList", pList);
+        setAttr("pList", pList);*/
+        String ptSql = "select * from product_type where 1=1 and userId = '" + userId + "'";
+        List<ProductType> ptList = ptdao.find(ptSql);
+        setAttr("ptList", ptList);
 
         // 查询所有代理或员工
         String usql = "select * from t_user where 1=1 and parentUserId = '" + userId + "'";

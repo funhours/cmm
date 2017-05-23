@@ -1,7 +1,5 @@
 package com.mlongbo.jfinal.model;
 
-import com.jfinal.plugin.activerecord.Model;
-
 /**
  * @author malongbo
  * @date 2015/2/13
@@ -20,6 +18,7 @@ public class OrdersSearch {
     public static String orderEntry = "orderEntry";
     public static String remarks = "remarks";
     public static String orderStatus = "orderStatus";
+    public static String productSpec = "productSpec";
     public static String relationUser = "relationUser";
     public static String creationDate = "creationDate";
     public static String year = "year";
@@ -169,5 +168,13 @@ public class OrdersSearch {
     }
 
     
-   
+    public static String getProductSpec() {
+        return productSpec;
+    }
+
+    
+    public static void setProductSpec(String productSpec) {
+        OrdersSearch.productSpec = productSpec;
+    }
+    
 }

@@ -363,6 +363,7 @@ public class OrderController extends BaseController {
                 .set("orderEntry",map.get(13))
                 .set("remarks",map.get(14))
                 .set("orderStatus",map.get(15))
+                .set("productSpec",map.get(16))
                 .set("relationUser",relationUser.getStr("userId"))
                 .set("creationDate",DateUtils.getNowTimeStamp())
                 .set("year", now.get(Calendar.YEAR))

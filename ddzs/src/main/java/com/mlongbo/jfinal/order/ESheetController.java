@@ -10,6 +10,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.mlongbo.jfinal.api.KdniaoEOrderApi;
+import com.mlongbo.jfinal.common.utils.RandomUtils;
 import com.mlongbo.jfinal.common.utils.SMSUtils;
 import com.mlongbo.jfinal.controller.BaseController;
 import com.mlongbo.jfinal.model.Orders;
@@ -36,12 +37,38 @@ public class ESheetController extends BaseController {
         setAttr("eSheetOrdersPage", eSheetOrdersPage);
         Page<Orders> eSheetNoPrintOrdersPage = dao.paginate(getParaToInt("p", 1), 10,"select o.*,s.shipperName ","from orders o LEFT JOIN shipper s on o.shipperCode = s.shipperCode where 1=1 and orderStatus = 3 and relationUser = '"+userId+"' order by creationDate");
         setAttr("eSheetNoPrintOrdersPage", eSheetNoPrintOrdersPage);
-        String sql = "select * from t_user where 1=1 and userId = '" + userId + "'";
-        User user = udao.findFirst(sql);
-        List<Shipper> shipper = new Shipper().dao().find("select * from shipper order by (Case when shipperCode = '"+user.getStr("shipperCode")+"' then 0 else 1 end),id asc" );
+        User user = udao.findById(userId);
+        List<RelationUserDotPara> rudps = rudpDao.find("select * from relation_user_dot_para WHERE userId = '"+userId+"' order by (Case when shipperCode = '"+user.getStr("shipperCode")+"' then 0 else 1 end),id asc" );
+        List<Shipper> shipper = new ArrayList<Shipper>();
+        for(RelationUserDotPara rudp : rudps){
+            Shipper shi = Shipper.dao.findFirst("select * from shipper where 1=1 and shipperCode = '" + rudp.getStr("shipperCode") + "'");
+            shipper.add(shi);
+        }
+        
         setAttr("shipper", shipper);
         
         render("index.html");
+    }
+    
+    /**
+     * 
+     * @Description (配置页面)
+     */
+    public void configPage(){
+        String userId = getLoginUserId();
+        //网点配置
+        List<RelationUserDotPara> rudpList = rudpDao.find("select r.*,s.shipperName from relation_user_dot_para r left join shipper s on r.shipperCode = s.shipperCode  where 1=1 and userId = '" + userId + "'");
+        setAttr("rudpList", rudpList);
+        //默认快递
+        String shipperCode = udao.findById(userId).get("shipperCode");
+        Shipper shipper = Shipper.dao.findFirst("select * from shipper where 1=1 and shipperCode = '"+shipperCode+"'");
+        setAttr("shipper", shipper);
+        //发件信息
+        String sql = "select * from order_esheet_sender_template where 1=1 and userId = '" + userId + "'";
+        OrderEsheetSenderTemplate template = tempDao.findFirst(sql);
+        setAttr("template", template);
+        
+        render("config.html");
     }
     
     /**
@@ -52,7 +79,13 @@ public class ESheetController extends BaseController {
         String userId = getLoginUserId();
         String sql = "select * from t_user where 1=1 and userId = '" + userId + "'";
         User user = udao.findFirst(sql);
-        List<Shipper> shipper = new Shipper().dao().find("select * from shipper order by (Case when shipperCode = '"+user.getStr("shipperCode")+"' then 0 else 1 end),id asc" );
+        List<RelationUserDotPara> rudps = rudpDao.find("select * from relation_user_dot_para WHERE userId = '"+userId+"' order by (Case when shipperCode = '"+user.getStr("shipperCode")+"' then 0 else 1 end),id asc" );
+        List<Shipper> shipper = new ArrayList<Shipper>();
+        for(RelationUserDotPara rudp : rudps){
+            Shipper shi = Shipper.dao.findFirst("select * from shipper where 1=1 and shipperCode = '" + rudp.getStr("shipperCode") + "'");
+            shipper.add(shi);
+        }
+        
         setAttr("shipper", shipper);
         render("defaultShipper.html");
     }
@@ -90,7 +123,7 @@ public class ESheetController extends BaseController {
     public void dotPara(){
         String userId = getLoginUserId();
         String shipperCode = getPara("shipperCode");
-        String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperId = '" + shipperCode+"'";
+        String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperCode = '" + shipperCode+"'";
         RelationUserDotPara rudp = rudpDao.findFirst(sql);
         setAttr("rudp", rudp);
         render("dotParameter.html");
@@ -109,7 +142,7 @@ public class ESheetController extends BaseController {
         String userId = getLoginUserId();
         String shipperCode = getPara("shipperCode");
         try {
-            String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperId = '" + shipperCode+"'";
+            String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperCode = '" + shipperCode+"'";
             RelationUserDotPara rudp = rudpDao.findFirst(sql);
             if(rudp != null){
                 saveOk = rudp.set("customerName", customerName)
@@ -117,8 +150,10 @@ public class ESheetController extends BaseController {
                 .set("monthCode", monthCode)
                 .update();
             }else{
-                saveOk = new RelationUserDotPara().set("userId", userId)
-                .set("shipperId", shipperCode)
+                saveOk = new RelationUserDotPara()
+                .set("id", RandomUtils.randomCustomUUID())
+                .set("userId", userId)
+                .set("shipperCode", shipperCode)
                 .set("customerName", customerName)
                 .set("customerPwd", customerPwd)
                 .set("monthCode", monthCode)
@@ -134,6 +169,15 @@ public class ESheetController extends BaseController {
         }
         renderJson(result);
         
+    }
+    
+    /**
+     * 
+     * @Description (删除网点配置)
+     */
+    public void delRudpConfig(){
+        String rudpId = getPara("rudpId");
+        renderJson(rudpDao.deleteById(rudpId));
     }
     
     
@@ -223,11 +267,11 @@ public class ESheetController extends BaseController {
             String orderId = getPara("orderId");
             String shipperCode = getPara("shipperCode");
             int eSheetCount = getParaToInt("eSheetCount");
-            double cost = Double.parseDouble(getPara("cost"));
+            //double cost = Double.parseDouble(getPara("cost"));
 //            double otherCost = Double.parseDouble(getPara("otherCost"));
             
             //1
-            String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperId = '" + shipperCode+"'";
+            String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperCode = '" + shipperCode+"'";
             RelationUserDotPara rudp = rudpDao.findFirst(sql);
             if(rudp == null){
                 result.addError("选择的快递未配置相应参数，请点击右上角配置按钮配置相关信息");
@@ -254,7 +298,7 @@ public class ESheetController extends BaseController {
                     "'CustomerPwd':'"+rudp.getStr("customerPwd")+"'," +
                     "'PayType':1," +
                     "'ExpType':1," +
-                    "'Cost':"+cost+"," +
+                   // "'Cost':"+cost+"," +
                    // "'OtherCost':"+otherCost+"," +
                     "'Sender':" +
                     "{" +
@@ -295,7 +339,7 @@ public class ESheetController extends BaseController {
             }
             if(success){
                 order.set("printTemplate", printTemplate).set("eBusinessID", eBusinessID).set("shipperCode",shipperCode).set("originCode", originCode).set("orderStatus", 3).update();
-                System.out.println("電子麵單分配成功，狀態已修改");
+                System.out.println("电子面单分配成功，状态已修改");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -323,11 +367,11 @@ public class ESheetController extends BaseController {
             String orderIdArr = getPara("orderIdArr");
             String orderIds[] = orderIdArr.split(",");
             String shipperCode = getPara("shipperCode");
-            double cost = Double.parseDouble(getPara("cost"));
+           // double cost = Double.parseDouble(getPara("cost"));
 //            double otherCost = Double.parseDouble(getPara("otherCost"));
             
             //1
-            String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperId = '" + shipperCode+"'";
+            String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperCode = '" + shipperCode+"'";
             RelationUserDotPara rudp = rudpDao.findFirst(sql);
             if(rudp == null){
                 result.addError("选择的快递未配置相应参数，请点击右上角配置按钮配置相关信息");
@@ -349,7 +393,7 @@ public class ESheetController extends BaseController {
                         "'CustomerPwd':'"+rudp.getStr("customerPwd")+"'," +
                         "'PayType':1," +
                         "'ExpType':1," +
-                        "'Cost':"+cost+"," +
+                        //"'Cost':"+cost+"," +
                         // "'OtherCost':"+otherCost+"," +
                         "'Sender':" +
                         "{" +
