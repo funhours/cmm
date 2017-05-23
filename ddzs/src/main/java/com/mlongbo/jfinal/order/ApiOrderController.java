@@ -1,5 +1,8 @@
 package com.mlongbo.jfinal.order;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
@@ -8,6 +11,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.mlongbo.jfinal.common.utils.DateUtils;
 import com.mlongbo.jfinal.common.utils.RandomUtils;
+import com.mlongbo.jfinal.common.utils.StringUtils;
 import com.mlongbo.jfinal.model.Orders;
 import com.mlongbo.jfinal.model.OrdersSearch;
 import com.mlongbo.jfinal.model.User;
@@ -45,7 +49,6 @@ public class ApiOrderController extends Controller {
             
         }
         
-        
         renderJson(allOrdersPage);
     }
     
@@ -64,8 +67,22 @@ public class ApiOrderController extends Controller {
        paraMap = getParaMap();
        paraStr = Utility.makePara(ordersSearch, "ordersSearch", paraMap);
        sqlCondition += paraStr[0];
-       Orders orders = Orders.dao.findFirst("select sum(productPrice) as totalPrice,count(*) as orderCount from orders ord where" + sqlCondition + " and orderEntry = '"+userName+"' order by creationDate desc");
-       Page<Orders> orderSearchPage = Orders.dao.paginate(page, 15, "select *", "from orders ord where" + sqlCondition + " and orderEntry = '"+userName+"' order by creationDate desc");
+       String startDate = getPara("startDate");
+       String endDate = getPara("endDate");
+       String startTime = "";
+       if(StringUtils.isEmpty(startDate)){
+           startTime = "0";
+       }else{
+           startTime = getTime(startDate+":23-59-59");
+       }
+       String endTime = "";
+       if(StringUtils.isEmpty(endDate)){
+           endTime = System.currentTimeMillis()+"";
+       }else{
+           endTime = getTime(endDate+":23-59-59");
+       }
+       Orders orders = Orders.dao.findFirst("select sum(productPrice) as totalPrice,count(*) as orderCount from orders ord where" + sqlCondition + " and orderEntry = '"+userName+"' and creationDate BETWEEN "+startTime+" AND "+endTime+" order by creationDate desc");
+       Page<Orders> orderSearchPage = Orders.dao.paginate(page, 15, "select *", "from orders ord where" + sqlCondition + " and orderEntry = '"+userName+"'and creationDate BETWEEN "+startTime+" AND "+endTime+" order by creationDate desc");
        setAttr("searchCon", paraStr[1]);
         
        result.setData(orders); 
@@ -139,5 +156,24 @@ public class ApiOrderController extends Controller {
            result.success(resultJson);
            renderJson(result);
        }
+   }
+   // 将字符串转为时间戳
+
+   public static String getTime(String user_time) {
+       String re_time = null;
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:hh-mm-ss");
+       Date d;
+       try {
+
+           d = sdf.parse(user_time);
+           long l = d.getTime();
+           String str = String.valueOf(l);
+           re_time = str.substring(0, 13);
+
+       } catch (ParseException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       }
+       return re_time;
    }
 }

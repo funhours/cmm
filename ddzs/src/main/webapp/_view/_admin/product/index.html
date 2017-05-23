@@ -21,81 +21,58 @@
                               <div class="am-btn-toolbar">
                                   <div class="am-btn-group am-btn-group-xs">
                                       <button type="button" class="am-btn am-btn-default am-btn-success addProduct"><span class="am-icon-plus"></span> 新增</button>
-                                      <button type="button" class="am-btn am-btn-default am-btn-secondary review"><span class="am-icon-save"></span> 启用</button>
-                                      <button type="button" class="am-btn am-btn-default am-btn-warning disable"><span class="am-icon-archive"></span> 禁用</button>
-                                      <button type="button" class="am-btn am-btn-default am-btn-danger dels"><span class="am-icon-trash-o"></span> 删除</button>
                                   </div>
                               </div>
                           </div>
                       </div>
-                      <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                          <div class="am-form-group tpl-table-list-select">
-                              <select data-am-selected="{btnSize: 'sm'}" class="pType">
-                              		<option value="0">-请选择商品类型-</option>
-                              	#for(pt:pTypeList)
-                              		<option value="#(pt.id)">#(pt.typeName)</option>
-                              	#end
-							  </select>
-                          </div>
-                      </div>
-                      <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                          <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                              <input type="text" class="am-form-field searchName" placeholder="请输入商品名字以搜索">
-                              <span class="am-input-group-btn">
-								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
-							  </span>
-                          </div>
-                      </div>
 
                       <div class="am-u-sm-12">
-                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
-                              <thead>
-                                  <tr>
+                      	#for(x : typeList)
+                      		<table width="100%" class="am-table am-table-compact am-table-bordered tpl-table-black " id="example-r">
+                      			<tr>
                                       <th class="table-check"><input type="checkbox" class="allCheck"/></th>
-						              <th>类型</th>
-						              <th>名称</th>
+						              <th>#(x.typeName)</th>
 						              <th>规格</th>
 						              <th>价格</th>
-						              <th>描述</th>
 						              <th>状态</th>
-						              <th>操作</th>
+						              <th>
+						              	<div class="tpl-table-black-operation">
+						              	<a href="javascript:;" class="addSpecAndPrice" id="#(x.id)">
+                                            <i class="am-icon-pencil"></i> 新增规格及价格
+                                        </a>
+                                        <a href="javascript:;" class="tpl-table-black-operation-del deleteType" id="#(x.id)">
+                                            <i class="am-icon-trash"></i> 删除
+                                        </a>
+                                        </div>
+						              </th>
                                   </tr>
-                              </thead>
-                              <tbody class="productItem">
-					            	#for(x : page.list)
-						            <tr>
-						              <td><input type="checkbox" value="#(x.id)" name="spCodeId"/></td>
-						              <td>#(x.typeName)</td>
-						              <td>#(x.name)</td>
-						              <td>#(x.specName)</td>
-						              <td>#(x.price)</td>
-						              <td>#(x.desc)</td>
-						              <td style="overflow:hidden"> 
-						              	#if(x.status == 1)
-							            	<span class="am-icon-angellist"> 使用 </span>
-							            #else
-						              		<span class="am-warning am-icon-warning"> 禁用  </span>
-						              	#end
-						              </td>
-						              <td style="overflow:hidden">
+                                 #if( x.getProducts())
+                                  
+                                  
+	                      			#for(y : x.getProducts())
+	                      				<tr>
+	                      				<td><input type="checkbox" value="#(x.id)" name="spCodeId"/></td>
+	                      				 <td>#(x.typeName)</td>
+	                      				 <td>#(y.spec)</td>
+	                      				 <td>#(y.price)</td>
+	                      				 <td>#(y.name)</td>
+										<td style="overflow:hidden">
 						                 <div class="tpl-table-black-operation">
-                                             <a href="javascript:;" class="productEdit" id="#(x.id)">
-                                                 <i class="am-icon-pencil"></i> 编辑
-                                             </a>
-                                             <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(x.id)">
-                                                 <i class="am-icon-trash"></i> 删除
-                                             </a>
-                                         </div>
+	                                            <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(y.id)">
+	                                                <i class="am-icon-trash"></i> 删除
+	                                            </a>
+	                                        </div>
 						              </td>
-						            </tr>
-						            #end
-					            </tbody>
-                            </table>
-                        </div>
-                        <div class="am-u-lg-12 am-cf">
-                            <div class="am-fr">
-                                #@paginate(page.pageNumber, page.totalPage, "#(base_path)/product?p=")
-                            </div>
+	                      			</tr> 
+	                      			#end
+                      			#else
+	                      			<tr>
+	                      				<td colspan="6" style="text-align: center;">暂无信息</td>
+	                      			</tr>
+                      			#end
+                      		</table>
+                      	#end
+                      	
                         </div>
                     </div>
                 </div>
@@ -115,7 +92,34 @@
 		//添加
 		$(".addProduct").unbind("click");
 		$(".addProduct").bind("click",function(){
-			window.location.href = "#(base_path)/product/toEdit?editType=0";
+			//添加
+			layer.prompt(
+			{
+				formType: 0, 
+				value: '', 
+				maxlength: 10, 
+			},function(val, index){
+			  var typeName = val;
+			  layer.close(index);
+			  if(typeName != null){
+				  $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/ptype/edit",
+				    data: {
+				    	"editType":0,
+				    	"typeName":typeName
+				    	},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("添加成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/product";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
 		});
 		
 		//启用
@@ -139,7 +143,7 @@
 				    data: {"reviewList":spCodesTemp},
 				    dataType : "json",
 				    success : function(data) {
-				    	layer.msg("审核成功", {shift: 1});
+				    	layer.msg("启用成功", {shift: 1});
 						setTimeout(function(){window.location.href = "/product";}, 600);
 				    },
 				    error : function(data) {
@@ -186,6 +190,21 @@
 			window.location.href = "#(base_path)/product/toEdit?editType=1&proId="+proId;
 		});
 		
+		//新增规格及价格
+		$(".addSpecAndPrice").unbind("click");
+		$(".addSpecAndPrice").bind("click",function(){
+			var typeId = this.id;
+			layer.open({
+			  type: 2,
+			  title: "增加规格及价格",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['800px', '500px'],
+			  content: '#(base_path)/product/toAddSpecAndPrice?typeId='+typeId
+			});
+		});
+		
 		//单个删除
 		$(".delete").unbind("click");
 		$(".delete").bind("click",function(e){
@@ -204,6 +223,29 @@
 			    error : function(data) {
 			    	layer.msg(data.message, {shift: 6});
 			    }
+			});
+		});
+		
+		//删除分类
+		$(".deleteType").unbind("click");
+		$(".deleteType").bind("click",function(e){
+			var typeId = this.id;
+			layer.confirm('删除类别将同时删除其相关规格，是否删除?', {icon: 3, title:'提示'}, function(index){
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/product/deleteTypeById",
+				    data: {"typeId":typeId},
+				    dataType : "json",
+				    success : function(data) {
+				    	if(data){
+					    	layer.msg("删除成功", {shift: 1});
+							setTimeout(function(){window.location.href = "#(base_path)/product";}, 600);
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
 			});
 		});
 		

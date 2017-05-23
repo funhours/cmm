@@ -1,119 +1,77 @@
-#set(seoTitle="蜂鸟订单助手")
-#if(loginUser.userType == 1)
-	#@adminLayout()
-#elseif(loginUser.userType == 2)
-	#@layout()
-#elseif(loginUser.userType == 3)
-	#@staffLayout()
-#end
-#define main()
-<link rel="stylesheet" type="text/css" href="#(base_path)/static/cityselect/css/hzw-city-picker.css">
-    <div class="container-fluid am-cf">
-        <div class="row">
-            <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
-                <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 商品增加 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row-content am-cf">
-	    <div class="row">
-	        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
-	            <div class="widget am-cf">
-				<div class="widget-body am-fr">
-		<form class="am-form tpl-form-line-form productForm" data-am-validator>
-           <div class="am-form-group">
-               <label for="product-name" class="am-u-sm-3 am-form-label">商品名称 <span class="tpl-form-line-small-title">/ Name</span></label>
-               <div class="am-u-sm-9">
-                   <input type="text" required class="tpl-form-input" placeholder="请输入商品名称 / name" name="product.name">
-               </div>
-           </div>
-           
-           <div class="am-form-group am-form-select">
-               <label for="product-spec" class="am-u-sm-3 am-form-label">商品规格 <span class="tpl-form-line-small-title">/ Spec</span></label>
-               <div class="am-u-sm-9">
-	          	 <select data-am-selected name="product.specId">
-			      	<option value="0">-请选择商品规格-</option>
-					#for(s : pSpecList)
-						<option value="#(s.id)">#(s.specName)</option>
-					#end
-			    </select>
-           </div>
-           
-           <div class="am-form-group">
-               <label for="product-price" class="am-u-sm-3 am-form-label">商品单价 <span class="tpl-form-line-small-title">/ Price</span></label>
-               <div class="am-u-sm-9">
-                   <input type="number" required class="tpl-form-input" placeholder="请输入商品单价 / price" name="product.price">
-               </div>
-           </div>
-
-          <div class="am-form-group am-form-select">
-           <label for="product-type" class="am-u-sm-3 am-form-label">商品类型<span class="tpl-form-line-small-title">/ Type</span></label>
-           <div class="am-u-sm-9">
-          	 <select data-am-selected name="product.typeId">
-		      	<option value="0">-请选择商品类型-</option>
-				#for(p : pTypeList)
-					<option value="#(p.id)">#(p.typeName)</option>
-				#end
-		    </select>
-           </div>
-         </div>
-         
-                
-         <div class="am-form-group">
-           <label for="user-intro" class="am-u-sm-3 am-form-label">简介<span class="tpl-form-line-small-title">/ Desc</span></label>
-           <div class="am-u-sm-9">
-             <textarea class="" rows="5" id="user-intro" placeholder="输入商品简介" name="product.desc"> </textarea>
-             <small>250字以内写出商品特色...</small>
-           </div>
-         </div>
-         <div class="am-form-group">
-           <div class="am-u-sm-9 am-u-sm-push-3">
-             <button type="button" class="am-btn am-btn-secondary saveProductEdit">保存信息</button>
-             &nbsp;&nbsp;&nbsp;&nbsp;
-             <button type="button" class="am-btn am-btn-primary back">返回</button>
-           </div>
-         </div>
+<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+<div>
+#(ptype.typeName??)
+	<!-- <input type="button" name="button" value="add" onclick="addtr('test');"> -->
+	<input type="button" name="button" value="save" onclick="save('test');">
+	<table border="1px #ooo" id="product" name="test" class="test" cellpadding="0" cellspacing="0" width="20%">
+		<thead>
+			<td width="45%">规格</td>
+			<td width="45%">价格</td>
+			<td>
+				<input type="button" name="button" value="add" onclick="addtr('product');">
+			</td>
+		</thead>
+		<form class="am-form tpl-form-line-form productForm">
+			<tbody>
+				<tr id="1">
+					<td width="45%"><input type="text" value="1" id="a1" /></td>
+					<td width="45%"><input type="text" value="2" id="a2" /></td>
+					<td>
+						<input type='button' name='button' value='del' onclick='deltr(this);'></td>
+					</td>
+					
+				</tr>
+			</tbody>
+		</form>
+	</table>
 </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-    
-#end
-#define js()
+
 <script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
 <script src="#(base_path)/static/front/jquery.form.js"></script>
-<script type="text/javascript" src="#(base_path)/static/cityselect/js/city-data.js"></script>
-<script type="text/javascript" src="#(base_path)/static/cityselect/js/hzw-city-picker.min.js"></script>
-<script  type="text/javascript">
-$(function($) {
-	//提交保存
-	$(".saveProductEdit").unbind("click");
-	$(".saveProductEdit").bind("click",function(){
-		var $form = $(".productForm");
+<script src="#(base_path)/assets/layer/layer.js"></script>
+<script type="text/javascript">
+	function addtr(id) {
+		var tr_id = $("#product>tbody>tr:last").attr("id");
+		tr_id++;
+		//alert(tr_id);  
+		str = "<tr id = '"+tr_id+"'><td width='45%'><input type='text' value='123' /></td><td width='45%'><input type='text' value='123' /></td><td><input type='button' name='button' value='del' onclick='deltr(this);'></td></tr>";
+		$('#' + id).append(str);
+	}
+	function deltr(clickTd) {
+		var tr = $(clickTd).parent().parent();
+		tr.remove();
+	}
+	function save() {
+		var tb = $("#product");
+		var tl = tb.find("tr").length;
+		var itemList = "";
+		for (var i = 1; i < tl; i++) {
+			var item = new Array();
+			for (var j = 0; j < 2; j++) {
+				var a = ($("#product tr:eq(" + i + ") td:eq(" + j + ")")).find( 'input').val();
+				item[j] = a;
+			}
+			itemList = itemList + "-" + item;
+			
+		}
 		$.ajax({
 			type : "POST",
-		    url : "#(base_path)/product/saveProductEdit",
-		    data: $form.serialize(),
+		    url : "#(base_path)/product/saveSpecAndPrice",
+		    data: {"itemList":itemList,"typeId":'#(typeId)'},
 		    dataType : "json",
 		    success : function(data) {
-		    	layer.msg("保存成功", {shift: 1});
-		    	setTimeout(function(){window.location.href = "#(base_path)/product";}, 600);
+		    	if(data.code == 0){
+			    	layer.msg("保存成功",{time:1000},function(){
+			    		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	    				parent.layer.close(index);
+			    	});
+		    		
+		    	}
 		    },
 		    error : function(data) {
 		    	layer.msg(data.message, {shift: 6});
 		    }
 		});
-	});
-	
-	//返回
-	$(".back").unbind("click");
-	$(".back").bind("click",function(){
-    	window.location.href = "#(base_path)/product";
-	});
-});
+	}
 </script>
 
-#end

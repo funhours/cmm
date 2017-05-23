@@ -170,31 +170,34 @@ public class IndexController extends BaseController {
 	}
 	
 	public void adminGetYearOrderInfo(){
-	    /*String userId = getLoginUserId();*/
-	    Calendar now = Calendar.getInstance(); 
-	    int year = now.get(Calendar.YEAR);
-	    String priceSql ="select SUM(productPrice) as prices from orders where 1=1 and year = "+year+" GROUP BY month"; 
-	    String countSql = "select count(*) as counts from orders where 1=1 and year = "+year+" GROUP BY month";
-	    
-	    List<Record> prices = Db.find(priceSql);
-	    List<Record> counts = Db.find(countSql);
-	    String _prices[] = new String[prices.size()];
-	    String _counts[] = new String[counts.size()];
-	    
-	    for (int i = 0; i < prices.size(); i++) {
-	        JSONObject pricesObj = JSONObject.parseObject(prices.get(i).toString());
-	        _prices[i] = pricesObj.getString("prices");
-	    }
-	    for (int i = 0; i < _counts.length; i++) {
-	        JSONObject countsObj = JSONObject.parseObject(counts.get(i).toString());
-	        _counts[i] = countsObj.getString("counts");
-	    }
-	    
-	    JSONObject resultObj = new JSONObject();
-	    resultObj.put("prices", _prices);
-	    resultObj.put("counts", _counts);
-	    
-	    renderJson(resultObj);
+
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR);
+        String priceSql ="select month,SUM(productPrice) as prices from orders where 1=1 and year = "+year+" GROUP BY month"; 
+        String countSql = "select month,count(*) as counts from orders where 1=1 and year = "+year+" GROUP BY month";
+        
+        List<Record> prices = Db.find(priceSql);
+        List<Record> counts = Db.find(countSql);
+        String _prices[] = new String[]{"0","0","0","0","0","0","0","0","0","0","0","0"};
+        String _counts[] = new String[]{"0","0","0","0","0","0","0","0","0","0","0","0"};
+        
+        for (int i = 0; i < prices.size(); i++) {
+            JSONObject pricesObj = JSONObject.parseObject(prices.get(i).toString());
+            int month = pricesObj.getIntValue("month")-1;
+            _prices[month] = pricesObj.getString("prices");
+        }
+        
+        for (int i = 0; i < counts.size(); i++) {
+            JSONObject countsObj = JSONObject.parseObject(counts.get(i).toString());
+            int month = countsObj.getIntValue("month")-1;
+            _counts[month] = countsObj.getString("counts");
+        }
+        
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("prices", _prices);
+        resultObj.put("counts", _counts);
+        
+        renderJson(resultObj);
 	    
 	}
 

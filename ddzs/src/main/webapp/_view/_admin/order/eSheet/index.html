@@ -10,10 +10,11 @@
 <div class="container-fluid am-cf">
      <div class="row">
          <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
-             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 电子面单</small></div>
+           <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 电子面单</small></div>
            <button type="button" class="page-header-button dtoParaConfig"><span class="am-icon-gear"></span> 网点参数设置</button>
            <button type="button" class="page-header-button senderTemplateConfig"><span class="am-icon-gear"></span> 发件信息设置</button>
            <button type="button" class="page-header-button defautShipperConfig"><span class="am-icon-gear"></span> 设置默认快递</button>
+         <button type="button" class="am-btn am-btn-success am-btn-xs returnSmart"><<返回录单</button>
          </div>
      </div>
 
@@ -527,6 +528,12 @@
 			    	layer.msg(data.message, {shift: 6});
 			    }
 			});
+		});
+		
+		//返回智能录单
+		$(".returnSmart").unbind("click");
+		$(".returnSmart").bind("click",function(){
+			window.location.href="#(base_path)/order/smart";
 		});
 		
 		//分配面单全选反选

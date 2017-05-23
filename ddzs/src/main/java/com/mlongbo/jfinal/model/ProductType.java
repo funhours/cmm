@@ -20,5 +20,14 @@ public class ProductType extends Model<ProductType> {
 		return Product.dao.find("select * from product where 1=1 and typeId = ?",get("id"));
 	}
 	
+	public void delProducts(){
+	    List<Product> pList = getProducts();
+	    
+	    for (Product product : pList) {
+	        product.delete();
+        }
+	    
+	}
+	
 	
 }

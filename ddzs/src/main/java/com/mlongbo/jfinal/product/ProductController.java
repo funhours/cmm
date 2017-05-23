@@ -24,14 +24,11 @@ public class ProductController extends BaseController {
 	public void index() {
 		//分页参数
 	    String userId = getLoginUserId();
-		Page<Product> page = dao.paginate(getParaToInt("p", 1), 10,"select p.*,pt.typeName,ps.specName ","from product p inner join product_type pt on p.typeId = pt.id INNER JOIN product_spec ps ON p.specId = ps.id where 1=1 and p.userId = '"+userId+"' order by p.creationDate");
-		setAttr("page", page);
-		
-		List<ProductType> pTypeList = ptdao.find("select * from product_type where 1=1 and userId='"+userId+"' and status = 1 order by creationDate");
-		setAttr("pTypeList", pTypeList);
-		
-		List<ProductSpec> pSpecList = psdao.find("select * from product_spec where 1=1 and userId='"+userId+"' and status = 1 order by creationDate");
-		setAttr("pSpecList", pSpecList);
+	    
+	    List<ProductType> typeList = ptdao.find("select * from product_type where 1=1 and userId = '"+userId+"' order by creationDate");
+	    
+	    
+		setAttr("typeList", typeList);
 		
 		render("index.html");
 	}
@@ -182,6 +179,105 @@ public class ProductController extends BaseController {
         
         render("index.html");
         
+    }
+    
+    //------------------------------------------修改后的代码-------------------------------------------
+    /**
+     * 
+     * @Description 添加修改商品类别
+     */
+    public void edit(){
+        boolean saveOk = false;
+        String productName = getPara("productName");
+        int editType = getParaToInt("editType");
+        String userId = getLoginUserId();
+        if(editType == 0){//新增
+            saveOk = new Product().set("id", RandomUtils.randomCustomUUID())
+            .set("name", productName)
+            .set("status", 0)
+            .set("creationDate", DateUtils.getNowTimeStamp())
+            .set("userId", userId).save();
+            if(saveOk){
+                result.success("保存成功");
+            }else{
+                result.addError("保存失败，请联系管理员");
+            }
+        }else if(editType == 1){//修改
+            String productId = getPara("productId");
+            Product product = dao.findById(productId);
+            saveOk = product.set("productName", productName).update();
+            
+            if(saveOk){
+                result.success("保存成功");
+            }else{
+                result.addError("保存失败，请联系管理员");
+            }
+        }
+        renderJson(result);
+    }
+    
+    /**
+     * 
+     * @Description (到新增规格及价格页面)
+     */
+    public void toAddSpecAndPrice(){
+        String typeId = getPara("typeId");
+        setAttr("typeId", typeId);
+        
+        ProductType ptype = ptdao.findById(typeId);
+        setAttr("ptype", ptype);
+        
+        render("add.html");
+    }
+    
+    /**
+     * 
+     * @Description (新增规格及价格)
+     */
+    public void saveSpecAndPrice(){
+        String userId = getLoginUserId();
+        String typeId = getPara("typeId");
+        String _itemList = getPara("itemList");
+        String itemList = _itemList.substring(1, _itemList.length());
+        String[] items = itemList.split("-");
+        
+        boolean saveOk = false;
+        
+        for (String item : items) {
+            String[] it = item.split(",");
+            //修改
+            String productId = RandomUtils.randomCustomUUID();
+            saveOk = new Product().set("id", productId)
+                    .set("spec", it[0])
+                    .set("price", it[1])
+                    .set("status", 1)
+                    .set("typeId", typeId)
+                    .set("creationDate", DateUtils.getNowTimeStamp())
+                    .set("userId", userId)
+                    .save();
+        }
+        if(saveOk){
+            result.success("信息保存成功");
+        }else{
+            result.addError("信息保存失败，请联系管理员");
+        };
+        result.setData(saveOk);
+        
+        renderJson(result);
+    }
+    
+    /**
+     * 
+     * @Description (删除类别，同时删除相关规格和价格)
+     */
+    public void deleteTypeById(){
+        String typeId = getPara("typeId");
+        ProductType pType = ptdao.findById(typeId);
+        pType.delProducts();
+        pType.delete();
+        
+        result.success("删除成功");
+        renderJson(result);
     }
 	
 }

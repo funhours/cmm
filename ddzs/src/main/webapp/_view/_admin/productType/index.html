@@ -13,8 +13,6 @@
               <div class="widget am-cf">
                   <div class="widget-head am-cf">
                       <div class="widget-title  am-cf">产品类型</div>
-
-
                   </div>
                   <div class="widget-body  am-fr">
 
@@ -114,11 +112,11 @@
 		$(".addPtype").unbind("click");
 		$(".addPtype").bind("click",function(){
 			layer.prompt(
-				{
-				  formType: 0, 
-				  value: '', 
-				  maxlength: 10, 
-				},function(val, index){
+			{
+			  formType: 0, 
+			  value: '', 
+			  maxlength: 10, 
+			},function(val, index){
 			  var typeName = val;
 			  layer.close(index);
 			  if(typeName != null){

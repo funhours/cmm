@@ -86,7 +86,7 @@ public class OrderController extends BaseController {
      */
     public void invalid(){
         String userId = getLoginUserId();
-        Page<Orders> ordersPage = dao.paginate(getParaToInt("p", 1), 10,"select * ","from orders where 1=1 and relationUser = '"+userId+"' order by creationDate");
+        Page<Orders> ordersPage = dao.paginate(getParaToInt("p", 1), 10,"select * ","from orders where 1=1 and orderStatus in(2,3,4) and relationUser = '"+userId+"' order by creationDate");
         setAttr("ordersPage", ordersPage);
         render("orderInvalid.html");
     }

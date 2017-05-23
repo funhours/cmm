@@ -11,7 +11,7 @@ import com.mlongbo.jfinal.model.RegisterCode;
  */
 public class IndexAction extends Controller {
     public void index () {
-        render("index.jsp");
+        render("html/SingnIn.html");
     }
     
     public void doc() {
