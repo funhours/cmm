@@ -10,6 +10,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.jfinal.plugin.activerecord.Page;
 import com.mlongbo.jfinal.common.utils.RandomUtils;
+import com.mlongbo.jfinal.common.utils.StringUtils;
 import com.mlongbo.jfinal.common.weixin.QRUtil;
 import com.mlongbo.jfinal.common.weixin.WeiXinPayUtil;
 import com.mlongbo.jfinal.config.AppProperty;
@@ -34,6 +35,7 @@ public class SmsController extends BaseController {
     private final SmsBuyConfig sbcDao = new SmsBuyConfig().dao();
     private final OrderBuyConfig obcDao = new OrderBuyConfig().dao();
     private final TimeBuyConfig tbcDao = new TimeBuyConfig().dao();
+    private final SmsTemplate stDao = new SmsTemplate().dao();
 
 	public void template(){
 	    try {
@@ -116,14 +118,14 @@ public class SmsController extends BaseController {
 	    setAttr("tbConfig", tbConfig);
 	    
 	    //购买记录
-	  //短信购买记录
-        Page<SmsBuyLog> buyLogPage = SmsBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from sms_buy_log where 1=1 and userId = '"+ userId+"'");
+	    //短信购买记录
+        Page<SmsBuyLog> buyLogPage = SmsBuyLog.dao.paginate(getParaToInt("sp", 1), 5,"select *","from sms_buy_log where 1=1 and userId = '"+ userId+"'");
         setAttr("buyLogPage", buyLogPage);
         //订单购买记录
-        Page<OrderBuyLog> oBuyLogPage = OrderBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from order_buy_log where 1=1 and userId = '"+ userId+"'");
+        Page<OrderBuyLog> oBuyLogPage = OrderBuyLog.dao.paginate(getParaToInt("op", 1), 5,"select *","from order_buy_log where 1=1 and userId = '"+ userId+"'");
         setAttr("oBuyLogPage", oBuyLogPage);
         //时长购买记录
-        Page<TimeBuyLog> tBuyLogPage = TimeBuyLog.dao.paginate(getParaToInt("p", 1), 10,"select *","from time_buy_log where 1=1 and userId = '"+ userId+"'");
+        Page<TimeBuyLog> tBuyLogPage = TimeBuyLog.dao.paginate(getParaToInt("tp", 1), 5,"select *","from time_buy_log where 1=1 and userId = '"+ userId+"'");
         setAttr("tBuyLogPage", tBuyLogPage);
 	    
 	    render("buyPage.html");
@@ -144,6 +146,35 @@ public class SmsController extends BaseController {
 	}
 	
 	
+	/**
+	 * 
+	 * @Description (跳转到自定义模板页面)
+	 */
+	public void toCustomTemplate(){
+	    String userId = getLoginUserId();
+	    String stSql = "select * from sms_template where userId = ?";
+	    SmsTemplate smsTemplate = stDao.findFirst(stSql,userId);
+	    setAttr("smsTemplate", smsTemplate);
+	    render("customTemplate.html");
+	}
+	
+	public void saveCustomTemplate(){
+	    SmsTemplate smsTemplate = getModel(SmsTemplate.class);
+	    boolean isOk = false;
+	    if(StringUtils.isEmpty(smsTemplate.getStr("id"))){//新增
+	        smsTemplate.set("id", RandomUtils.randomCustomUUID());
+	        smsTemplate.set("userId", getLoginUserId());
+	        isOk = smsTemplate.save();
+	    }else{//修改
+	        isOk = smsTemplate.update();
+	    }
+	    if(isOk){
+	        result.success("保存成功");
+	    }else{
+	        result.addError("保存失败");
+	    }
+        renderJson(result);
+	}
 	/**
 	 * 
 	 * @Description (编辑短信模板)

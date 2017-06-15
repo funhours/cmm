@@ -4,7 +4,7 @@
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
 	#@layout()
-#elseif(loginUser.userType == 3)
+#elseif(loginUser.userType == 3 || loginUser.userType == 4)
 	#@staffLayout()
 #end
 #define main()

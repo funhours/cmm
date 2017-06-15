@@ -3,7 +3,7 @@
 	#@adminLayout()
 #elseif(loginUser.userType == 2)
 	#@layout()
-#elseif(loginUser.userType == 3)
+#elseif(loginUser.userType == 3 || loginUser.userType == 4)
 	#@staffLayout()
 #end
 #define main()
@@ -38,7 +38,7 @@
 					              <th>发货人</th>
 					              <th>发货人电话</th>
 					              <th>订单录入人</th>
-					              <th>备注</th>
+					              <th>原因</th>
 					              <th>状态</th>
 					              <th>操作</th>
                              </tr>
@@ -57,7 +57,7 @@
                          			<td>#(x.shipper??)</td>
                          			<td>#(x.shipperTel??)</td>
                          			<td>#(x.orderEntry??)</td>
-                         			<td>#(x.remarks??)</td>
+                         			<td>#(x.reason??)</td>
                          			<td>异常件</td>
                          			
        								<td style="overflow:hidden">

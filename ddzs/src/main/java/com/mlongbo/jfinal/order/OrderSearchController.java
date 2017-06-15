@@ -29,8 +29,8 @@ public class OrderSearchController extends BaseController {
 
     public void index() {
         String userId = getLoginUserId();
-        setAttr("orderSearchPage", Orders.dao.paginate(page, 15, "select *",
-                "from orders where 1=1 and relationUser = '" + userId + "' order by creationDate desc"));
+        
+        //setAttr("orderSearchPage", Orders.dao.paginate(page, 15, "select *", "from orders where 1=1 and relationUser = '" + userId + "' order by creationDate desc"));
 
         // 查询所有产品
 //        String psql = "select * from product where 1=1 and userId = '" + userId + "'";
@@ -76,15 +76,38 @@ public class OrderSearchController extends BaseController {
 
         switch (searchType) {
         case 1:// 系统订单
+            String searchPara = getPara("searchPara");
+            String orderEntry = getPara("orderEntry");//模糊查询录入者昵称和发件人电话号码
+            String orderStatus = getPara("ordersSearch.orderStatus");//订单状态
+            if(StringUtils.isEmpty(orderStatus)){
+                orderStatus = "1,2,3,4,5,6,7,8,9,0";
+            }
             paraMap = getParaMap();
             paraStr = Utility.makePara(ordersSearch, "ordersSearch", paraMap);
             sqlCondition += paraStr[0];
-            setAttr("total", Orders.dao
-                    .findFirst("select sum(productPrice) as totalPrice,count(*) as orderCount from orders where"
+            if("1=1".equals(sqlCondition.trim())){
+                if(StringUtils.isNotEmpty(orderEntry)){//录入者有值
+                    setAttr("total", Orders.dao.findFirst("select sum(productPrice) as totalPrice,count(*) as orderCount from orders where"
+                            + sqlCondition + " and creationDate BETWEEN "+startTime+" AND "+endTime+" and relationUser = '" + userId + "' and (shipperTel = '"+orderEntry+"' or orderEntry LIKE '%"+orderEntry+"%') order by creationDate desc"));
+                    
+                    setAttr("orderSearchPage", Orders.dao.paginate(page, 15, "select *", "from orders ord where" + sqlCondition
+                            + " and creationDate BETWEEN "+startTime+" AND "+endTime+" and relationUser = '" + userId + "' and (shipperTel = '"+orderEntry+"' or orderEntry LIKE '%"+orderEntry+"%') order by creationDate desc"));
+                }else{
+                    setAttr("total", Orders.dao.findFirst("select sum(productPrice) as totalPrice,count(*) as orderCount from orders where"
                             + sqlCondition + " and creationDate BETWEEN "+startTime+" AND "+endTime+" and relationUser = '" + userId + "' order by creationDate desc"));
-            setAttr("orderSearchPage", Orders.dao.paginate(page, 15, "select *", "from orders ord where" + sqlCondition
-                    + " and creationDate BETWEEN "+startTime+" AND "+endTime+" and relationUser = '" + userId + "' order by creationDate desc"));
-            setAttr("searchCon", paraStr[1]);
+                    
+                    setAttr("orderSearchPage", Orders.dao.paginate(page, 15, "select *", "from orders ord where" + sqlCondition
+                            + " and creationDate BETWEEN "+startTime+" AND "+endTime+" and relationUser = '" + userId + "' order by creationDate desc"));
+                }
+                
+                setAttr("searchCon", paraStr[1]);
+            }
+            
+            if(!StringUtils.isEmpty(searchPara)){
+                List<Orders> orderList = Orders.dao.find("select * from orders where orderId like '%"+searchPara+"%' AND creationDate BETWEEN "+startTime+" AND "+endTime+" and orderStatus in ("+orderStatus+") and relationUser = '" + userId + "' union select * from orders where courierNumber like '%"+searchPara+"%' AND creationDate BETWEEN "+startTime+" AND "+endTime+" and orderStatus in ("+orderStatus+") and relationUser = '" + userId + "' union select * from orders where recipient like '%"+searchPara+"%' AND creationDate BETWEEN "+startTime+" AND "+endTime+" and orderStatus in ("+orderStatus+") and relationUser = '" + userId + "' union select * from orders where recipientTel like '%"+searchPara+"%' AND creationDate BETWEEN "+startTime+" AND "+endTime+" and orderStatus in ("+orderStatus+") and relationUser = '" + userId + "'");
+                setAttr("orderList",orderList);
+            }
+            
             break;
         case 2:// 淘宝订单
             paraMap = getParaMap();

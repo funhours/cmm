@@ -159,7 +159,7 @@ public class AccountAPIController extends BaseAPIController {
 		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_YEAR, + initUseCount.getInt("useDay"));//今天的时间加初始使用时间
+        calendar.add(Calendar.DAY_OF_YEAR, initUseCount.getInt("useDay"));//今天的时间加初始使用时间
         date = calendar.getTime();
 
 		new User().set("userId", userId)

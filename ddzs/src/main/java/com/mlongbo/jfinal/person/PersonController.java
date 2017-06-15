@@ -1,6 +1,8 @@
 package com.mlongbo.jfinal.person;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.jfinal.kit.HashKit;
@@ -12,6 +14,7 @@ import com.mlongbo.jfinal.common.utils.RandomUtils;
 import com.mlongbo.jfinal.common.utils.StringUtils;
 import com.mlongbo.jfinal.controller.BaseController;
 import com.mlongbo.jfinal.model.ExtQuery;
+import com.mlongbo.jfinal.model.InitUseCount;
 import com.mlongbo.jfinal.model.User;
 import com.mlongbo.jfinal.model.UserRole;
 import com.mlongbo.jfinal.vo.AjaxResult;
@@ -46,7 +49,7 @@ public class PersonController extends BaseController {
 	public void toEdit(){
 		int editType = getParaToInt("editType");
 		if(editType == 1){//1：编辑 0：新增
-			String userId = getLoginUserId();
+			String userId = getPara("userId");
 			Record user = Db.findFirst("select * from t_user where userId = '" + userId+"'"  );
 			setAttr("user", user);
 			render("personEdit.html");
@@ -67,7 +70,21 @@ public class PersonController extends BaseController {
 		String userId = user.get("userId");
 		user.set("parentUserId", loginUserId);
 		user.set(User.CREATION_DATE, DateUtils.getNowTimeStamp());
+		user.set("loginName", user.get("telephone"));
+		
 		if(!StringUtils.isEmpty(userId)){
+		    
+		    User extUser = dao.findById(userId);
+		    
+		    if(!extUser.getStr("password").trim().equals(user.getStr("password").trim())){
+		        String password =  user.get(User.PASSWORD);
+		        String hashedPass = HashKit.sha256("kyddzs" + password);
+		        user.setPassword(hashedPass);
+		    }else{
+		        user.setPassword(extUser.getStr("password"));
+		    }
+		    
+		    
 			UserRole userRole = userRoleDao.findFirst("select * from t_userroles where userID='"+userId+"'");
             userRole.set(UserRole.ROLE_ID, user.get(User.USERTYPE));
             userRole.update();
@@ -80,14 +97,23 @@ public class PersonController extends BaseController {
 			
 			result.setData(saveOk);
 		}else{
+		    InitUseCount initUseCount = InitUseCount.dao.findById(1);
+	        
+	        Date date = new Date();
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(date);
+	        calendar.add(Calendar.DAY_OF_YEAR, initUseCount.getInt("useDay") + 720);//今天的时间加初始使用时间
+	        date = calendar.getTime();
+	        
 			// 新增
 			userId = RandomUtils.randomCustomUUID();
 			user.set(User.USER_ID, userId);
-			String password =  user.get(User.PASSWORD);
-			String hashedPass = HashKit.sha256("kyddzs" + password);
-			user.setPassword(hashedPass);
 			user.set(User.LOGIN_NAME, user.get("telephone"));
 			user.set("parentUserId", loginUserId);
+			user.set("expiryDate", date);
+			String password =  user.get(User.PASSWORD);
+	        String hashedPass = HashKit.sha256("kyddzs" + password);
+	        user.setPassword(hashedPass);
 			user.save();
 			
 			
@@ -145,7 +171,7 @@ public class PersonController extends BaseController {
 	
 	// 单个删除
 	public void delById(){
-		String userId = getLoginUserId();
+		String userId = getPara("userId");
 		boolean isDelete = dao.deleteById(userId);
 		
 		renderJson(isDelete);

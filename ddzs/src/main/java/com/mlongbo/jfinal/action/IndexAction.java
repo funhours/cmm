@@ -1,5 +1,6 @@
 package com.mlongbo.jfinal.action;
 
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.mlongbo.jfinal.common.utils.StringUtils;
 import com.mlongbo.jfinal.model.RegisterCode;
@@ -9,6 +10,7 @@ import com.mlongbo.jfinal.model.RegisterCode;
  * @date 2015/2/13
  * @package com.snailbaba.action
  */
+@Clear
 public class IndexAction extends Controller {
     public void index () {
         render("html/SingnIn.html");

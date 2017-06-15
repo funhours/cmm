@@ -32,7 +32,7 @@ public class SmartInputController extends BaseController {
         JSONArray jobj = JSONObject.parseArray(obj.getString("reserveOrderNoList"));
         int successCount = 0;
         int failCount = 0;
-        int orderStatus = 9;//订单状态：供应商自己和员工录入不用审核，代理商录入订单需要审核
+        int orderStatus = 1;//不需要审核阶段，直接进入未分配阶段
         if(user.getInt("userType") == 4 ){
             orderStatus = 1;
         }
@@ -54,7 +54,7 @@ public class SmartInputController extends BaseController {
                 String remarks = orderObj.get("remarks").toString();
             
                 Orders orders = new Orders();
-                orders.set("orderId", RandomUtils.randomCustomUUID())
+                orders.set("orderId", now.get(Calendar.YEAR)+""+(now.get(Calendar.MONTH) + 1)+""+now.get(Calendar.DAY_OF_MONTH)+"" + RandomUtils.randomString(5)+"")
                 .set("productName",productName)
                 .set("productCount",productCount)
                 .set("productPrice",productPrice)

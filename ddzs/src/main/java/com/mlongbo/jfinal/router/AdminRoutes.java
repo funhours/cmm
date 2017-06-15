@@ -6,6 +6,7 @@ import com.mlongbo.jfinal.banner.BannerController;
 import com.mlongbo.jfinal.extQuery.ExtQueryController;
 import com.mlongbo.jfinal.feedback.FeedBackController;
 import com.mlongbo.jfinal.index.IndexController;
+import com.mlongbo.jfinal.interceptor.LoginSessionInterceptor;
 import com.mlongbo.jfinal.login.LoginController;
 import com.mlongbo.jfinal.logistics.LogisticsController;
 import com.mlongbo.jfinal.logistics.LogisticsInquiryController;
@@ -27,9 +28,10 @@ public class AdminRoutes extends Routes {
 	public void config() {
 		
 		// 添加后台管理拦截器，将拦截在此方法中注册的所有 Controller
-//		addInterceptor(new AdminAuthInterceptor());
+		addInterceptor(new LoginSessionInterceptor());
 				
 		setBaseViewPath("/_view/_admin");
+		
 		add("/login", LoginController.class);
 		//首页
 		add("/admin", IndexController.class, "/index");
@@ -61,12 +63,12 @@ public class AdminRoutes extends Routes {
         add("/accountBook", AccountBookController.class, "/accountBook");
         //banner图管理
         add("/banner", BannerController.class, "/banner");
-        //物流查询
+        //内部物流查询
         add("/logistics", LogisticsController.class, "/logistics");
+        //外部物流查
+        add("/logisticsInquiry",LogisticsInquiryController.class,"/logisticsInquiry");
         //外部查询页管理
         add("/extQuery",ExtQueryController.class,"/extQuery");
-        //外部查询页
-        add("/logisticsInquiry",LogisticsInquiryController.class,"/logisticsInquiry");
 	}
 
 }

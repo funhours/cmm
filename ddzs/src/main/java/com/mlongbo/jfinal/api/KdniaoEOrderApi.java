@@ -31,51 +31,11 @@ public class KdniaoEOrderApi {
     private String EBusinessID="1281025";
     //电商加密私钥，快递鸟提供，注意保管，不要泄漏
     private String AppKey="87c84d45-2134-472e-92e7-6a258b9d978e";
-	//请求url, 正式环境地址：http://api.kdniao.cc/api/Eorderservice    测试环境地址：http://testapi.kdniao.cc:8081/api/EOrderService
-	private String ReqURL="http://testapi.kdniao.cc:8081/api/Eorderservice";	
+	//电子面单请求url, 正式环境地址：http://api.kdniao.cc/api/Eorderservice    测试环境地址：http://testapi.kdniao.cc:8081/api/EOrderService
+	private String EsheetReqURL="http://api.kdniao.cc/api/Eorderservice";
+	//订阅正式地址："http://api.kdniao.cc/api/dist";
+	private String DistReqURL="http://api.kdniao.cc/api/dist";	
 	
-
-	/**
-     * Json方式 电子面单
-	 * @throws Exception 
-     */
-	public String orderOnlineByJson() throws Exception{
-		String requestData= "{'OrderCode': '012657700387'," +
-                "'ShipperCode':'YD'," +
-                "'CustomerName':'testyd'," +
-                "'CustomerPwd':'testydpwd'," +
-                "'PayType':1," +
-                "'ExpType':1," +
-                "'Cost':1.0," +
-                "'OtherCost':1.0," +
-                "'Sender':" +
-                "{" +
-                "'Company':'LV','Name':'Taylor','Mobile':'15018442396','ProvinceName':'上海','CityName':'上海','ExpAreaName':'青浦区','Address':'明珠路73号'}," +
-                "'Receiver':" +
-                "{" +
-                "'Company':'GCCUI','Name':'Yann','Mobile':'15018442396','ProvinceName':'北京','CityName':'北京','ExpAreaName':'朝阳区','Address':'三里屯街道雅秀大厦'}," +
-                "'Commodity':" +
-                "[{" +
-                "'GoodsName':'鞋子','Goodsquantity':1,'GoodsWeight':1.0}]," +
-                "'Weight':1.0," +
-                "'Quantity':1," +
-                "'Volume':0.0," +
-                "'Remark':'小心轻放'," +
-                "'IsReturnPrintTemplate':1}";
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("RequestData", urlEncoder(requestData, "UTF-8"));
-		params.put("EBusinessID", EBusinessID);
-		params.put("RequestType", "1007");
-		String dataSign=encrypt(requestData, AppKey, "UTF-8");
-		params.put("DataSign", urlEncoder(dataSign, "UTF-8"));
-		params.put("DataType", "2");
-		
-		String result=sendPost(ReqURL, params);	
-		
-		//根据公司业务处理返回的信息......
-		
-		return result;
-	}
 	
 	public String getOrderOnlineByJson(String requestData) throws Exception{
         Map<String, String> params = new HashMap<String, String>();
@@ -86,7 +46,28 @@ public class KdniaoEOrderApi {
         params.put("DataSign", urlEncoder(dataSign, "UTF-8"));
         params.put("DataType", "2");
         
-        String result=sendPost(ReqURL, params); 
+        String result=sendPost(EsheetReqURL, params); 
+        
+        //根据公司业务处理返回的信息......
+        
+        return result;
+    }
+	
+	
+	/**
+     * Json方式  物流信息订阅
+     * @throws Exception 
+     */
+    public String orderTracesSubByJson(String requestData) throws Exception{
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("RequestData", urlEncoder(requestData, "UTF-8"));
+        params.put("EBusinessID", EBusinessID);
+        params.put("RequestType", "1008");
+        String dataSign=encrypt(requestData, AppKey, "UTF-8");
+        params.put("DataSign", urlEncoder(dataSign, "UTF-8"));
+        params.put("DataType", "2");
+        
+        String result=sendPost(DistReqURL, params); 
         
         //根据公司业务处理返回的信息......
         

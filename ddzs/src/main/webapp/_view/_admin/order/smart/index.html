@@ -1,230 +1,314 @@
 #set(seoTitle="蜂鸟订单助手")
 #if(loginUser.userType == 1)
-	#@adminLayout()
+#@adminLayout()
 #elseif(loginUser.userType == 2)
-	#@layout()
-#elseif(loginUser.userType == 3)
-	#@staffLayout()
+#@layout()
+#elseif(loginUser.userType == 3 || loginUser.userType == 4)
+#@staffLayout()
 #end
 #define main()
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <style>
-	.tishi{display: none; width: 240px;height: auto;background-color: #FFFFFF; border: 2px groove #c9c9c9;z-index: 99999;box-shadow: 0 0 6px #898989; position: fixed;top: 300px;right: 50px;padding: 5px;}
+    .tishi{display: none; width: 240px;height: auto;background-color: #FFFFFF; border: 2px groove #c9c9c9;z-index: 99999;box-shadow: 0 0 6px #898989; position: fixed;top: 300px;right: 50px;padding: 5px;}
     .tishi .title{width: 100%;font-size: 16px;font-weight: bold; text-align: center;}
     .tishi .mess{font-size: 13px;color: #000;}
     .tishi .mess .xiazai{text-decoration: underline;}
     .tishi .mess .type{display: block; line-height: 21px;text-indent: 10px;}
+    table tr td{border: 1px solid #ccc;text-align: center;}
+    table tr th{border: 0px solid #c9c9c9;text-align: center;}
+    /*table tr td{background: #FF0000;}*/
+    input{width: 100%;height:100%;text-align: center;}
+    input{background: transparent;border: none;}
+    input:focus{outline: none;}
+
+    input[type="checkbox"], input[type="radio"]{width: 15px;height: 15px;}
+	#goodsWeight1,#goodsWeight2,#goodsWeight3,#goodsWeight4,#goodsWeight5,#goodsWeight6,#goodsWeight7,#goodsWeight8,#goodsWeight9{display:none;}
 </style>
 <form role="form">
-        <div class="form-group">
-            <textarea class="form-control" rows="10" placeholder="请输入您需要识别的内容"></textarea>
-        </div>
-    </form>
-    <div style="text-align:right;">
-        <button id="button" class="btn btn-primary toeSheet"  type="button">面单分配</button>
-        <button id="button" class="btn btn-primary importExcel"  type="button">导入EXCEL格式订单</button>
-        <button id="fat-btn" class="btn btn-primary" data-loading-text="Loading..." type="button"> 点击分析 </button>
+    <div class="form-group">
+        <textarea class="form-control orderContent" rows="10" placeholder="请输入您需要识别的内容"></textarea>
     </div>
-    <div class="tishi" id="prompt">
-    	<p class="title">提示</p>
-    	<p class="mess">
-    		1.请务必保持每次上传的EXCEL表格格式相同<a class="xiazai" href="">（下载EXCEL标准订单格式）</a>，否则可能导致上传失败或者导入数据错误
-    	</p>
-    	<p class="mess">
-    		2.追加数据为添加新数据，请不要上传重复数据
-    	</p>
-    	<p class="mess">
-    		3.EXCEL文件请符合以下标准：
-    		<span class="type">后缀名为xls或者xlsx;</span>
-    		<span class="type">文件大小请勿超过5MB;</span>
-    		<span class="type">文件所含数据行数请勿超过5000条。</span>
-    	</span>
-    </div>
-    <table class="table" id="myTable">
-        <caption><h3>订单列表 温馨提示：点击可修改，修改完之后请回车</h3></caption>
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="goods"/>商品名称</th>
-                <th><input type="checkbox" id="goodsNum"/>数量</th>
-                <th><input type="checkbox" id="goodsPrice"/>金额</th>
-                <th><input type="checkbox" id="goodsWeight"/>重量</th>
-                <th><input type="checkbox" id="toPeople"/>收货人</th>
-                <th><input type="checkbox" id="telephone"/>收货人手机</th>
-                <th>省</th>
-                <th>市</th>
-                <th>区县</th>
-                <th>详细地址</th>
-                <th>发货人</th>
-                <th>发货人联系方式</th>
-                <th>备注</th>
-            </tr>
+</form>
+<div style="text-align:right;">
+    #if(loginUser.userType == 1 || loginUser.userType == 2)
+    <button id="button" class="btn btn-primary toeSheet"  type="button">面单分配</button>
+    #end
+    <button id="button" class="btn btn-primary importExcel"  type="button">导入EXCEL格式订单</button>
+    <button id="fat-btn" class="btn btn-primary" data-loading-text="Loading..." type="button"> 点击分析 </button>
+</div>
+
+<div class="tishi" id="prompt">
+    <p class="title">提示</p>
+    <p class="mess">
+        1.请务必保持每次上传的EXCEL表格格式相同<a class="xiazai" href="">（下载EXCEL标准订单格式）</a>，否则可能导致上传失败或者导入数据错误
+    </p>
+    <p class="mess">
+        2.追加数据为添加新数据，请不要上传重复数据
+    </p>
+    <p class="mess">
+        3.EXCEL文件请符合以下标准：
+        <span class="type">后缀名为xls或者xlsx;</span>
+        <span class="type">文件大小请勿超过5MB;</span>
+        <span class="type">文件所含数据行数请勿超过5000条。</span>
+        </span>
+</div>
+<fieldset>
+    <legend>未提交订单</legend>
+    <table id="oTable" style="background-color:#eeeeee;" bordercolor="#aaaaaa" border="0" cellpadding="0" cellpadding="2" width="100%">
+        <thead id="head">
+        <tr>
+            <th><input type="checkbox" id="goods"/>商品名称</th>
+            <th><input type="checkbox" id="goodsNum"/>数量</th>
+            <th><input type="checkbox" id="goodsPrice"/>金额</th>
+            <th><input type="checkbox" id="goodsWeight0"/>重量</th>
+            <th><input type="checkbox" id="goodsWeight1"/>收货人</th>
+            <th><input type="checkbox" id="goodsWeight2"/>收货人电话</th>
+            <th><input type="checkbox" id="goodsWeight3"/>省</th>
+            <th><input type="checkbox" id="goodsWeight4"/>市</th>
+            <th><input type="checkbox" id="goodsWeight5"/>区县</th>
+            <th><input type="checkbox" id="goodsWeight6"/>详细地址</th>
+            <th><input type="checkbox" id="goodsWeight7"/>发货人</th>
+            <th><input type="checkbox" id="goodsWeight8"/>发货人联系方式</th>
+            <th><input type="checkbox" id="goodsWeight9"/>备注</th>
+        </tr>
+        <tr id="model" style="display: none">
+            <td><div class="goods" contenteditable="true" onblur="change(this)">桔子</div></td>
+            <td><div class="goodsNum" contenteditable="true" onblur="change(this)">1</div></td>
+            <td><div class="goodsPrice" contenteditable="true" onblur="change(this)">0</div></td>
+            <td><div class="goodsWeight0" contenteditable="true" onblur="change(this)">5</div></td>
+            <td><div class="goodsWeight1" contenteditable="true" onblur="change(this)">0</div></td>
+            <td><div class="goodsWeight2" contenteditable="true" onblur="change(this)">5</div></td>
+            <td><div class="goodsWeight3" contenteditable="true" onblur="change(this)"></div></td>
+            <td><div class="goodsWeight4" contenteditable="true" onblur="change(this)"></div></td>
+            <td><div class="goodsWeight5" contenteditable="true" onblur="change(this)"></div></td>
+            <td><div class="goodsWeight6" contenteditable="true" onblur="change(this)"></div></td>
+            <td><div class="goodsWeight7" contenteditable="true" onblur="change(this)"></div></td>
+            <td><div class="goodsWeight8" contenteditable="true" onblur="change(this)"></div></td>
+            <td><div class="goodsWeight9" contenteditable="true" onblur="change(this)"></div></td>
+        </tr>
         </thead>
-        <tbody>
+        <tbody id="body">
         </tbody>
     </table>
-    <div style="text-align:right;">
-        <button id="submit-btn" class="btn btn-primary" data-loading-text="Loading..." type="button">提交订单</button>
-    </div>
-
- 
+</fieldset>
+<div style="text-align:right;">
+    <button id="submit-btn" class="btn btn-primary" data-loading-text="Loading..." type="button">保存</button>
+</div>
 #end
 #define js()
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="#(base_path)/static/orderInput/jquery.easyui.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="#(base_path)/static/orderInput/smart.js"></script>
 <script type="text/javascript" src="#(base_path)/static/orderInput/matchGoods.js"></script>
 <script type="text/javascript" src="#(base_path)/static/orderInput/matchAddress.js"></script>
-<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
-<script type="text/javascript" src="jquery-1.11.3.min.js" ></script>
+<script type="text/javascript" src="#(base_path)/static/orderInput/smart.js"></script>
 <script type="text/javascript">
-	jQuery(function($) {
-		$(".importExcel").mouseover(function(){
-			$("#prompt").show();
-		})
-		$(".importExcel").mouseout(function(){
-			$("#prompt").hide();
-		})
-		//跳转到订单导入
-		$(".importExcel").unbind("click");
-		$(".importExcel").bind("click",function(){
-			window.location.href="#(base_path)/order/excelPage";
-		});
-		
-		//跳转到电子面单
-		$(".toeSheet").unbind("click");
-		$(".toeSheet").bind("click",function(){
-			window.location.href="#(base_path)/order/eSheet";
-		});
-		
-		
-		 $("textarea").blur(function () {
-             if($("#inlineCheckbox1").is(':checked')){
-                 confirm("请配置默认信息");
-             }
-             var inputInfo = $(this).val();
-             if(undefined != inputInfo && 0 != inputInfo.length)
-                 getOrdersInfo(inputInfo);
-         });
+    jQuery(function($) {
+        $(".importExcel").mouseover(function(){
+            $("#prompt").show();
+        })
+        $(".importExcel").mouseout(function(){
+            $("#prompt").hide();
+        })
+        //跳转到订单导入
+        $(".importExcel").unbind("click");
+        $(".importExcel").bind("click",function(){
+            window.location.href="#(base_path)/order/excelPage";
+        });
 
-         $("#fat-btn").click(function () {
-             if($("#inlineCheckbox1").is(':checked')){
-                 confirm("请配置默认信息");
-             }
-             var inputInfo = $(this).val();
-             if(undefined != inputInfo && 0 != inputInfo.length)
-                 getOrdersInfo(inputInfo);
-         });
+        //跳转到电子面单
+        $(".toeSheet").unbind("click");
+        $(".toeSheet").bind("click",function(){
+            window.location.href="#(base_path)/order/eSheet";
+        });
 
-         $("#submit-btn").click(function () {
-        	 var submitOrders = new Array();      ///提交后台数据
-        	 var count = 0;
-			$("#myTable tbody tr").each(function ()    
-				{
-					var productName= $(this).find("td").eq(0).html();    
-					var productCount= $(this).find("td").eq(1).html();    
-					var productPrice= $(this).find("td").eq(2).html();    
-					var productWeight= $(this).find("td").eq(3).html();    
-					var recipient= $(this).find("td").eq(4).html();    
-					var recipientTel= $(this).find("td").eq(5).html();    
-					var provinceName= $(this).find("td").eq(6).html();    
-					var cityName= $(this).find("td").eq(7).html();    
-					var expAreaName= $(this).find("td").eq(8).html();    
-					var recipientAddress= $(this).find("td").eq(9).html();    
-					var shipper= $(this).find("td").eq(10).html();    
-					var shipperTel= $(this).find("td").eq(11).html();    
-					var remarks= $(this).find("td").eq(12).html();    
-					var orderInfo = {
-						 productName: productName,
-	                     productCount: productCount,
-	                     productPrice: productPrice,
-	                     productWeight: productWeight,
-	                     recipient: recipient,
-	                     recipientTel: recipientTel,
-	                     provinceName: provinceName,
-	                     cityName: cityName,
-	                     expAreaName: expAreaName,
-	                     recipientAddress: recipientAddress,
-	                     shipper: shipper,
-	                     shipperTel: shipperTel,
-	                     remarks: remarks
-					}
-					
-					submitOrders[count] = orderInfo;
-					count++;
-				})  
-				var params = {  
-		            reserveOrderNoList:submitOrders
-		         };  
-        	 
-             if(0 != submitOrders.length){//提交保存
-				console.log(submitOrders);
-				$.ajax({
-				    type : "POST",
-				    url : "#(base_path)/order/smart/addOrder?userId=#(loginUser.userId)",
-				    data: {"params":JSON.stringify(params)},   
-				    dataType : "json",
-				    success : function(data) {
-				    	var code = data.code;
-				    	if(code == 0){
-					        layer.msg("上传完成，成功:"+data.data.successCount+"个，已存在或未完成："+data.data.failCount+"个", {shift: 1});
-							setTimeout(function(){window.location.href = "#(base_path)/order/allOrder?userId=#(loginUser.userId??)";}, 600);
-				    	}else if(code == 1){
-				    		layer.msg(data.message, {shift: 1});
-				    	}
-				    },
-				    error : function(data) {
-				    	layer.msg(data.message, {shift: 6});
-				    }
-				});
-             }
-         });
-     });
-
-     function getOrdersInfo(inputInfo) { ///获取订单信息并填入table中
-         smartAnalysis(inputInfo, function(err, orderOs) { ///智能分析
-             if(err)
-                 return;
-             var tbody = $("table").find("tbody");
-             tbody.empty();
-             for(var i in orderOs){
-                 var orderInfo = "<tr><td class=goods value=goods>"
-                     + orderOs[i].goods +"</td><td class=goodsNum value=goodsNum>"
-                     + orderOs[i].goodsNum + "</td><td class=goodsPrice value=goodsPrice>"
-                     + 1 + "</td><td class=goodsWeight value=goodsWeight>"
-                     + orderOs[i].goodsWeight + "</td><td class=toPeople value=toPeople>"
-                     + orderOs[i].toPeople + "</td><td class=telephone value=telephone>"
-                     + orderOs[i].toContact + "</td><td>"
-                     + orderOs[i].adds.province + "</td><td>"
-                     + orderOs[i].adds.city + "</td><td>"
-                     + orderOs[i].adds.area + "</td><td>"
-                     + orderOs[i].adds.detail + "</td><td>"
-                     + orderOs[i].fromPeople + "</td><td>"
-                     + orderOs[i].fromContact + "</td><td></td></tr>";
-                 tbody.append(orderInfo);
-             }
-
-             $("table td").attr("contenteditable", true);
-             $("table td").attr("oninput", "changeThis(this)");
-         });
-     }
-
-     function changeThis(temp){
-         var selectTh = temp.getAttribute("value");
-            if (document.getElementById(selectTh).checked){
-                var list = $("." + selectTh);
-                for (var i=0; 0<list.length; i++)
-                    if (temp !== list[i]) {
-                        console.log(list[i]);
-                        list[i].innerHTML = temp.innerHTML;
-                    }
+        $("#fat-btn").click(function () {
+            if($("#inlineCheckbox1").is(':checked')){
+                confirm("请配置默认信息");
             }
-     }
+            var inputInfo = $('.orderContent').val();
+            if (undefined != inputInfo && 0 != inputInfo.length) {
+                getOrdersInfo(inputInfo);
+            }
+        });
+
+        $("#submit-btn").click(function () {
+            var body = document.getElementById("body");
+            var submitOk = nullJudgment(body, 2);
+            if (!submitOk){
+            	 layer.msg("本次提交数据不完整", {shift: 1});
+                return ;
+            }
+            var submitOrders = new Array();      ///提交后台数据
+            var count = 0;
+
+            var trs = body.children;
+            for (var i=0; i<trs.length; i++){
+                var tds = trs[i].children;
+                var productName = tds[0].firstElementChild.innerHTML;
+                var productCount= tds[1].firstElementChild.innerHTML;
+                var productPrice= tds[2].firstElementChild.innerHTML;
+                var productWeight= tds[3].firstElementChild.innerHTML;
+                var recipient= tds[4].firstElementChild.innerHTML;
+                var recipientTel= tds[5].firstElementChild.innerHTML;
+                var provinceName= tds[6].firstElementChild.innerHTML;
+                var cityName= tds[7].firstElementChild.innerHTML;
+                var expAreaName= tds[8].firstElementChild.innerHTML;
+                var recipientAddress= tds[9].firstElementChild.innerHTML;
+                var shipper= tds[10].firstElementChild.innerHTML;
+                var shipperTel= tds[11].firstElementChild.innerHTML;
+                var remarks= tds[12].firstElementChild.innerHTML;
+
+                var orderInfo = {
+                    productName: productName,
+                    productCount: productCount,
+                    productPrice: productPrice,
+                    productWeight: productWeight,
+                    recipient: recipient,
+                    recipientTel: recipientTel,
+                    provinceName: provinceName,
+                    cityName: cityName,
+                    expAreaName: expAreaName,
+                    recipientAddress: recipientAddress,
+                    shipper: shipper,
+                    shipperTel: shipperTel,
+                    remarks: remarks
+                }
+
+                 submitOrders[count] = orderInfo;
+                 count++;
+            }
+            var params = {
+                reserveOrderNoList:submitOrders
+            };
+
+            if(0 != submitOrders.length){//提交保存
+                $.ajax({
+                    type : "POST",
+                    url : "#(base_path)/order/smart/addOrder?userId=#(loginUser.userId)",
+                    data: {"params":JSON.stringify(params)},
+                    dataType : "json",
+                    success : function(data) {
+                        var code = data.code;
+                        if(code == 0){
+                            layer.msg("上传完成，成功:"+data.data.successCount+"个，已存在或未完成："+data.data.failCount+"个", {shift: 1});
+                            setTimeout(function(){window.location.href = "#(base_path)/order/eSheet";}, 600);
+                        }else if(code == 1){
+                            layer.msg(data.message, {shift: 1});
+                        }
+                    },
+                    error : function(data) {
+                        layer.msg(data.message, {shift: 6});
+                    }
+                });
+            }
+        });
+    });
+
+
+    function getOrdersInfo(inputInfo) { ///获取订单信息并填入table中
+        smartAnalysis(inputInfo, function(err, orderOs) { ///智能分析
+            if(err)
+                return;
+            var body = document.getElementById("body");
+            var head = document.getElementById("head");
+            var trs = body.children;
+            for (var j= (trs.length - 1); j>=0; j--){
+                removeElement(body.firstElementChild);
+            }
+
+            for(var i in orderOs){
+                var orderModel = head.lastElementChild;
+                var newOrder = orderModel.cloneNode(true);
+                var tags = newOrder.children;
+                tags[0].firstElementChild.innerHTML = orderOs[i].goods;
+                tags[1].firstElementChild.innerHTML = orderOs[i].goodsNum;
+                tags[2].firstElementChild.innerHTML = "";
+                tags[3].firstElementChild.innerHTML = orderOs[i].goodsWeight;
+                tags[4].firstElementChild.innerHTML = orderOs[i].toPeople;
+                tags[5].firstElementChild.innerHTML = orderOs[i].toContact;
+                tags[6].firstElementChild.innerHTML = orderOs[i].adds.province;
+                tags[7].firstElementChild.innerHTML = orderOs[i].adds.city;
+                tags[8].firstElementChild.innerHTML = orderOs[i].adds.area;
+                tags[9].firstElementChild.innerHTML = orderOs[i].adds.detail;
+                tags[10].firstElementChild.innerHTML = orderOs[i].fromPeople;
+                tags[11].firstElementChild.innerHTML = orderOs[i].fromContact;
+                tags[12].firstElementChild.innerHTML = "无";
+                newOrder.setAttribute("style", "");
+                newOrder.setAttribute("id", "");
+                body.appendChild(newOrder);
+            }
+
+            nullJudgment(body, 1);
+        });
+    }
+
+    function change(temp) {
+        var className = temp.getAttribute('class');
+        var refresh = temp.innerHTML;
+        if (document.getElementById(className).checked){
+            ///console.log(className);
+            var tagList = getElementsByClassName(className);
+            for (var i = 0; i<tagList.length; i++){
+                tagList[i].innerHTML = refresh;
+                if (0 === tagList[i].innerHTML.length || 0 < tagList[i].innerHTML.indexOf("br")){
+					tagList[i].parentNode.style.border = "2px solid #FF0000";
+				}else{
+				   tagList[i].parentNode.style.border = "1px solid #c9c9c9";
+				}
+                  
+            }
+        }else{
+			 if (0 === temp.innerHTML.length || 0 < temp.innerHTML.indexOf("br")){
+					temp.parentNode.style.border = "2px solid #FF0000";
+				}else{
+				   temp.parentNode.style.border = "1px solid #c9c9c9";
+				}
+		}
+    }
+
+    function changeColor(temp){
+
+    }
+
+    function getElementsByClassName(n) {
+        var classElements = [],allElements = document.getElementsByTagName('*');
+        for (var i=0; i< allElements.length; i++ )
+        {
+            if (allElements[i].className == n ) {
+                classElements[classElements.length] = allElements[i];
+            }
+        }
+        return classElements;
+    }
+
+    function nullJudgment(temp, type){
+        var trs = temp.children;
+        for (var i=0; i<trs.length; i++){       ///第一个隐藏tr不计入
+            var tds = trs[i].children;
+            for (var j=0; j<tds.length; j++){
+                if ("" === tds[j].firstElementChild.innerHTML && 1 === type)
+                    tds[j].style.border = "2px solid #FF0000";
+                else if (("" === tds[j].firstElementChild.innerHTML || "<br>" === tds[j].firstElementChild.innerHTML) && 2 === type)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    function removeElement(_element){
+         var _parentElement = _element.parentNode;
+         if(_parentElement){
+                _parentElement.removeChild(_element);
+         }
+}
 </script>
 
 #end

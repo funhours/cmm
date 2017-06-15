@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+<link rel="stylesheet" href="../../../assets/layer/skin/default/layer.css">
 </head>
 <body>
 	<form class="am-form tpl-form-border-form tpl-form-border-br"
@@ -29,8 +29,8 @@
 			</div>
 		</div>
 	</form>
-	<script src="#(base_path)/assets/js/jquery.min.js"></script>
-	<script src="#(base_path)/assets/layer/layer.js"></script>
+	<script src="../../../assets/js/jquery.min.js"></script>
+	<script src="../../../assets/layer/layer.js"></script>
 	<script type="text/javascript">
 
 		$(function($) {
@@ -41,14 +41,14 @@
 
 				$.ajax({
 					type : "POST",
-					url : "#(base_path)/order/editBuyConfig?obcEditType=0",
+					url : "/order/editBuyConfig?obcEditType=0",
 					data : $form.serialize(),
 					dataType : "json",
 					success : function(data) {
 						layer.msg(data.data);
 						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
 	    				parent.layer.close(index);
-	    				setTimeout(function(){window.location.href = "#(base_path)/smsManage/template";}, 600);
+	    				setTimeout(function(){window.location.href = "/smsManage/template";}, 600);
 					},
 					error : function(data) {
 					}

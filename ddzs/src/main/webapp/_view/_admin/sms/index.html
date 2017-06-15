@@ -361,7 +361,7 @@
 		//设置短信模板
 		$(".configTemplate").unbind("click");
 		$(".configTemplate").bind("click",function(){
-			layer.prompt(
+			/* layer.prompt(
 			{
 			  formType: 2, 
 			  value: '', 
@@ -416,7 +416,8 @@
 					});
 				}
 			  }
-			});
+			}); */
+			window.location.href = "#(base_path)/smsManage/toCustomTemplate";
 		});
 		
 		

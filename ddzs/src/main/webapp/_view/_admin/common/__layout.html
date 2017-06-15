@@ -41,14 +41,6 @@
 				<div class="am-fl tpl-header-switch-button am-icon-list">
 					<span> </span>
 				</div>
-				<!-- 搜索 -->
-				<!-- <div class="am-fl tpl-header-search">
-					<form class="tpl-header-search-form" action="javascript:;">
-						<button class="tpl-header-search-btn am-icon-search"></button>
-						<input class="tpl-header-search-box" type="text"
-							placeholder="搜索内容...">
-					</form>
-				</div> -->
 				<!-- 其它功能-->
 				<div class="am-fr tpl-header-navbar">
 					<ul>
@@ -59,7 +51,7 @@
 							供货商
 							#elseif(loginUser.userType == 3)
 							团队成员
-							#elseif(loginUser.userType == 3)
+							#elseif(loginUser.userType == 4)
 							代理商
 							#end
 							<span>#(loginUser.nickName??)</span>
@@ -113,7 +105,7 @@
 						<i class="am-icon-reorder sidebar-nav-link-logo"></i> 订单管理
 						<span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
 					</a>
-					<ul class="sidebar-nav sidebar-nav-sub">
+					<ul class="sidebar-nav sidebar-nav-sub" style="display: block;">
                        <!--  <li class="sidebar-nav-link">
                             <a href="#(base_path)/order/allOrder">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 所有订单
@@ -155,13 +147,28 @@
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 作废订单
                             </a>
                         </li>
-                      	<li class="sidebar-nav-link">
+                      	
+                    </ul>
+				</li>
+				<li class="sidebar-nav-link">
+					<a href="javascript:;" class="sidebar-nav-sub-title">
+						<i class="am-icon-reorder sidebar-nav-link-logo"></i> 物流查询
+						<span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+					</a>
+					<ul class="sidebar-nav sidebar-nav-sub" style="display: block;">
+						<li class="sidebar-nav-link">
                             <a href="#(base_path)/logistics">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 物流跟踪
                             </a>
                         </li>
-                    </ul>
+                        <li class="sidebar-nav-link">
+							<a href="#(base_path)/extQuery"> 
+								<i class="am-icon-link sidebar-nav-link-logo"></i> 外部查询页
+							</a>
+						</li>
+					</ul>
 				</li>
+				
 				<li class="sidebar-nav-link">
 					<a href="#(base_path)/person/?userId=#(loginUser.userId??)"> 
 						<i class="am-icon-users  sidebar-nav-link-logo"></i> 团队管理
@@ -220,11 +227,7 @@
 						<i class="am-icon-book sidebar-nav-link-logo"></i> 收支记录
 					</a>
 				</li>
-				<li class="sidebar-nav-link">
-					<a href="#(base_path)/extQuery"> 
-						<i class="am-icon-link sidebar-nav-link-logo"></i> 外部查询页
-					</a>
-				</li>
+				
 				<li class="sidebar-nav-link">
 					<a href="#(base_path)/order/eSheet/configPage"> 
 						<i class="am-icon-cog sidebar-nav-link-logo"></i> 快递配置

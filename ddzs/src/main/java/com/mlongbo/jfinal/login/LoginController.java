@@ -6,6 +6,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.kit.Ret;
 import com.mlongbo.jfinal.kit.IpKit;
 
+@Clear
 public class LoginController extends Controller
 {
   static final LoginService srv = LoginService.me;

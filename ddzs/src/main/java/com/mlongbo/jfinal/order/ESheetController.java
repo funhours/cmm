@@ -18,6 +18,7 @@ import com.mlongbo.jfinal.model.RelationUserDotPara;
 import com.mlongbo.jfinal.model.Shipper;
 import com.mlongbo.jfinal.model.SmsSendLog;
 import com.mlongbo.jfinal.model.SmsStore;
+import com.mlongbo.jfinal.model.SmsTemplate;
 import com.mlongbo.jfinal.model.User;
 import com.mlongbo.jfinal.model.esheet.OrderEsheetSenderTemplate;
 import com.mlongbo.jfinal.vo.AjaxResult;
@@ -26,6 +27,7 @@ import com.mlongbo.jfinal.vo.AjaxResult;
 public class ESheetController extends BaseController {
     private final AjaxResult result = new AjaxResult();
     static Orders dao = new Orders().dao();
+    private final SmsTemplate stDao = new SmsTemplate().dao();
     User udao = new User().dao();
     RelationUserDotPara rudpDao = new RelationUserDotPara().dao();
     OrderEsheetSenderTemplate tempDao = new OrderEsheetSenderTemplate().dao();
@@ -122,6 +124,16 @@ public class ESheetController extends BaseController {
      */
     public void dotPara(){
         String userId = getLoginUserId();
+        /*
+        //判断发件信息是否配置
+        //发件信息
+        String sendSql = "select * from order_esheet_sender_template where 1=1 and userId = '" + userId + "'";
+        OrderEsheetSenderTemplate template = tempDao.findFirst(sendSql);
+        if(template != null){
+            result.addError("发件信息为空，请先配置发件信息");
+            renderJson(result);
+            return;
+        }*/
         String shipperCode = getPara("shipperCode");
         String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperCode = '" + shipperCode+"'";
         RelationUserDotPara rudp = rudpDao.findFirst(sql);
@@ -287,12 +299,13 @@ public class ESheetController extends BaseController {
             }
             
             Orders order = dao.findById(orderId);
-            String originCode = "";
+            String logisticCode = "";
             String printTemplate = "";
             String eBusinessID = "";
             boolean success = false;
             for (int i = 0; i < eSheetCount; i++) {
                 String esriJson =  "{'OrderCode': '"+orderId+"'," +
+                    "'CallBack':'"+orderId+"'," +
                     "'ShipperCode':'"+shipperCode+"'," +
                     "'CustomerName':'"+rudp.getStr("customerName")+"'," +
                     "'CustomerPwd':'"+rudp.getStr("customerPwd")+"'," +
@@ -321,24 +334,60 @@ public class ESheetController extends BaseController {
                 JSONObject obj = JSONObject.parseObject(eSheetResult);
                 eBusinessID = obj.get("EBusinessID").toString();
                 success = (Boolean) obj.get("Success");
-                if(i == (eSheetCount-1)){
-                    printTemplate += obj.get("PrintTemplate").toString();
-                }else{
-                    printTemplate += obj.get("PrintTemplate").toString()+",";
+                if(success){
+                    if(i == (eSheetCount-1)){
+                        printTemplate += obj.get("PrintTemplate").toString();
+                    }else{
+                        printTemplate += obj.get("PrintTemplate").toString()+",";
+                        
+                    }
                     
-                }
-                
-                String eOrderStr = obj.getString("Order");
-                JSONObject eOrderObj = JSONObject.parseObject(eOrderStr);
-                if(i == (eSheetCount-1)){
-                    originCode += eOrderObj.getString("OriginCode");
-                }else{
-                    originCode += eOrderObj.getString("OriginCode")+",";
+                    String eOrderStr = obj.getString("Order");
+                    JSONObject eOrderObj = JSONObject.parseObject(eOrderStr);
+                    if(i == (eSheetCount-1)){
+                        logisticCode += eOrderObj.getString("LogisticCode");
+                    }else{
+                        logisticCode += eOrderObj.getString("LogisticCode")+",";
+                    }
                 }
                 
             }
             if(success){
-                order.set("printTemplate", printTemplate).set("eBusinessID", eBusinessID).set("shipperCode",shipperCode).set("originCode", originCode).set("orderStatus", 3).update();
+                order.set("printTemplate", printTemplate).set("eBusinessID", eBusinessID).set("shipperCode",shipperCode).set("logisticCode", logisticCode).set("orderStatus", 3).update();
+                String logisticCodes[] = logisticCode.split(",");
+                
+                String distJson =  "{'OrderCode': '"+orderId+"'," +
+                        "'LogisticCode':'"+logisticCodes[0]+"'," +
+                        "'CallBack':'"+orderId+"'," +
+                        "'ShipperCode':'"+shipperCode+"'," +
+                        "'CustomerName':'"+rudp.getStr("customerName")+"'," +
+                        "'CustomerPwd':'"+rudp.getStr("customerPwd")+"'," +
+                        "'PayType':1," +
+                        "'ExpType':1," +
+                       // "'Cost':"+cost+"," +
+                       // "'OtherCost':"+otherCost+"," +
+                        "'Sender':" +
+                        "{" +
+                        "'Company':'"+template.getStr("company")+"','Name':'"+template.getStr("name")+"','Mobile':'"+template.get("mobile").toString()+"','ProvinceName':'"+template.getStr("provinceName")+"','CityName':'"+template.getStr("cityName")+"','ExpAreaName':'"+template.getStr("expAreaName")+"','Address':'"+template.getStr("address")+"'}," +
+                        "'Receiver':" +
+                        "{" +
+                        "'Name':'"+order.getStr("recipient")+"','Mobile':'"+order.get("recipientTel").toString()+"','ProvinceName':'"+order.getStr("provinceName")+"','CityName':'"+order.getStr("cityName")+"','ExpAreaName':'"+order.getStr("expAreaName")+"','Address':'"+order.getStr("recipientAddress")+"'}," +
+                        "'Commodity':" +
+                        "[{" +
+                        "'GoodsName':'"+order.getStr("productName")+"','Goodsquantity':"+order.getInt("productCount")+"}]," +
+                        "'Weight':"+order.getBigDecimal("productWeight")+"," +
+                        "'Quantity':1," +
+                        "'Volume':0.0," +
+                        "'Remark':'"+order.getStr("remarks")+"'," +
+                        "'IsReturnPrintTemplate':1}";
+                
+                String distResult = eOrderApi.orderTracesSubByJson(distJson);
+                JSONObject distJobj = JSONObject.parseObject(distResult);
+                String distIsSuccess = distJobj.getString("Success");
+                if("true".equals(distIsSuccess)){
+                    System.out.println("订阅成功！订单号："+orderId+"   运单号："+logisticCodes[0]);
+                }
+                
                 System.out.println("电子面单分配成功，状态已修改");
             }
         } catch (Exception e) {
@@ -367,9 +416,8 @@ public class ESheetController extends BaseController {
             String orderIdArr = getPara("orderIdArr");
             String orderIds[] = orderIdArr.split(",");
             String shipperCode = getPara("shipperCode");
-           // double cost = Double.parseDouble(getPara("cost"));
-//            double otherCost = Double.parseDouble(getPara("otherCost"));
-            
+            int eSheetCount = getParaToInt("eSheetCount");
+            String logisticCode = "";
             //1
             String sql = "select * from relation_user_dot_para where 1=1 and userId = '" + userId + "' and shipperCode = '" + shipperCode+"'";
             RelationUserDotPara rudp = rudpDao.findFirst(sql);
@@ -387,14 +435,62 @@ public class ESheetController extends BaseController {
             }
             for (int i = 0; i < orderIds.length; i++) {
                 Orders order = dao.findById(orderIds[i]);
-                String esriJson =  "{'OrderCode': '"+orderIds[i]+"'," +
+                String printTemplate = "";
+                String eBusinessID = "";
+                for (int j = 0; j < eSheetCount; j++) {
+                
+                    String esriJson =  "{'OrderCode': '"+orderIds[i]+"'," +
+                            "'ShipperCode':'"+shipperCode+"'," +
+                            "'CustomerName':'"+rudp.getStr("customerName")+"'," +
+                            "'CustomerPwd':'"+rudp.getStr("customerPwd")+"'," +
+                            "'PayType':1," +
+                            "'ExpType':1," +
+                            "'Sender':" +
+                            "{" +
+                            "'Company':'"+template.getStr("company")+"','Name':'"+template.getStr("name")+"','Mobile':'"+template.get("mobile").toString()+"','ProvinceName':'"+template.getStr("provinceName")+"','CityName':'"+template.getStr("cityName")+"','ExpAreaName':'"+template.getStr("expAreaName")+"','Address':'"+template.getStr("address")+"'}," +
+                            "'Receiver':" +
+                            "{" +
+                            "'Name':'"+order.getStr("recipient")+"','Mobile':'"+order.get("recipientTel").toString()+"','ProvinceName':'"+order.getStr("provinceName")+"','CityName':'"+order.getStr("cityName")+"','ExpAreaName':'"+order.getStr("expAreaName")+"','Address':'"+order.getStr("recipientAddress")+"'}," +
+                            "'Commodity':" +
+                            "[{" +
+                            "'GoodsName':'"+order.getStr("productName")+"','Goodsquantity':"+order.getInt("productCount")+"}]," +
+                            "'Weight':"+order.getBigDecimal("productWeight")+"," +
+                            "'Quantity':1," +
+                            "'Volume':0.0," +
+                            "'Remark':'"+order.getStr("remarks")+"'," +
+                            "'IsReturnPrintTemplate':1}";
+                    System.out.println(esriJson);
+                    String eSheetResult = eOrderApi.getOrderOnlineByJson(esriJson);
+                    System.out.println("电子面单申请返回===>"+eSheetResult);
+                    
+                    JSONObject obj = JSONObject.parseObject(eSheetResult);
+                    eBusinessID = obj.get("EBusinessID").toString();
+                    boolean success = (Boolean) obj.get("Success");
+                    if(success){
+                        printTemplate = obj.get("PrintTemplate").toString();
+                        
+                        String eOrderStr = obj.getString("Order");
+                        JSONObject eOrderObj = JSONObject.parseObject(eOrderStr);
+                        if(i == (eSheetCount-1)){
+                            logisticCode += eOrderObj.getString("LogisticCode");
+                        }else{
+                            logisticCode += eOrderObj.getString("LogisticCode")+",";
+                        }
+                    }
+                }
+                order.set("printTemplate", printTemplate).set("shipperCode",shipperCode).set("eBusinessID", eBusinessID).set("logisticCode", logisticCode).set("orderStatus", 3).update();
+                System.out.println("电子面单分配成功，状态已修改");
+                String logisticCodes[] = logisticCode.split(",");
+                String distJson =  "{'OrderCode': '"+orderIds[i]+"'," +
+                        "'LogisticCode':'"+logisticCodes[0]+"'," +
+                        "'CallBack':'"+orderIds[i]+"'," +
                         "'ShipperCode':'"+shipperCode+"'," +
                         "'CustomerName':'"+rudp.getStr("customerName")+"'," +
                         "'CustomerPwd':'"+rudp.getStr("customerPwd")+"'," +
                         "'PayType':1," +
                         "'ExpType':1," +
-                        //"'Cost':"+cost+"," +
-                        // "'OtherCost':"+otherCost+"," +
+                       // "'Cost':"+cost+"," +
+                       // "'OtherCost':"+otherCost+"," +
                         "'Sender':" +
                         "{" +
                         "'Company':'"+template.getStr("company")+"','Name':'"+template.getStr("name")+"','Mobile':'"+template.get("mobile").toString()+"','ProvinceName':'"+template.getStr("provinceName")+"','CityName':'"+template.getStr("cityName")+"','ExpAreaName':'"+template.getStr("expAreaName")+"','Address':'"+template.getStr("address")+"'}," +
@@ -409,23 +505,15 @@ public class ESheetController extends BaseController {
                         "'Volume':0.0," +
                         "'Remark':'"+order.getStr("remarks")+"'," +
                         "'IsReturnPrintTemplate':1}";
-                System.out.println(esriJson);
-                String eSheetResult = eOrderApi.getOrderOnlineByJson(esriJson);
-                System.out.println("电子面单申请返回===>"+eSheetResult);
                 
-                JSONObject obj = JSONObject.parseObject(eSheetResult);
-                String eBusinessID = obj.get("EBusinessID").toString();
-                boolean success = (Boolean) obj.get("Success");
-                String printTemplate = obj.get("PrintTemplate").toString();
-                
-                String eOrderStr = obj.getString("Order");
-                JSONObject eOrderObj = JSONObject.parseObject(eOrderStr);
-                String originCode = eOrderObj.getString("OriginCode");
-                
-                if(success){//分配成功
-                    order.set("printTemplate", printTemplate).set("shipperCode",shipperCode).set("eBusinessID", eBusinessID).set("originCode", originCode).set("orderStatus", 3).update();
-                    System.out.println("電子麵單分配成功，狀態已修改");
+                String distResult = eOrderApi.orderTracesSubByJson(distJson);
+                JSONObject distJobj = JSONObject.parseObject(distResult);
+                String distIsSuccess = distJobj.getString("Success");
+                if("true".equals(distIsSuccess)){
+                    System.out.println("订阅成功！订单号："+orderIds[i]+"   运单号："+logisticCodes[0]);
                 }
+               
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -494,10 +582,12 @@ public class ESheetController extends BaseController {
      * 5.短信量更改
      */
     public void sendSms(){
+        String userId = getLoginUserId();
+        String stSql = "select * from sms_template where userId = ?";
+        SmsTemplate smsTemplate = stDao.findFirst(stSql,userId);
         try {
             String orderId= getPara("orderId");
             String orderIds[] = orderId.split(",");
-            String userId = getLoginUserId();
             //0
           //查询短信剩余量
             String smsRemainingSql = "select * from sms_store where 1=1 and userId = ?";
@@ -508,23 +598,27 @@ public class ESheetController extends BaseController {
                 renderJson(result);
             }
             //1
-            List<String> smsContents = new ArrayList<String>();
             for (int i = 0; i < orderIds.length; i++) {
                 Orders order = dao.findById(orderIds[i]);
                 String shipperCode = order.getStr("shipperCode");
                 Shipper shipper = Shipper.dao.findFirst("select * from shipper where shipperCode = '" + shipperCode+"'");
                 //2
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                String content = "亲，您购买的"+order.getStr("productName")+"已委托"+shipper.getStr("shipperName")+"镖局为您发货。镖号："+order.getStr("originCode")+".若想及时了解快递信息，请点击：http://fengniao.com/logistics/getOrderTracesByOrderId?no="+orderIds[i]+" 时间:"+df.format(new Date());
+                //String content = "亲，您购买的"+order.getStr("productName")+"已委托"+shipper.getStr("shipperName")+"镖局为您发货。镖号："+order.getStr("originCode")+".若想及时了解快递信息，请点击：http://fengniao.com/logistics/getOrderTracesByOrderId?no="+orderIds[i]+" 时间:"+df.format(new Date());
+                String _template = smsTemplate.getStr("template");
+                String template = _template.replace("{商品名称}", order.getStr("productName")).replace("{快递公司}", shipper.getStr("shipperName")).replace("{快递号}", order.getStr("originCode"));
+                String content = template +".若想及时了解快递信息，请点击：http://fengniaodadan.com/logisticsInquiry/search?no="+orderIds[i]+" 时间:"+df.format(new Date());
                 String mobile[] = new String[]{order.get("recipientTel")+""} ;
                 //3
                 SMSUtils.sendOrderSms(mobile, content);
                 //4
-                boolean smsSendLogSave= new SmsSendLog()
+                new SmsSendLog()
                         .set("userId", userId)
                         .set("mobiles", mobile[0])
                         .set("smsContent", content)
                         .set("sendTime", df.format(new Date())).save();
+                
+                order.set("isSendMsg", 1).update();
             }
            
             //5
@@ -539,7 +633,7 @@ public class ESheetController extends BaseController {
     public void noSendSms(){
         String orderId= getPara("orderId");
         Orders order = dao.findById(orderId);
-        order.set("orderStatus", 4).update();
+        order.set("orderStatus", 4).set("isSendMsg", 0).update();
     }
 
 }

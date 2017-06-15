@@ -50,28 +50,30 @@
 						<div class="denglv">
 							<p class="welcom">欢迎使用</p>
 							<p class="message">
-								<i class="icon"></i> 请输入正确的手机号或邮箱！
+								<i class="icon"></i> 请输入正确的手机号！
 							</p>
 							<div class="name">
 								<i class="icon-user"></i> 
-								<input type="text" class="userName" placeholder="账号" name="user" id="username" autocomplete="off"> 
+								<input type="text" class="userName" placeholder="请使用手机号登录" name="user" id="username" autocomplete="off"> 
 								<i class="icon-fail"></i>
 							</div>
 							<div class="password">
 								<i class="icon-pwd"></i> 
-								<input type="password" class="userPassword" placeholder="密码" name="password" id="password" autocomplete="off"> 
+								<input type="password" class="userPassword" placeholder="密码" name="userPassword" id="userPassword" autocomplete="off"> 
 								<i class="icon-fail"></i>
 							</div>
 							<div class="remember">
 								<div class="holdon">
-									<input id="cbx_keep" class="input-checkbok" type='checkbox' name='keepLogin'/>
-									<label class="text">保持登录</label>
+									<input id="cbx_keep" class="input-checkbok" type='checkbox' name='keepLogin' />
+									<label class="text">记住密码</label>
+									<!-- <input id="isAutoLoginId" class="input-checkbok" type='checkbox' name="isAutoLoginId" />
+									<label class="text">自动登录</label> -->
 								</div>
 								<div class="forget">
 									<a class="wangji" href="#">忘记密码？</a>
 								</div>
 							</div>
-							<a class="button login" id="btn_login" >登录</a>
+							<a class="button login" id="btn_login" href="#">登录</a>
 							<p class="no-account">
 								<span class="no">没有账号?</span> <a href="#" class="color zhuce" >立即注册</a>
 							</p>
@@ -131,7 +133,57 @@
 	
 	$(".login").unbind("click");
 	$(".login").bind("click",function(){
-		var keepLogin = $("#cbx_keep").is(':checked');
+		login();		
+	});
+	
+	document.onkeydown = function (event){
+		if (event.keyCode==13){
+			login();
+		}
+　　};
+
+
+    $(document).ready(function(){    
+	   	//读取 localStage 本地存储，填充用户名密码,如果自动登录有值直接跳转；    
+	   	//相反，跳转到本页面,等待登陆处理    
+	   	var storage = window.localStorage;    
+   	    var getUserName = storage["userName"];    
+   	    var getPwd = storage["userPassword"];    
+   	    var getisstroepwd = storage["isstorePwd"];    
+   	    if("yes" == getisstroepwd)    
+   	    {
+   	    	$("#cbx_keep").prop("checked",true);
+            if(( ("" != getUserName) ||(null != getUserName)) && (("" != getPwd) ||(null != getPwd)))    
+            {
+                //lacoste  已经保存 登陆信息 直接登陆    
+                // alert('正在自动登录');  
+                $(".userName").val(getUserName);  
+                $(".userPassword").val(getPwd);  
+            	$("#cbx_keep").prop("checked",true);
+            }
+   	    }    
+   	 });   
+    function login(){  
+       var userName=$(".userName").val();    
+       var userPassword=$(".userPassword").val();    
+       
+       var storage = window.localStorage;    
+       //记住密码    
+       if(document.getElementById("cbx_keep").checked)    
+       {    
+           //存储到loaclStage      
+       
+           storage["userName"] = userName;    
+           storage["userPassword"] =  userPassword;    
+           storage["isstorePwd"] =  "yes";    
+       }    
+       else    
+       {    
+           storage["userName"] = userName;    
+           storage["isstorePwd"] =  "no";    
+       }    
+       
+       var keepLogin = $("#cbx_keep").is(':checked');
 		var loginName = $(".userName").val();
 		var password = $(".userPassword").val();
 		var url = "#(base_path)/login/doLogin?returnUrl=#(returnUrl)";
@@ -151,6 +203,7 @@
 				  layer.msg("当前用户未激活，请联系管理员", {shift: 1});
 				  return;
 			  }
+			  if(data.loginUser.userType == 2){
 			  //判断订单剩余量
 				var oRemaining = data.orderStore.remaining;
 				if(oRemaining <= 0){
@@ -174,7 +227,6 @@
 			      });
 					return;
 				}
-
 				  
 			  //判断时长剩余量
 				if(data.isExpired){
@@ -198,6 +250,8 @@
 			      });
 					return;
 				}
+				  
+			  }
 				 layer.msg("登录成功", {shift: 1});
 				 var userId = data.loginUser.userId
 				 setTimeout(function(){window.location.href="#(base_path)/admin";}, 600);
@@ -207,8 +261,7 @@
 		  },error: function (XMLHttpRequest) {
 			alert("Ajax请求失败，错误状态为："+XMLHttpRequest.status);
 		}
-		});
-		
-	});
+		})  
+   }  
 </script>
 </html>

@@ -1,12 +1,34 @@
-<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
-<div>
-#(ptype.typeName??)
-	<!-- <input type="button" name="button" value="add" onclick="addtr('test');"> -->
-	<input type="button" name="button" value="save" onclick="save('test');">
-	<table border="1px #ooo" id="product" name="test" class="test" cellpadding="0" cellspacing="0" width="20%">
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+		<style>
+			.wapper{display: block;margin: auto;}
+			.wapper .title{width: 100%;text-align: center;margin-bottom: 20px;margin-top: 10px;}
+			table{display: block;margin: auto;width: 600px;}
+			table td{width: 200px;text-align: center;border: 1px solid #898989;padding: 7px 0;}
+			input{text-align: center;border: none;}
+			input:focus{outline: none;}
+			input[type="text"]{width: 100%;font-size: 15px;}
+			input[type="button"]{padding: 4px 15px;border: 1px groove #f8f8f8;border-radius: 3px;}
+		    input[type="button"]:active{border: 1px ridge #f8f8f8; box-shadow:  0 0 2px #898989;}
+		</style>	
+	</head>
+	<body>
+		
+<div class="wapper">
+	<div class="title">
+		#(ptype.typeName??)
+		<!-- <input type="button" name="button" value="add" onclick="addtr('test');"> -->
+		<input class="save" type="button" name="button" value="save" onclick="save('test');">
+	</div>
+
+	<table  id="product" name="test" class="test" cellpadding="0" cellspacing="0" >
 		<thead>
-			<td width="45%">规格</td>
-			<td width="45%">价格</td>
+			<td >规格</td>
+			<td >价格</td>
 			<td>
 				<input type="button" name="button" value="add" onclick="addtr('product');">
 			</td>
@@ -14,8 +36,8 @@
 		<form class="am-form tpl-form-line-form productForm">
 			<tbody>
 				<tr id="1">
-					<td width="45%"><input type="text" value="1" id="a1" /></td>
-					<td width="45%"><input type="text" value="2" id="a2" /></td>
+					<td ><input type="text" value="1" id="a1" /></td>
+					<td ><input type="text" value="2" id="a2" /></td>
 					<td>
 						<input type='button' name='button' value='del' onclick='deltr(this);'></td>
 					</td>
@@ -34,7 +56,7 @@
 		var tr_id = $("#product>tbody>tr:last").attr("id");
 		tr_id++;
 		//alert(tr_id);  
-		str = "<tr id = '"+tr_id+"'><td width='45%'><input type='text' value='123' /></td><td width='45%'><input type='text' value='123' /></td><td><input type='button' name='button' value='del' onclick='deltr(this);'></td></tr>";
+		str = "<tr id = '"+tr_id+"'><td ><input type='text' value='123' /></td><td><input type='text' value='123' /></td><td><input type='button' name='button' value='del' onclick='deltr(this);'></td></tr>";
 		$('#' + id).append(str);
 	}
 	function deltr(clickTd) {
@@ -75,3 +97,6 @@
 	}
 </script>
 
+
+	</body>
+</html>

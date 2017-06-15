@@ -61,6 +61,8 @@
                              <tr>
                                  <th class="table-check"><input type="checkbox" class="eSheetAllCheck"/></th>
 					              <th>订单编号</th>
+					              <th>状态</th>
+					              <th>操作</th>
 					              <th>商品名称</th>
 					              <th>商品数量</th>
 					              <th>商品金额</th>
@@ -71,8 +73,6 @@
 					              <th>发货人电话</th>
 					              <th>订单录入人</th>
 					              <th>备注</th>
-					              <th>状态</th>
-					              <th>操作</th>
                              </tr>
                          </thead>
                          	<tbody class="eSheetItem">
@@ -80,6 +80,14 @@
                          		<tr>
                          			<td><input type="checkbox" value="#(x.orderId??)" name="eSheet"/></td>
                          			<td>#(x.orderId??)</td>
+                         			<td>未分配</td>
+       								<td style="overflow:hidden">
+	                				 <div class="tpl-table-black-operation">
+                                        <a href="javascript:;" class="distributionNumber" id="#(x.orderId)">
+                                            <i class="am-icon-pencil"></i> 分配面单
+                                        </a>
+                                    </div>
+	              					</td>
                          			<td>#(x.productName??)</td>
                          			<td>#(x.productCount??)</td>
                          			<td>#(x.productPrice??)</td>
@@ -90,16 +98,7 @@
                          			<td>#(x.shipperTel??)</td>
                          			<td>#(x.orderEntry??)</td>
                          			<td>#(x.remarks??)</td>
-                         			<td>未分配</td>
                          			
-       								<td style="overflow:hidden">
-	                				 <div class="tpl-table-black-operation">
-                                        <a href="javascript:;" class="distributionNumber" id="#(x.orderId)">
-                                            <i class="am-icon-pencil"></i> 分配面单
-                                        </a>
-                                    </div>
-	                				
-	              					</td>
                          		</tr>
                          		#end
            					</tbody>
@@ -170,7 +169,7 @@
                          			<td>#(y.recipientTel??)</td>
                          			<td>#(y.recipientAddress??)</td>
                          			<td>#(y.orderEntry??)</td>
-                         			<td>#(y.originCode??)</td>
+                         			<td>#(y.logisticCode??)</td>
                          			<td>#(y.shipperName??)</td>
                          			<td>#(y.remarks??)</td>
                          			<td>未打印</td>
@@ -210,8 +209,8 @@
 
 #end
 #define js()
-<script src="#(base_path)/static/amazeui/js/jquery.min.js"></script>
-<script src="#(base_path)/static/amazeui/js/amazeui.tree.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
 <script src="#(base_path)/static/webPrint/webPrint.js"></script>
 <script type="text/javascript">
 	jQuery(function($) {	
@@ -344,11 +343,6 @@
 		$(".distributionNumber").bind("click",function(){
 		  	var orderId = this.id;
 			var shipperCode = $(".ShipperCode").val();
-			var cost = $(".Cost").val();
-			if(cost == ""){
-				layer.msg("请填写邮费");
-				return;
-			}
 			var index = layer.load(1, {
 			  shade: [0.1,'#fff'] //0.1透明度的白色背景
 			});
@@ -390,7 +384,7 @@
 				});
 			  }
 			});
-			
+			layer.close(index);
 			
 			
 		});
