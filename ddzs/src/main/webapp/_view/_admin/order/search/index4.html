@@ -1,0 +1,640 @@
+#set(seoTitle="蜂鸟订单助手") #if(loginUser.userType == 1) #@adminLayout()
+#elseif(loginUser.userType == 2) #@layout() #elseif(loginUser.userType
+== 3) #@staffLayout() #end #define main()
+<div class="row-content am-cf">
+	<div class="row">
+		<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+          <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black">
+              <thead>
+                  <tr>
+                      <th colspan="5">常用查询</th>
+                  </tr>
+              </thead>
+              <form class = "am-form tpl-form-line-form orderSeachParaForm" action="#(base_path)/orderSearch/orderSeachByPara" method="post">
+              <tbody>
+                  <tr class="gradeX">
+                      <td>
+                      	<!-- 
+                      	<select data-am-selected="{btnWidth: '85%',btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.orderEntry" placeholder="订单录入人" class="widget-body">
+                         	<option value="">请选择订单录入人</option>
+					      		#for(u : uList)
+					      			<option value="#(u.nickName)"><p style="color: black;">#(u.nickName)</p></option>
+					      		#end
+				    	</select> 
+				    	-->
+				    	#if(loginUser.userType == 2)
+				    		<input type="text" class="am-form-field" placeholder="订单录入人" required name="ordersSearch.orderEntry"/>
+                      	#elseif(loginUser.userType == 2)
+				    		<input type="text" class="am-form-field" required name="ordersSearch.orderEntry" value="#(loginUser.nickName)" readOnly="true" />
+                      	#end
+                      </td>
+                      <td>
+                      	<input type="text" class="am-form-field startDate" placeholder="开始日期" data-am-datepicker readonly required name="inputDate"/>
+                      </td>
+                      <td>
+                      	<input type="text" class="am-form-field endDate" placeholder="结束日期" data-am-datepicker readonly required name="inputDate"/>
+                      </td>
+                      <td>
+                         <select data-am-selected="{btnWidth: '85%',btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.productName" placeholder="商品名称" onchange="chooesPtype()" class="chooesPtype">
+                         <option value="">商品名称</option>
+					      	#for(p : ptList)
+					     			<option id="#(p.id)" value="#(p.typeName)">#(p.typeName)</option>
+					      	#end
+					      </select>
+                      </td>
+                      <td>
+                         <select data-am-selected="{btnWidth: '85%',btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.productSpec" placeholder="商品规格" class="productSpec">
+      </select>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+    </div>
+    </div>
+    <div class="row">
+    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+           <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black" id="example-r">
+               <thead>
+                  <tr>
+                      <th colspan="5">其它条件</th>
+                  </tr>
+              </thead>
+               <tbody>
+                   <tr class="gradeX">
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="订单编号" name="ordersSearch.orderId">
+                         
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="商品数量" name="ordersSearch.productCount">
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="商品价格" name="ordersSearch.productPrice">
+                       </td>
+                       <td>
+                          <input type="text" class="am-form-field" placeholder="发件人" name="ordersSearch.shipper">
+                       </td>
+                       <td>
+                          <input type="text" class="am-form-field" placeholder="发件人电话" name="ordersSearch.shipperTel">
+                       </td>
+                   </tr>
+                   <tr class="gradeX">
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="收件人" name="ordersSearch.recipient">
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="收件人电话" name="ordersSearch.recipientTel">
+                       </td>
+                       <td>
+                       	<input type="text" class="am-form-field" placeholder="收件人地址" name="ordersSearch.recipientAddress">
+                       </td>
+                       <td>
+                       	<select data-am-selected="{btnSize: 'sm', btnStyle: 'secondary'}" name="ordersSearch.orderStatus" placeholder="订单状态">
+					      	<option value="">请选择订单状态</option>
+					      	<option value="1"><p class="am-sans-serif">未分配</p></option>
+							<option value="2">已分配</option>
+							<option value="3">未打印</option>
+							<option value="4">已打印</option>
+							<option value="5">快递中</option>
+							<option value="6">已收件</option>
+							<option value="7">异常件</option>
+							<option value="8">已作废</option>
+					    </select>
+                       </td>
+                       <td>
+                          <input type="text" class="am-form-field searchDate" placeholder="订单日期" data-am-datepicker readonly required name="inputDate"/>
+                       </td>
+                   </tr>
+               </tbody>
+           </table>
+                         
+             				<input type="hidden" class="am-form-field year" placeholder="年" name="ordersSearch.year"/>
+                            <input type="hidden" class="am-form-field month" placeholder="月" name="ordersSearch.month"/>
+                            <input type="hidden" class="am-form-field day" placeholder="日" name="ordersSearch.day"/>
+                            
+                            <input type="hidden" class="am-form-field _startDate" name="startDate"/>
+                            <input type="hidden" class="am-form-field _endDate" name="endDate"/>
+                            <input type="hidden" class="searchType" name="searchType">
+              </form>
+    </div>
+	
+	</div>
+	
+	<div class="row">
+     <div class="am-u-sm-12 am-u-md-12">
+	  <button class="am-btn am-btn-primary am-round am-icon-search ordSearch" type="button">系统订单查询</button>
+	  <button class="am-btn am-btn-primary am-round am-icon-search chartOrdSearch" type="button">图表查询</button>
+	 </div>
+	</div>
+	<br/>
+	 <div class="row">
+	 <div class="am-u-sm-12 am-u-md-6 ">
+            <div class="widget widget-primary ">
+                <div class="widget-statistic-header">
+                    	总金额
+                </div>
+                <div class="widget-statistic-body">
+                    <div class="widget-statistic-value">
+                           <span class="am-icon-rmb"> &nbsp;&nbsp;#(total.totalPrice??0)</span>
+                    </div>
+                    <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="am-u-sm-12 am-u-md-6 ">
+            <div class="widget widget-primary am-cf">
+                <div class="widget-statistic-header">
+                    	订单数
+                </div>
+                <div class="widget-statistic-body">
+                    <div class="widget-statistic-value">
+                        	<span class="am-icon-line-chart"> &nbsp;&nbsp;#(total.orderCount??0)</span>
+                    </div>
+                    <span class="widget-statistic-icon am-icon-list-ol"></span>
+                </div>
+            </div>
+        </div>
+	</div>
+	
+	<div class="row">
+		<div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+          <div class="am-form-group">
+              <div class="am-btn-toolbar">
+                  <div class="am-btn-group am-btn-group-xs">
+                      <button type="button" class="am-btn am-btn-default am-btn-warning invalids"><span class="am-icon-archive"></span> 作废</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-danger dels"><span class="am-icon-trash-o"></span> 删除</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+	</div>
+	
+	
+	<div class="row">
+		<table width="100%"
+			class="am-table am-table-compact am-text-nowrap tpl-table-black"
+			id="example-r">
+			<thead>
+				<tr>
+					<th class="table-check">
+						<input type="checkbox" class="searchAllCheck" />
+					</th>
+					<th>订单编号</th>
+					<th>年</th>
+					<th>月</th>
+					<th>日</th>
+					<th>商品名称</th>
+					<th>商品数量</th>
+					<th>商品金额</th>
+					<th>收货人</th>
+					<th>收货人电话</th>
+					<th>收货人地址</th>
+					<th>发货人</th>
+					<th>发货人电话</th>
+					<th>订单录入人</th>
+					<!-- <th>备注</th> -->
+					<th>状态</th>
+					<!-- <th>操作</th> -->
+				</tr>
+			</thead>
+			<tbody class="searchOrderItem">
+				#for(x : orderSearchPage.list)
+				<tr>
+					<td>
+						<input type="checkbox" value="#(x.orderId??)" name="searchOrderId" />
+					</td>
+					<td>#(x.orderId??)</td>
+					<td>#(x.year??)</td>
+					<td>#(x.month??)</td>
+					<td>#(x.day??)</td>
+					<td>#(x.productName??)</td>
+					<td>#(x.productCount??)</td>
+					<td>#(x.productPrice??)</td>
+					<td>#(x.recipient??)</td>
+					<td>#(x.recipientTel??)</td>
+					<td>#(x.recipientAddress??)</td>
+					<td>#(x.shipper??)</td>
+					<td>#(x.shipperTel??)</td>
+					<td>#(x.orderEntry??)</td>
+					<!-- <td>#(x.remarks??)</td> -->
+					<td>#if((x.orderStatus) == 1) 未分配 #elseif((x.orderStatus) ==
+						2) 已分配 #elseif((x.orderStatus) == 3) 未打印 #elseif((x.orderStatus)
+						== 4) 已打印 #elseif((x.orderStatus) == 5) 快递中
+						#elseif((x.orderStatus) == 6) 已收件 #elseif((x.orderStatus) == 7)
+						异常件 #elseif((x.orderStatus) == 8) 作废 #elseif((x.orderStatus) == 9)
+						未审核 #elseif((x.orderStatus) == 0) 审核未通过 #end</td>
+
+					<!-- <td style="overflow: hidden">#if(x.orderStatus != 2 &&
+						x.orderStatus != 4)
+						<div class="tpl-table-black-operation">
+							 <a href="javascript:;" class="searchInvalid" id="#(x.orderId)">
+                                   <i class="am-icon-pencil"></i> 作废
+                               </a>
+							<a href="javascript:;"
+								class="tpl-table-black-operation-del searchDelete"
+								id="#(x.orderId)"> <i class="am-icon-trash"></i> 删除
+							</a>
+						</div> #end
+					</td> -->
+				</tr>
+				#end
+			</tbody>
+		</table>
+	</div>
+	<div class="row">
+	<div class="am-u-lg-12 am-cf">
+
+    	<div class="am-fr">
+	     	 <!-- 分页 -->
+			#@paginate(orderSearchPage.pageNumber, orderSearchPage.totalPage, "/orderSearch?p=")
+	    </div>
+	</div>
+	</div>
+	
+	<div class="row">
+		<div class="widget am-cf">
+              <div class="widget-head am-cf">
+                  <div class="widget-title am-fl">年度订单统计</div>
+                  <div class="widget-function am-fr">
+                      <a href="javascript:;" class="am-icon-cog"></a>
+                  </div>
+              </div>
+              <div class="widget-body am-fr">
+                  <div style="height: 400px" id="tpl-echarts">
+
+                  </div>
+              </div>
+     </div>
+	</div>
+	
+</div>
+
+
+
+
+#end #define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {
+		$(".ordSearch").unbind("click");
+		$(".ordSearch").bind("click", function() {
+			$(".searchType").val(1);
+			var searchDate = $(".searchDate").val().split("-");
+			$(".year").val(searchDate[0]);
+			$(".month").val(searchDate[1]);
+			$(".day").val(searchDate[2]);
+
+			var startDate = $(".startDate").val();
+			$("._startDate").val(startDate);
+			var endDate = $(".endDate").val();
+			$("._endDate").val(endDate);
+
+			$(".orderSeachParaForm").submit();
+		});
+
+		$(".ordersTbSearch").unbind("click");
+		$(".ordersTbSearch").bind("click", function() {
+			$(".searchType").val(2);
+			var searchDate = $(".searchDate").val().split("-");
+			$(".year").val(searchDate[0]);
+			$(".month").val(searchDate[1]);
+			$(".day").val(searchDate[2]);
+			$(".orderSeachParaForm").submit();
+		});
+
+		$(".ordersJdSearch").unbind("click");
+		$(".ordersJdSearch").bind("click", function() {
+			$(".searchType").val(3);
+			var searchDate = $(".searchDate").val().split("-");
+			$(".year").val(searchDate[0]);
+			$(".month").val(searchDate[1]);
+			$(".day").val(searchDate[2]);
+			$(".orderSeachParaForm").submit();
+		});
+		
+		
+		//订单作废
+		$(".searchInvalid").unbind("click");
+		$(".searchInvalid").bind("click", function() {
+			var orderId = this.id;
+			$.ajax({
+				type : "POST",
+				url : "#(base_path)/order/invalidById",
+				data : {
+					"orderId" : orderId,
+					"orderFrom" : 1
+				},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+				dataType : "json",
+				success : function(data) {
+					if (data) {
+						layer.msg("作废成功", {
+							shift : 1
+						});
+						setTimeout(function() {
+							window.location.href = "#(base_path)/orderSearch";
+						}, 600);
+					}
+				},
+				error : function(data) {
+					layer.msg(data.message, {
+						shift : 6
+					});
+				}
+			});
+		});
+
+		//订单删除
+		$(".searchDelete").unbind();
+		$(".searchDelete").bind("click", function() {
+			var orderId = this.id;
+			$.ajax({
+				type : "POST",
+				url : "#(base_path)/order/deleteById",
+				data : {
+					"orderId" : orderId,
+					"orderFrom" : 1
+				},//orderFrom删除哪个订单。1：系统，2：淘宝，3：京东
+				dataType : "json",
+				success : function(data) {
+					if (data) {
+						layer.msg("删除成功", {
+							shift : 1
+						});
+						setTimeout(function() {
+							window.location.href = "#(base_path)/orderSearch";
+						}, 600);
+					}
+				},
+				error : function(data) {
+					layer.msg(data.message, {
+						shift : 6
+					});
+				}
+			});
+		});
+
+		//删除选中
+		$(".dels").unbind("click");
+		$(".dels").bind("click",function() {
+			layer.confirm('确定删除选中订单?',{
+				icon : 3,
+				title : '提示'
+			},
+			function(index) {
+				layer.close(index);
+				var spCodesTemp = "";
+				$(".searchOrderItem :checkbox[name=searchOrderId]:checked").each(
+					function(i) {
+						if (0 == i) {
+							spCodesTemp = $(this).val();
+						} else {
+							spCodesTemp += ("," + $(this).val());
+						}
+					});
+				$.ajax({
+					type : "POST",
+					url : "#(base_path)/order/delByIds",
+					data : {
+						"delsList" : spCodesTemp
+					},
+					dataType : "json",
+					success : function(data) {
+						layer.msg("删除成功",{shift : 1});
+						setTimeout(function() {window.location.href = "#(base_path)/orderSearch";}, 600);
+					},
+					error : function(data) {
+						layer.msg(data.message,{shift : 6});}
+					});
+				});
+			});
+
+		//作废选中
+		$(".invalids").unbind("click");
+		$(".invalids")
+				.bind(
+						"click",
+						function() {
+							layer
+									.confirm(
+											'确定作废选中订单?',
+											{
+												icon : 3,
+												title : '提示'
+											},
+											function(index) {
+												layer.close(index);
+												var spCodesTemp = "";
+												$(
+														".searchOrderItem :checkbox[name=searchOrderId]:checked")
+														.each(
+																function(i) {
+																	if (0 == i) {
+																		spCodesTemp = $(
+																				this)
+																				.val();
+																	} else {
+																		spCodesTemp += ("," + $(
+																				this)
+																				.val());
+																	}
+																});
+
+												$
+														.ajax({
+															type : "POST",
+															url : "#(base_path)/order/invalidByIds",
+															data : {
+																"delsList" : spCodesTemp
+															},
+															dataType : "json",
+															success : function(
+																	data) {
+																layer
+																		.msg(
+																				"作废成功",
+																				{
+																					shift : 1
+																				});
+																setTimeout(
+																		function() {
+																			window.location.href = "#(base_path)/orderSearch";
+																		}, 600);
+															},
+															error : function(
+																	data) {
+																layer
+																		.msg(
+																				data.message,
+																				{
+																					shift : 6
+																				});
+															}
+														});
+											});
+						});
+
+		//订单全选反选
+		$(".searchAllCheck").click(function() {
+			if (this.checked) {
+				$(".searchOrderItem :checkbox").prop("checked", true);
+			} else {
+				$(".searchOrderItem :checkbox").prop("checked", false);
+			}
+		});
+
+		$(".chartOrdSearch").unbind("click");
+		$(".chartOrdSearch").bind(
+				"click",
+				function() {
+					$(".searchType").val(1);
+					var searchDate = $(".searchDate").val().split("-");
+					$(".year").val(searchDate[0]);
+					$(".month").val(searchDate[1]);
+					$(".day").val(searchDate[2]);
+
+					var startDate = $(".startDate").val();
+					$("._startDate").val(startDate);
+					var endDate = $(".endDate").val();
+					$("._endDate").val(endDate);
+
+					//			$(".orderSeachParaForm").attr("action","#(base_path)/orderSearch/getYearOrderInfo").submit();
+					$.ajax({
+						type : 'POST',
+						url : "#(base_path)/orderSearch/getYearOrderInfo",
+						data : $('.orderSeachParaForm').serialize(),
+						success : function(data) {
+							myChart.setOption({
+								xAxis : {
+									data : [ '1月', '2月', '3月', '4月', '5月',
+											'6月', '7月', '8月', '9月', '10月',
+											'11月', '12月' ]
+								},
+								yAxis : [ {
+									axisLabel : {
+										formatter : '{value} 单'
+									}
+								}, {
+									axisLabel : {
+										formatter : '{value}元'
+									}
+								} ],
+								series : [ {
+									name : '订单量',
+									type : 'bar',
+									data : data.counts
+								}, {
+									name : '订单额',
+									type : 'line',
+									yAxisIndex : 1,
+									data : data.prices
+								} ]
+							});
+						},
+						error : function(XMLHttpRequest) {
+						}
+					});
+				});
+
+		// 使用刚指定的配置项和数据显示图表。
+		var myChart = echarts.init(document.getElementById('tpl-echarts'));
+
+		var colors = [ '#5793f3', '#d14a61' ];
+
+		option = {
+			color : colors,
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : {
+					type : 'cross'
+				}
+			},
+			legend : {
+				width : 'auto',
+				height : 'auto'
+			},
+			grid : {
+				right : '20%'
+			},
+			toolbox : {
+				feature : {
+					dataView : {
+						show : true,
+						readOnly : false
+					},
+					restore : {
+						show : true
+					},
+					saveAsImage : {
+						show : true
+					}
+				}
+			},
+			legend : {
+				data : [ '订单额', '销售额' ]
+			},
+			xAxis : [ {
+				type : 'category',
+				axisTick : {
+					alignWithLabel : true
+				},
+				data : []
+			} ],
+			yAxis : [ {
+				type : 'value',
+				name : '订单额',
+				position : 'left',
+				axisLine : {
+					lineStyle : {
+						color : colors[0]
+					}
+				}
+			}, {
+				type : 'value',
+				name : '销售额',
+				position : 'right',
+				offset : 80,
+				axisLine : {
+					lineStyle : {
+						color : colors[1]
+					}
+				}
+			} ],
+			series : [ {
+				name : '订单量',
+				type : 'bar',
+				data : []
+			}, {
+				name : '订单额',
+				type : 'line',
+				yAxisIndex : 1,
+				data : []
+			} ]
+		};
+	});
+	
+	//选择类别，查询之下的规格和价格
+	function chooesPtype(){
+		var typeId = $(":selected",".chooesPtype").attr("id");
+		$.ajax({
+			type : "POST",
+			url : "#(base_path)/orderSearch/getProByTypeId",
+			data : {
+				"typeId" : typeId
+			},
+			dataType : "json",
+			success : function(data) {
+				$("<option value=''>请选择商品规格</option>").appendTo(".productSpec");
+				for(var i = 0; i< data.length; i++){
+					$("<option value="+data[i].spec+">"+data[i].spec+"</option>").appendTo(".productSpec");
+				}
+			},
+			error : function(data) {
+				layer.msg(data.message,{shift : 6});
+			}
+		});
+	}
+</script>
+
+#end

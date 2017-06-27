@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+	    <meta name="format-detection" content="telephone=no" />
+		<title>平台查询</title>
+		<link rel="stylesheet" href="#(base_path)/view/express/PlatformQuery.css" />
+		<link rel="stylesheet" href="#(base_path)/assets/layer/skin/default/layer.css">
+		<script src="#(base_path)/assets/js/jquery.min.js"></script>
+		<script type="text/javascript" src="#(base_path)/view/express/index.js" ></script>
+	</head>
+	<body>
+		<p class="title">蜂鸟订单助手管理系统</p>
+           <select data-am-selected="{btnSize: 'sm'}" class="drop-down shipperCode">
+		    <option value="YD">韵达</option>
+		    <option value="SF">顺丰</option>
+		    <option value=HTKY">百世汇通</option>
+		    <option value="ZTO">中通</option>
+		    <option value="STO">申通</option>
+		    <option value="YTO">圆通</option>
+		    <option value="YZPY">邮政平邮</option>
+		    <option value="EMS">EMS</option>
+		    <option value="HHTT">天天</option>
+		    <option value="JD">京东</option>
+		    <option value="QFKD">全峰</option>
+		    <option value="GTO">国通</option>
+		    <option value="UC">优速</option>
+		    <option value="DBL">德邦</option>
+		    <option value="FAST">快捷</option>
+		    <option value="AMAZON">亚马逊</option>
+		    <option value="ZJS">宅急送</option>
+		  </select>
+		<div class="search">
+			<input type="text" class="logisticCode" placeholder="请输入订单编号以搜索" value="1202567593133"/>
+			<label for="user" id="Determine"></label>
+		</div>
+		<div class="logistics">
+		#(traces)
+			#if(traces)
+				#for(r : traces)
+					<div class='am-progress-title'>#(r.acceptStation) <span class='am-fr am-progress-title-more'>#(r.acceptTime)</span></div>
+				#end
+			#end
+		</div>
+		<p class="slogan">简化管理信息化过程，充分提升团队或个人工作效率</p>
+	</body>
+	<script src="#(base_path)/assets/layer/layer.js"></script>
+	<script>
+		jQuery(function($) {
+			var index = layer.load(2);
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/logistics/getOrderTracesByOrderId",
+			    data: {"orderId":"#(orderId)"},
+			    dataType : "json",
+			    success : function(data) {
+		    		var result = JSON.parse(data.data);
+		    		var state = result.State;
+		    		var traces= result.Traces;
+		    		var html = "";
+			    	if(state == 2){//在途中
+			    		for(var i=0;i<traces.length;i++){
+			    			var acceptStation = traces[i].AcceptStation;
+			    			var acceptTime = traces[i].AcceptTime;
+			    			html += "<div class='am-progress-title'>"+acceptStation+" <span class='am-fr am-progress-title-more'>"+acceptTime+"</span></div>";
+			    		}
+	    				$(".logistics").html(html);
+			    	}else if(state == 3){//签收
+			    		for(var i=0;i<traces.length;i++){
+			    			var acceptStation = traces[i].AcceptStation;
+			    			var acceptTime = traces[i].AcceptTime;
+			    			html += "<div class='am-progress-title'>"+acceptStation+" <span class='am-fr am-progress-title-more'>"+acceptTime+"</span></div>";
+			    		}
+	    				$(".logistics").html(html);
+			    	}else if(state == 4){//问题件
+			    		layer.msg("问题件");
+			    	}
+			    	layer.close(index);
+		    	}
+			});
+		});
+		
+		$("#Determine").click(function(){
+
+			var index = layer.load(2); //又换了种风格，并且设定最长等待10秒 
+		    var shipperCode = $(".shipperCode").val();
+		    var logisticCode = $(".logisticCode").val();
+		    
+		    if(shipperCode == null || shipperCode == ""){
+		    	layer.msg("请选择快递公司，若无您使用的快递公司请联系客服", {shift: 1});
+		    	layer.close(index);
+				return;
+		    }
+		    if(logisticCode == null || logisticCode == ""){
+		    	layer.msg("请填写快递单号", {shift: 1});
+		    	layer.close(index);
+				return;
+		    }
+		    
+		    $.ajax({
+			    type : "POST",
+			    url : "#(base_path)/logistics/getOrderTraces",
+			    data: {"ShipperCode":shipperCode,"LogisticCode":logisticCode},
+			    dataType : "json",
+			    success : function(data) {
+		    		var result = JSON.parse(data.data);
+		    		var state = result.State;
+		    		var traces= result.Traces;
+		    		var html = "";
+			    	if(state == 2){//在途中
+			    		for(var i=0;i<traces.length;i++){
+			    			var acceptStation = traces[i].AcceptStation;
+			    			var acceptTime = traces[i].AcceptTime;
+			    			html += "<div class='am-progress-title'>"+acceptStation+" <span class='am-fr am-progress-title-more'>"+acceptTime+"</span></div>";
+			    		}
+	    				$(".logistics").html(html);
+			    	}else if(state == 3){//签收
+			    		for(var i=0;i<traces.length;i++){
+			    			var acceptStation = traces[i].AcceptStation;
+			    			var acceptTime = traces[i].AcceptTime;
+			    			html += "<div class='am-progress-title'>"+acceptStation+" <span class='am-fr am-progress-title-more'>"+acceptTime+"</span></div>";
+			    		}
+	    				$(".logistics").html(html);
+			    	}else if(state == 4){//问题件
+			    		layer.msg("问题件");
+			    	}
+			    	layer.close(index);
+		    	}
+			});
+		})
+	</script>
+</html>

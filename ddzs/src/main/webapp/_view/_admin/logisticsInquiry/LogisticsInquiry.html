@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+	    <meta name="format-detection" content="telephone=no" />
+		<title>#(eQuery.title??"蜂鸟订单系统快递查询官网")</title>
+		<link rel="stylesheet" type="text/css" href="#(base_path)/static/cityselect/css/hzw-city-picker.css">
+		<link rel="stylesheet" href="#(base_path)/_view/_admin/logisticsInquiry/LogisticsInquiry.css" />
+		<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+		<script language="javascript" src="#(base_path)/assets/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="#(base_path)/_view/_admin/logisticsInquiry/index.js" ></script>
+		<script>
+			function createTime() {
+                WdatePicker({dateFmt:'yyyy-MM-dd'});
+            }
+		</script>
+	</head>
+	<body>
+		<img class="beijing" src="#(base_path)assets/img/bg.jpg">
+		<div class="title">#(eQuery.title??"蜂鸟订单系统快递查询官网")</div>
+		<img class="logo" src="#(base_path)#(eQuery.imgUrl??'/assets/img/title.png')" />
+		<input type="text" value="请在这里收件人姓名/电话/运单号" class="input_test searchKey"/>
+		<!--<select class="express">
+			<option selected="selected">请选择查询快递类型</option>
+			<option>顺丰</option>
+			<option>中通</option>
+			<option>顺丰</option>
+			<option>顺丰</option>
+			<option>顺丰</option>
+			<option>中通</option>
+			<option>顺丰</option>
+			<option>顺丰</option>
+		</select>-->
+		<input class="input_test searchDate" id="countTimestart" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" name="inputDate" value="请选择查询日期"></input>
+
+		<!--<div class="express">
+			<span class="name">请选择查询快递：</span>
+			<select>
+				<option>顺丰</option>
+				<option>中通</option>
+				<option>顺丰</option>
+				<option>顺丰</option>
+				<option>顺丰</option>
+				<option>中通</option>
+				<option>顺丰</option>
+				<option>顺丰</option>
+			</select>
+		</div>
+		<div class="time">
+			<span class="name">请选择查询时间：</span>
+			<input id="countTimestart" onFocus="createTime()" name="inputDate"></input>
+		</div>-->
+		<button class="button searchBtn">查一下</button>
+		<div class="con-text">
+			<span class="blod">公告：</span>
+			#(eQuery.notice??"暂无公告")
+		</div>
+		<div class="advert">
+			<p class="">#(eQuery.adWords??"暂无广告词1")</p>
+			<p class="">#(eQuery.adWords2??"暂无广告词2")</p>
+			<p class="">供应商广告语供应商广告语3</p>
+		</div>
+		
+		<div class="footer">
+			<!--<p class="zhishi">欢迎使用本系统</p>-->
+			<p class="zhishi">欢迎使用蜂鸟打单系统</p>
+			<p class="zhishi">链接网址：<a href="www.fengniaodadan.com">www.fengniaodadan.com</a> </p>
+		</div>
+		
+	</body>
+	
+	<script type="text/javascript">
+	jQuery(function($) {
+		$(".searchBtn").unbind("click");
+		$(".searchBtn").bind("click",function(){
+			var searchKey = $(".searchKey").val();
+			var searchDate = $(".searchDate").val();
+			location.href="#(base_path)/logisticsInquiry/search?searchKey="+searchKey+"&searchDate="+searchDate+"&linkKey=#(linkKey)";
+		});
+		$(".input_test").bind({ 
+			focus:function(){ 
+				if (this.value == this.defaultValue){ 
+				this.value=""; 
+				} 
+			}, 
+			blur:function(){ 
+				if (this.value == ""){ 
+				this.value = this.defaultValue; 
+				} 
+			} 
+		}); 
+
+	});	
+	</script>
+	
+</html>

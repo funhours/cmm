@@ -1,0 +1,338 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3 || loginUser.userType == 4)
+	#@staffLayout()
+#end
+#define main()
+<!-- <div style="background: url('#(base_path)/assets/img/bg.jpg') no-repeat;background-size: 100% 100%;"> -->
+ <div class="container-fluid am-cf" >
+     <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 外部查询页自定义</div>
+             <p class="page-header-description">在此你可以自定义自己的查询页面</p>
+         </div>
+     </div>
+ </div>
+
+ <div class="row-content am-cf">
+     <!-- <div class="row  am-cf">
+         <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+             <div class="widget widget-primary am-cf">
+                 <div class="widget-statistic-header">
+              		 LOGO
+                 </div>
+                 <form class="am-form tpl-form-line-form" id="js_images_form" action="#(base_path)/api/fs/upload" method="post" enctype="multipart/form-data">
+                 <div class="am-form-group am-form-file">
+                       <div class="tpl-form-file-img">
+                           <img class="am-img-circle am-img-thumbnail extLogo" src="#(base_path)#(eQuery.imgUrl??'/assets/img/title.png')" alt="" >
+                       </div>
+                       <button type="button" class="am-btn am-btn-danger am-btn-sm">
+						<i class="am-icon-cloud-upload"></i> 上传LOGO图片
+                       <input type="file" id="imageFile" name="imgFile" multiple="multiple"></button>
+                   </div>
+                   <button type="button" class="am-btn am-btn-secondary saveImgUrl">保存</button>
+             </div>
+         </div>
+         
+         <div class="am-u-sm-12 am-u-md-6">
+         	<div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">分享连接配置</div>
+                <div class="widget-function am-fr">
+                    <a href="javascript:;" class="am-icon-cog configKey"></a>
+                </div>
+            </div>
+            <div class="widget-body am-fr">
+                <div class="am-fl">
+                    <div class="widget-fluctuation-description-amount text-success" am-cf>
+                        www.fengniaodadan.com/logisticsInquiry?linkKey=#(eQuery.linkKey??)
+                    </div>
+                </div>
+            </div>
+        </div>
+         </div>
+         
+         </form>
+         
+     </div> -->
+ </div>
+ <div class="row-content am-cf">
+ 	<!-- <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">页面标题</div>
+                <div class="widget-function am-fr">
+                    <a href="javascript:;" class="am-icon-cog configTitle"></a>
+                </div>
+            </div>
+            <div class="widget-body am-fr">
+                <div class="am-fl">
+                    <div class="widget-fluctuation-description-amount text-success" am-cf>
+                        #(eQuery.title??"暂无标题")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+     
+   <!--  <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">公告</div>
+                <div class="widget-function am-fr">
+                    <a href="javascript:;" class="am-icon-cog configNotice"></a>
+                </div>
+            </div>
+            <div class="widget-body am-fr">
+                <div class="am-fl">
+                    <div class="widget-fluctuation-description-amount text-success" am-cf>
+                        #(eQuery.notice??"暂无公告")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">页面广告词1</div>
+                <div class="widget-function am-fr">
+                    <a href="javascript:;" class="am-icon-cog configAdWords"></a>
+                </div>
+            </div>
+            <div class="widget-body am-fr">
+                <div class="am-fl">
+                    <div class="widget-fluctuation-description-amount text-success" am-cf>
+                        #(eQuery.adWords??"暂无广告词1")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">页面广告词2</div>
+                <div class="widget-function am-fr">
+                    <a href="javascript:;" class="am-icon-cog configAdWords2"></a>
+                </div>
+            </div>
+            <div class="widget-body am-fr">
+                <div class="am-fl">
+                    <div class="widget-fluctuation-description-amount text-success myTemplate" am-cf>
+                        #(eQuery.adWords2??"暂无广告词2")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  -->   
+    <!-- </div>     -->
+     <div id="html_1">
+     <iframe align="center" width="100%" height="1000" src="http://localhost:8183/logisticsInquiry?linkKey=g2pu6" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+     </div> 
+ </div>
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/front/jquery.form.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {
+		
+		//编辑标题
+		$(".configTitle").unbind("click");
+		$(".configTitle").bind("click",function(){
+			layer.prompt(
+			{
+			  formType: 2, 
+			  value: '', 
+			  maxlength: 10,
+			  title:'页面标题',
+			  area: ['500px', '100px']
+			},function(val, index){
+			  var title = val;
+			  layer.close(index);
+			  if(title != null){
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/extQuery/saveTitle",
+				    data: {"title":title},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("保存成功", {shift: 1});
+				    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+		});
+		
+		//编辑公告
+		$(".configNotice").unbind("click");
+		$(".configNotice").bind("click",function(){
+			layer.prompt(
+			{
+			  formType: 2, 
+			  value: '', 
+			  maxlength: 10,
+			  title:'页面标题',
+			  area: ['500px', '100px']
+			},function(val, index){
+			  var notice = val;
+			  layer.close(index);
+			  if(notice != null){
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/extQuery/saveNotice",
+				    data: {"notice":notice},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("保存成功", {shift: 1});
+				    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+		});
+		
+		//编辑广告词1
+		$(".configAdWords").unbind("click");
+		$(".configAdWords").bind("click",function(){
+			layer.prompt(
+			{
+			  formType: 2, 
+			  value: '', 
+			  maxlength: 10,
+			  title:'页面标题',
+			  area: ['500px', '100px']
+			},function(val, index){
+			  var adWords = val;
+			  layer.close(index);
+			  if(adWords != null){
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/extQuery/saveAdWords",
+				    data: {"adWords":adWords},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("保存成功", {shift: 1});
+				    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+		});
+		
+		//编辑广告词2
+		$(".configAdWords2").unbind("click");
+		$(".configAdWords2").bind("click",function(){
+			layer.prompt(
+			{
+			  formType: 2, 
+			  value: '', 
+			  maxlength: 10,
+			  title:'页面标题',
+			  area: ['500px', '100px']
+			},function(val, index){
+			  var adWords2 = val;
+			  layer.close(index);
+			  if(adWords2 != null){
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/extQuery/saveAdWords2",
+				    data: {"adWords2":adWords2},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("保存成功", {shift: 1});
+				    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+		});
+		
+		//编辑链接后缀
+		$(".configKey").unbind("click");
+		$(".configKey").bind("click",function(){
+			layer.msg("暂不支持自定义",{shift:1});
+			/* layer.prompt(
+			{
+			  formType: 2, 
+			  value: '', 
+			  maxlength: 6,
+			  title:'页面标题',
+			  area: ['500px', '100px']
+			},function(val, index){
+			  var adWords2 = val;
+			  layer.close(index);
+			  if(adWords2 != null){
+				$.ajax({
+				    type : "POST",
+				    url : "#(base_path)/extQuery/saveAdWords2",
+				    data: {"adWords2":adWords2},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("保存成功", {shift: 1});
+				    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			}); */
+		});
+		
+		//保存图片地址
+		$(".saveImgUrl").unbind("click");
+		$(".saveImgUrl").bind("click",function(){
+			var extLogo = $(".extLogo").val();
+			$.ajax({
+				type : "POST",
+			    url : "#(base_path)/extQuery/saveImgUrl",
+			    data: {"extLogo":extLogo},
+			    dataType : "json",
+			    success : function(data) {
+			    	layer.msg("保存成功", {shift: 1});
+			    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//上传图片
+		$("#imageFile").bind("change",function(){
+			$("#js_images_form").ajaxSubmit({
+			    dataType: "json",
+			    success: function(data) {
+			        layer.msg("上传成功", {shift: 1});
+			        var url = "#(base_path)/upload"+data.datum.imgFile;
+			        $(".extLogo").attr("src",url);
+			        $(".extLogo").val(url);
+			    }
+			});
+		});
+		
+	});	
+</script>
+
+#end

@@ -1,6 +1,5 @@
 package com.mlongbo.jfinal.common.utils;
 
-import java.util.HashMap;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;

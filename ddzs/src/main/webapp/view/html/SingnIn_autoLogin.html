@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>蜂鸟订单助手</title>
+<link rel="stylesheet" href="#(base_path)/view/css/SignIn.css" />
+<link rel="icon" type="image/png" href="#(base_path)/assets/i/favicon.png">
+</head>
+<body>
+	<div class="wapper">
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：头部内容
+            -->
+		<header class="header-bg">
+		<div class="header">
+			<div class="tit-left">
+				<a class="logo" href="#">
+					<img class="pic" src="#(base_path)/assets/i/favicon.png">
+					<img class="tit" src="#(base_path)/assets/img/title-index.png">
+				</a>
+			</div>
+			<div class="tit-right">
+				<a class="but CreateAccountBtn" >创建账号</a>
+			</div>
+		</div>
+
+		</header>
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：主体内容
+            -->
+		<div class="content-bg">
+			<div class="content">
+				<!--左边广告-->
+				<div class="advert">
+					<div class="pic">
+						<img src="#(base_path)/view/img/SignIn/guanggao.png" />
+					</div>
+					<div class="weixin">
+						<img class="anzhuo" src="#(base_path)/view/img/SignIn/anzhuo.png" /> <img
+							class="apple" src="#(base_path)/view/img/SignIn/apple.png" />
+					</div>
+				</div>
+				<!--右边from表单，用户登录模块-->
+				<form action="" id="login">
+					<div class="denglv-bg">
+						<div class="denglv">
+							<p class="welcom">欢迎使用</p>
+							<p class="message">
+								<i class="icon"></i> 请输入正确的手机号！
+							</p>
+							<div class="name">
+								<i class="icon-user"></i> 
+								<input type="text" class="userName" placeholder="账号" name="user" id="username" autocomplete="off"> 
+								<i class="icon-fail"></i>
+							</div>
+							<div class="password">
+								<i class="icon-pwd"></i> 
+								<input type="password" class="userPassword" placeholder="密码" name="userPassword" id="userPassword" autocomplete="off"> 
+								<i class="icon-fail"></i>
+							</div>
+							<div class="remember">
+								<div class="holdon">
+									<input id="cbx_keep" class="input-checkbok" type='checkbox' name='keepLogin' />
+									<label class="text">记住密码</label>
+									<!-- <input id="isAutoLoginId" class="input-checkbok" type='checkbox' name="isAutoLoginId" />
+									<label class="text">自动登录</label> -->
+								</div>
+								<div class="forget">
+									<a class="wangji" href="#">忘记密码？</a>
+								</div>
+							</div>
+							<a class="button login" id="btn_login" href="#">登录</a>
+							<p class="no-account">
+								<span class="no">没有账号?</span> <a href="#" class="color zhuce" >立即注册</a>
+							</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--
+            	作者：1097709961@qq.com
+            	时间：2017-01-07
+            	描述：页脚-网站链接及版权信息
+            -->
+		<footer class="footer">
+		<div class="about">
+			<div class="link">
+				<a href="">关于我们</a>
+			</div>
+			<div class="link">
+				<a href="">使用条款</a>
+			</div>
+			<div class="link">
+				<a href="">安全声明</a>
+			</div>
+			<div class="link">
+				<a href="">隐私声明</a>
+			</div>
+			<div class="link">
+				<a href="">技术支持</a>
+			</div>
+			<div class="link">
+				<a href="">加入我们</a>
+			</div>
+		</div>
+		<div class="copy">Copyright&nbsp;&nbsp;&copy;&nbsp;&nbsp;2017&nbsp;&nbsp;重庆凯优科技有限公司&nbsp;&nbsp;版权所有&nbsp;&nbsp;蜀icp备17012800号-1</div>
+		</footer>
+	</div>
+
+</body>
+<script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
+<script src="#(base_path)/assets/layer/layer.js"></script>
+<script type="text/javascript">
+	$(".wangji").unbind("click");
+	$(".wangji").bind("click",function(){
+		window.location.href='#(base_path)/ForgetPassword';
+	});
+	
+	$(".zhuce").unbind("click");
+	$(".zhuce").bind("click",function(){
+		window.location.href='#(base_path)/CreateAccount';
+	});
+	
+	$(".CreateAccountBtn").unbind("click");
+	$(".CreateAccountBtn").bind("click",function(){
+		window.location.href='#(base_path)/CreateAccount';
+	});
+	
+	$(".login").unbind("click");
+	$(".login").bind("click",function(){
+		login();		
+	});
+	
+	document.onkeydown = function (event){
+		login();
+　　};
+
+
+    $(document).ready(function(){    
+	   	//读取 localStage 本地存储，填充用户名密码,如果自动登录有值直接跳转；    
+	   	//相反，跳转到本页面,等待登陆处理    
+	   	var storage = window.localStorage;    
+   	    var getUserName = storage["userName"];    
+   	    var getPwd = storage["userPassword"];    
+   	    var getisstroepwd = storage["isstorePwd"];    
+   	    /* var getisautologin = storage["isautologin"];  */   
+   	    if("yes" == getisstroepwd)    
+   	    {
+   	    	$("#cbx_keep").prop("checked",true);
+   	        /* if("yes" == getisautologin)
+   	        { */
+   	            if(( ("" != getUserName) ||(null != getUserName)) && (("" != getPwd) ||(null != getPwd)))    
+   	            {
+   	                //lacoste  已经保存 登陆信息 直接登陆    
+   	                // alert('正在自动登录');  
+   	                $(".userName").val(getUserName);  
+   	                $(".userPassword").val(getPwd);  
+   	                //$("#isAutoLoginId").prop("checked",true);
+   	            	$("#cbx_keep").prop("checked",true);
+   	                //login();
+   	                
+   	            }
+   	        /* }
+   	        else
+   	        {
+   	                $(".userName").val(getUserName);    
+   	                $(".userPassword").val(getPwd);    
+   	        }  */   
+   	    }    
+   	 });   
+    function login(){  
+       var userName=$(".userName").val();    
+       var userPassword=$(".userPassword").val();    
+       
+       var storage = window.localStorage;    
+       //记住密码    
+       if(document.getElementById("cbx_keep").checked)    
+       {    
+           //存储到loaclStage      
+       
+           storage["userName"] = userName;    
+           storage["userPassword"] =  userPassword;    
+           storage["isstorePwd"] =  "yes";    
+       }    
+       else    
+       {    
+           storage["userName"] = userName;    
+           storage["isstorePwd"] =  "no";    
+       }    
+       
+       /* //下次自动登录    
+       if(document.getElementById("isAutoLoginId").checked)    
+       {    
+           //存储到loaclStage      
+           storage["userName"] = userName;    
+           storage["userPassword"] =  userPassword;    
+           storage["isstorePwd"] =  "yes";    
+           storage["isautologin"] =  "yes";    
+       }    
+       else    
+       {    
+           storage["userName"] = userName;    
+           storage["isautologin"] =  "no";    
+       }   */ 
+       var keepLogin = $("#cbx_keep").is(':checked');
+		var loginName = $(".userName").val();
+		var password = $(".userPassword").val();
+		var url = "#(base_path)/login/doLogin?returnUrl=#(returnUrl)";
+		$.ajax({
+		  type: 'POST',
+		  url: url,
+		  data: {
+			  loginName:loginName,
+			  password:password,
+			  keepLogin:keepLogin
+			  },
+		  success: function(data){
+		  	if(data.isOk){
+				  
+			  //判断用户状态
+			  if(data.loginUser.activity == 0){
+				  layer.msg("当前用户未激活，请联系管理员", {shift: 1});
+				  return;
+			  }
+			  //判断订单剩余量
+				var oRemaining = data.orderStore.remaining;
+				if(oRemaining <= 0){
+					layer.open({
+				        type: 1
+				        ,title: false //不显示标题栏
+				        ,closeBtn: false
+				        ,area: '300px;'
+				        ,shade: 0.8
+				        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+				        ,btn: ['前去充值', '暂时不买']
+				        ,moveType: 1 //拖拽模式，0或者1
+				        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br><br>你的订单使用条数余额已不足，为避免你的业务流程请及时充值。<br><br>你可以直接在本平台购买订单条数使用</div>'
+				        ,success: function(layero){
+				          var btn = layero.find('.layui-layer-btn');
+				          btn.css('text-align', 'center');
+				          btn.find('.layui-layer-btn0').attr({
+				            href: '#(base_path)/smsManage/toAloneBuyPage?userId='+loginName
+				          });
+				        }
+			      });
+					return;
+				}
+
+				  
+			  //判断时长剩余量
+				if(data.isExpired){
+					layer.open({
+				        type: 1
+				        ,title: false //不显示标题栏
+				        ,closeBtn: false
+				        ,area: '300px;'
+				        ,shade: 0.8
+				        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+				        ,btn: ['前去充值', '暂时不买']
+				        ,moveType: 1 //拖拽模式，0或者1
+				        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br><br>你的账号已过期，为避免你的业务流程请及时充值。<br><br>你可以直接在本平台购买订单条数使用</div>'
+				        ,success: function(layero){
+				          var btn = layero.find('.layui-layer-btn');
+				          btn.css('text-align', 'center');
+				          btn.find('.layui-layer-btn0').attr({
+				            href: '#(base_path)/smsManage/toAloneBuyPage?userId='+loginName
+				          });
+				        }
+			      });
+					return;
+				}
+				 layer.msg("登录成功", {shift: 1});
+				 var userId = data.loginUser.userId
+				 setTimeout(function(){window.location.href="#(base_path)/admin";}, 600);
+			  }else{
+				 layer.msg(data.msg, {shift: 1});
+			 }
+		  },error: function (XMLHttpRequest) {
+			alert("Ajax请求失败，错误状态为："+XMLHttpRequest.status);
+		}
+		})  
+   }  
+</script>
+</html>

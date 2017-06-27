@@ -1,0 +1,200 @@
+#set(seoTitle="蜂鸟订单助手") 
+#if(loginUser.userType == 1) 
+#@adminLayout()
+#elseif(loginUser.userType == 2) 
+#@layout() 
+#elseif(loginUser.userType == 3) 
+#@staffLayout() 
+#end 
+#define main() 
+
+<div class="container-fluid am-cf">
+	<div class="row">
+		<div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+			<div class="page-header-heading">
+				<span class="am-icon-home page-header-heading-icon"></span> 自定义短信模板
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row-content am-cf">
+	<div class="row">
+		<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+			<div class="widget am-cf">
+				<div class="widget-body am-fr">
+
+					<form class="am-form tpl-form-line-form customTemplateForm"
+						data-am-validator>
+
+						<div class="am-form-group">
+							<label for="user-phone" class="am-u-sm-3 am-form-label">模板
+								<span class="tpl-form-line-small-title">/ Template</span>
+							</label>
+							<div class="am-u-sm-9">
+								<input type="text" class="template" name="smsTemplate.template" value="#(smsTemplate.template)" >
+							</div>
+						</div>
+
+						<div class="am-form-group">
+							<label for="cityChoice" class="am-u-sm-3 am-form-label">标签
+								<span class="tpl-form-line-small-title">/ Label</span>
+							</label>
+							<div class="am-u-sm-9">
+								<label class="am-checkbox-inline "> 
+									<input type="checkbox" class="productName" data-am-ucheck>商品名称
+								</label> 
+								<label class="am-checkbox-inline "> 
+									<input type="checkbox" class="shipperName" data-am-ucheck> 快递公司
+								</label>
+								<label class="am-checkbox-inline "> 
+									<input type="checkbox" class="shipperCode" data-am-ucheck> 运单号
+								</label>
+								<p>
+									<small>更多标签请等待升级……</small>
+								</p>
+							</div>
+						</div>
+
+						<div class="am-form-group">
+							<label for="user-phone" class="am-u-sm-3 am-form-label">例子：
+								<span class="tpl-form-line-small-title">/ Example</span>
+							</label>
+							<div class="am-u-sm-9">
+								<input type="text" class="example">
+							</div>
+						</div>
+
+						<div class="am-form-group">
+							<div class="am-u-sm-9 am-u-sm-push-3">
+								<button type="button"
+									class="am-btn am-btn-secondary saveTempEdit">保存信息</button>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="am-btn am-btn-primary back">返回</button>
+							</div>
+						</div>
+				</div>
+
+				<!--  隐藏数据start -->
+					<input type="hidden" name="smsTemplate.id" value="#(smsTemplate.id??)">
+					<input type="hidden" name="smsTemplate.userId" value="#(smsTemplate.userId??)">
+
+				<!-- 隐藏数据end -->
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+#end 
+#define js()
+<script type="text/javascript">
+$(function($) {
+	var exampleTemplate = "#(smsTemplate.template)";
+	
+	if(exampleTemplate.indexOf("{商品名称}") != -1){
+		$(".productName").uCheck('check');
+	}
+	if(exampleTemplate.indexOf("{快递公司}") != -1){
+		$(".shipperName").uCheck('check');
+	}
+	if(exampleTemplate.indexOf("{快递号}") != -1){
+		$(".shipperCode").uCheck('check');
+	}
+	
+	var newExample = exampleTemplate.replace("{商品名称}", "苹果10").replace("{快递公司}", "顺丰").replace("{快递号}", "107998935964");
+	
+	$(".example").val(newExample);
+	
+	$(".productName").unbind("click");
+	$(".productName").bind("click",function(){
+		var isChecked = $(".productName").prop("checked");
+		if(isChecked){//选中
+			var template = $(".template").val();
+			var newStr = template.replace("{商品名称}", "")+"{商品名称}";
+			$(".template").val(newStr);
+			//例子
+			var newExample = newStr.replace("{商品名称}", "苹果10").replace("{快递公司}", "顺丰").replace("{快递号}", "107998935964");
+			$(".example").val(newExample);
+		}else{
+			var template = $(".template").val();
+			var newStr = template.replace("{商品名称}", "");
+			$(".template").val(newStr);
+			//例子
+			var newExample = template.replace("{商品名称}", "").replace("{快递公司}", "顺丰").replace("{快递号}", "107998935964");
+			$(".example").val(newExample);
+		}
+	});
+	$(".shipperName").unbind("click");
+	$(".shipperName").bind("click",function(){
+		var isChecked = $(".shipperName").prop("checked");
+		if(isChecked){//选中
+			var template = $(".template").val();
+			var newStr = template.replace("{快递公司}", "")+"{快递公司}";
+			$(".template").val(newStr);
+			//例子
+			var newExample = newStr.replace("{商品名称}", "苹果10").replace("{快递公司}", "顺丰").replace("{快递号}", "107998935964");
+			$(".example").val(newExample);
+		}else{
+			var template = $(".template").val();
+			var newStr = template.replace("{快递公司}", "");
+			$(".template").val(newStr);
+			//例子
+			var newExample = template.replace("{商品名称}", "苹果10").replace("{快递公司}", "").replace("{快递号}", "107998935964");
+			$(".example").val(newExample);
+		}
+	});
+	$(".shipperCode").unbind("click");
+	$(".shipperCode").bind("click",function(){
+		var isChecked = $(".shipperCode").prop("checked");
+		if(isChecked){//选中
+			var template = $(".template").val();
+			var newStr = template.replace("{快递号}", "")+"{快递号}";
+			$(".template").val(newStr);
+			//例子
+			var newExample = newStr.replace("{商品名称}", "苹果10").replace("{快递公司}", "顺丰").replace("{快递号}", "107998935964");
+			$(".example").val(newExample);
+		}else{
+			var template = $(".template").val();
+			var newStr = template.replace("{快递号}", "");
+			$(".template").val(newStr);
+			//例子
+			var newExample = template.replace("{商品名称}", "苹果10").replace("{快递公司}", "顺丰").replace("{快递号}", "");
+			$(".example").val(newExample);
+		}
+	});
+	
+	
+	$(".saveTempEdit").unbind("click");
+	$(".saveTempEdit").bind("click",function(){
+		var $form = $(".customTemplateForm");
+		$.ajax({
+			type : "POST",
+		    url : "saveCustomTemplate",
+		    data: $form.serialize(),
+		    dataType : "json",
+		    success : function(data) {
+		    	layer.msg("保存成功", {shift: 1});
+		    	setTimeout(function(){window.location.href = "#(base_path)/smsManage/template";}, 600);
+		    },
+		    error : function(data) {
+		    	layer.msg(data.message, {shift: 6});
+		    }
+		});
+	});
+	//返回
+	$(".back").unbind("click");
+	$(".back").bind("click",function(){
+    	window.location.href = "#(base_path)/smsManage/template";
+	});
+	
+	//输入框失去焦点
+	$(".template").blur(function(){  // 失去焦点  
+		var template = $(".template").val();
+		var newExample = template.replace("{商品名称}", "苹果10").replace("{快递公司}", "顺丰").replace("{快递号}", "107998935964");
+		$(".example").val(newExample);
+	});  
+})
+
+</script>
+#end

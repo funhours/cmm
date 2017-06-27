@@ -1,0 +1,317 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+  <div class="row-content am-cf">
+      <div class="row">
+          <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+              <div class="widget am-cf">
+                  <div class="widget-head am-cf">
+                      <div class="widget-title  am-cf">产品规格</div>
+
+
+                  </div>
+                  <div class="widget-body  am-fr">
+
+                      <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                          <div class="am-form-group">
+                              <div class="am-btn-toolbar">
+                                  <div class="am-btn-group am-btn-group-xs">
+                                      <button type="button" class="am-btn am-btn-default am-btn-success addPspec"><span class="am-icon-plus"></span> 新增</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-secondary enable"><span class="am-icon-save"></span> 启用</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-warning disable"><span class="am-icon-archive"></span> 禁用</button>
+                                      <button type="button" class="am-btn am-btn-default am-btn-danger dels"><span class="am-icon-trash-o"></span> 删除</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                          <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                              <input type="text" class="am-form-field searchSpecName" placeholder="请输入类型名字以搜索">
+                              <span class="am-input-group-btn">
+								  <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search search" type="button"></button>
+							  </span>
+                          </div>
+                      </div>
+
+                      <div class="am-u-sm-12">
+                          <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                              <thead>
+                                  <tr>
+                                      <th class="table-check"><input type="checkbox" class="allCheck"/></th>
+						              <th>名称</th>
+						              <th>状态</th>
+						              <th>操作</th>
+                                  </tr>
+                              </thead>
+                              <tbody class="productSpecItem">
+					            	#for(x : page.list)
+						            <tr>
+						              <td><input type="checkbox" value="#(x.id)" name="specId"/></td>
+						              <td>#(x.specName)</td>
+						              <td style="overflow:hidden"> 
+						              	#if(x.status == 1)
+							            	<span class="am-icon-angellist"> 使用 </span>
+							            #else
+						              		<span class="am-warning am-icon-warning"> 禁用  </span>
+						              	#end
+						              </td>
+						              <td style="overflow:hidden">
+						                 <div class="tpl-table-black-operation">
+                                             <a href="javascript:;" class="pTypeEdit" id="#(x.id)">
+                                                 <i class="am-icon-pencil"></i> 编辑
+                                             </a>
+                                             <a href="javascript:;" class="tpl-table-black-operation-del delete" id="#(x.id)">
+                                                 <i class="am-icon-trash"></i> 删除
+                                             </a>
+                                         </div>
+						              </td>
+						            </tr>
+						            #end
+					            </tbody>
+                            </table>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+                            <div class="am-fr">
+                                #@paginate(page.pageNumber, page.totalPage, "#(base_path)/productType?p=")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">商品属性</div>
+    <div class="am-modal-bd">
+      	请输入商品属性名称
+      <input type="text" class="am-modal-prompt-input">
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+      <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+    </div>
+  </div>
+</div>
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {	
+		//添加
+		$(".addPspec").unbind("click");
+		$(".addPspec").bind("click",function(){
+			layer.prompt(
+			{
+			  formType: 0, 
+			  value: '', 
+			  maxlength: 10, 
+			},function(val, index){
+			  var specName = val;
+			  layer.close(index);
+			  if(specName != null){
+				  $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/pspec/edit",
+				    data: {
+				    	"editType":0,
+				    	"specName":specName
+				    	},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("添加成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/pspec";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+		});
+		
+		//启用
+		$(".enable").unbind("click");
+		$(".enable").bind("click",function(){
+			layer.confirm('确定启用选中规格?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+			//获取所有选中的值
+				 var spCodesTemp = "";
+				 $(".productSpecItem :checkbox[name=specId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/pspec/review",
+				    data: {"reviewList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("启用成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/pspec";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		//禁用
+		$(".disable").unbind("click");
+		$(".disable").bind("click",function(){
+			layer.confirm('禁用类型将导致关联商品无法使用，确定禁用选中规格?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+			//获取所有选中的值
+				 var spCodesTemp = "";
+				 $(".productSpecItem :checkbox[name=specId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/pspec/disable",
+				    data: {"reviewList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("禁用成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/pspec";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		//编辑
+		$(".pTypeEdit").unbind("click");
+		$(".pTypeEdit").bind("click",function(){
+			var pSpecId = this.id;
+			layer.prompt(
+				{
+				  formType: 0, 
+				  value: '', 
+				  maxlength: 10, 
+				},function(val, index){
+			  var specName = val;
+			  layer.close(index);
+			  if(specName != null){
+				  $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/pspec/edit",
+				    data: {
+				    	"editType":1,
+				    	"specName":specName,
+				    	"pSpecId":pSpecId
+				    	},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("修改成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/pspec";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			  }
+			});
+		});
+		
+		//单个删除
+		$(".delete").unbind("click");
+		$(".delete").bind("click",function(e){
+			var pSpecId = this.id;
+			
+			layer.confirm('删除类型将导致关联商品无法使用，确定删除选中类型?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+			  $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/pspec/delById",
+				    data: {"pSpecId":pSpecId},
+				    dataType : "json",
+				    success : function(data) {
+				    	if(data){
+					    	layer.msg("删除成功", {shift: 1});
+							setTimeout(function(){window.location.href = "#(base_path)/pspec";}, 600);
+				    	}
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+			
+			
+		});
+		
+		//删除选中
+		$(".dels").unbind("click");
+		$(".dels").bind("click",function(){
+			layer.confirm('删除类型将导致关联商品无法使用，确定删除选中规格?', {icon: 3, title:'提示'}, function(index){
+			  layer.close(index);
+				 var spCodesTemp = "";
+				 $(".productSpecItem :checkbox[name=specId]:checked").each(function(i){
+			       if(0==i){
+			        spCodesTemp = $(this).val();
+			       }else{
+			        spCodesTemp += (","+$(this).val());
+			       }
+			      });
+				 
+				 $.ajax({
+				    type : "POST",
+				    url : "#(base_path)/pspec/delByIds",
+				    data: {"delsList":spCodesTemp},
+				    dataType : "json",
+				    success : function(data) {
+				    	layer.msg("删除成功", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/pspec";}, 600);
+				    },
+				    error : function(data) {
+				    	layer.msg(data.message, {shift: 6});
+				    }
+				});
+			});
+		});
+		
+		
+		//搜索
+		$(".search").unbind("click");
+		$(".search").bind("click",function(){
+		    var searchSpecName = $(".searchSpecName").val();
+		    window.location.href = "#(base_path)/pspec/search?searchSpecName="+searchSpecName;
+		});
+		
+		//全选反选
+		$(".allCheck").click(function(){ 
+		    if(this.checked){   
+		        $(".productSpecItem :checkbox").prop("checked", true);  
+		    }else{   
+			$(".productSpecItem :checkbox").prop("checked", false);
+		    }   
+		});
+	});
+
+</script>
+
+#end

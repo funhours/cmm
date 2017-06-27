@@ -1,0 +1,243 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3)
+	#@staffLayout()
+#end
+#define main()
+<div class="container-fluid am-cf">
+     <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+           <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 电子面单</small></div>
+           <button type="button" class="page-header-button dtoParaConfig"><span class="am-icon-gear"></span> 网点参数设置</button>
+           <button type="button" class="page-header-button senderTemplateConfig"><span class="am-icon-gear"></span> 发件信息设置</button>
+           <!-- <button type="button" class="page-header-button defautShipperConfig"><span class="am-icon-gear"></span> 设置默认快递</button> -->
+         </div>
+     </div>
+
+ </div>
+ 
+  <div class="row-content am-cf">
+      <div class="row">
+      <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+        <div class="widget am-cf">
+        	<div class="widget-head am-cf">
+                <div class="widget-title am-fl">快递列表</div>
+            </div>
+            <div class="widget-body am-fr">
+            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black am-text-nowrap" id="example-r">
+               <thead>
+                  <tr>
+                      <!-- <th class="table-check"><input type="checkbox" class="eSheetAllCheck"/></th> -->
+			         <!-- <th>customerName</th>
+			         <th>customerPwd</th> -->
+			         <th>快递公司</th>
+			         <th>操作</th>
+                  </tr>
+               </thead>
+                         	<tbody class="rudpItem">
+                         		#for(x : rudpList??)
+                         		<tr>
+                         			<!-- <td><input type="checkbox" value="#(x.id??)" name="rudp"/></td> -->
+                         			<!-- <td>#(x.customerName??)</td>
+                         			<td>#(x.customerPwd??)</td> -->
+                         			<td>#(x.shipperName??)</td>
+       								<td style="overflow:hidden">
+	                				 <div class="tpl-table-black-operation">
+	                				 	#if(x.shipperCode == shipper.shipperCode)
+	                				 		<a href="javascript:;" class="tpl-table-black-operation-del">
+	                                            	当前默认快递
+	                                        </a>
+                                        #else
+	                                        <a href="javascript:;" id="#(x.shipperCode??)" class="tpl-table-black-operation-secondary saveDShipperPara">
+	                                            <i class="am-icon-cog"></i> 设置为默认快递
+	                                        </a>
+                                        
+	                				 	#end
+                                        <a href="javascript:;" id="#(x.id??)" class="tpl-table-black-operation-del delRudpConfig">
+                                            <i class="am-icon-pencil"></i> 删除
+                                        </a>
+                                    </div>
+	                				
+	              					</td>
+                         		</tr>
+                         		#end
+           					</tbody>
+                       </table>
+           </div>
+        </div>
+    </div>
+      <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">发件人信息</div>
+            </div>
+            <div class="widget-body am-fr">
+                <div class="am-fl">
+                    <div class="widget-fluctuation-description-amount text-success" am-cf>
+                        <table width="100%" class="am-table am-table-compact am-table-bordered am-table-radius am-table-striped tpl-table-black " id="example-r">
+                        <thead>
+                             <tr>
+                                 <th>公司名称</th>
+                                 <th>发件人姓名</th>
+                                 <th>电话</th>
+                                 <th>邮编</th>
+                                 <th>发件省</th>
+                                 <th>发件市</th>
+                                 <th>发件区</th>
+                                 <th>发件地址</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                              <tr class="gradeX">
+                              	<td>#(template.company??)</td>
+                              	<td>#(template.name??)</td>
+                              	<td>#(template.mobile??)</td>
+                              	<td>#(template.postCode??)</td>
+                              	<td>#(template.provinceName??)</td>
+                              	<td>#(template.cityName??)</td>
+                              	<td>#(template.expAreaName??)</td>
+                              	<td>#(template.address??)</td>
+                              </tr>
+                         </tbody>
+                        	
+                        </table>
+                        <input type="hidden" class="templateId" value="#(template.id??)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+</div>
+
+
+
+
+#end
+#define js()
+<script src="#(base_path)/static/webPrint/webPrint.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {	
+		//默认快递设置
+		$(".defautShipperConfig").unbind();
+		$(".defautShipperConfig").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			layer.open({
+			  type: 2,
+			  title: "默认快递设置",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+   			  content: '#(base_path)/order/eSheet/toDefaultShipper',
+			  end:function(){
+					window.location.href="#(base_path)/order/eSheet/configPage";
+				  }
+			});
+		});
+		
+		//网点参数配置
+		$(".dtoParaConfig").unbind();
+		$(".dtoParaConfig").bind("click",function(){
+			var templateId = $(".templateId").val();
+			var shipperCode = $(".ShipperCode").val();
+			if(! templateId == ""){
+				layer.open({
+			  		type: 2,
+				  title: "网点参数配置",
+				  closeBtn: 1,
+				  shadeClose: true,
+				  skin: 'demo-class',
+				  area: ['800px', '300px'],
+				  content: '#(base_path)/order/eSheet/dotPara?shipperCode='+shipperCode,
+				  end:function(){
+					window.location.href="#(base_path)/order/eSheet/configPage";
+				  }
+				});
+			}else{
+				layer.msg("请先配置发件信息", {shift: 1});
+			}
+			
+		});
+		
+		//发件信息参数配置
+		$(".senderTemplateConfig").unbind();
+		$(".senderTemplateConfig").bind("click",function(){
+			var shipperCode = $(".ShipperCode").val();
+			layer.open({
+			  type: 2,
+			  title: "网点参数配置",
+			  closeBtn: 1,
+			  shadeClose: true,
+			  skin: 'demo-class',
+			  area: ['800px', '500px'],
+			  content: '#(base_path)/order/eSheet/toTemplate?shipperCode='+shipperCode,
+			  end:function(){
+					window.location.href="#(base_path)/order/eSheet/configPage";
+				  }
+			});
+		});
+		
+		
+		//返回智能录单
+		$(".returnSmart").unbind("click");
+		$(".returnSmart").bind("click",function(){
+			window.location.href="#(base_path)/order/smart";
+		});
+		
+		//删除快递配置
+		$(".delRudpConfig").unbind("click");
+		$(".delRudpConfig").bind("click",function(){
+			var rudpId = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/delRudpConfig",
+			    data: {"rudpId":rudpId},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data){
+				    	layer.msg("删除成功！", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet/configPage";}, 600);
+			    	}else{
+			    		layer.msg(data.message, {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet/configPage";}, 600);
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//默认快递配置
+		$(".saveDShipperPara").unbind("click");
+		$(".saveDShipperPara").bind("click",function(){
+			var shipperCode = this.id;
+			$.ajax({
+			    type : "POST",
+			    url : "#(base_path)/order/eSheet/saveDShipperPara",
+			    data: {"shipperCode":shipperCode},
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data.code == 0){
+			    		layer.msg("设置成功！", {shift: 1});
+						setTimeout(function(){window.location.href = "#(base_path)/order/eSheet/configPage";}, 600);
+			    	}else if(data.code == 500){
+			    		layer.msg("服务器错误", {shift: 1});
+			    	}
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+	});
+	
+
+</script>
+
+#end

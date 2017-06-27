@@ -1,0 +1,128 @@
+#set(seoTitle="蜂鸟订单助手")
+#if(loginUser.userType == 1)
+	#@adminLayout()
+#elseif(loginUser.userType == 2)
+	#@layout()
+#elseif(loginUser.userType == 3 || loginUser.userType == 4)
+	#@staffLayout()
+#end
+#define main()
+<!-- <div style="background: url('#(base_path)/assets/img/bg.jpg') no-repeat;background-size: 100% 100%;"> -->
+ <div class="container-fluid am-cf" >
+     <div class="row">
+         <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+             <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 外部查询页自定义</div>
+             <p class="page-header-description">分享连接连接：<a href="/logisticsInquiry?linkKey=#(eQuery.linkKey??)">www.fengniaodadan.com/logisticsInquiry?linkKey=#(eQuery.linkKey??)</a></p>
+         </div>
+     </div>
+ </div>
+
+ <div class="row-content am-cf">
+     <div class="row  am-cf">
+         <div class="am-u-sm-12 am-u-md-12">
+         	<div class="widget am-cf">
+	            <div class="widget-head am-cf">
+	                <div class="widget-title am-fl">配置</div>
+	            </div>
+	            <div class="widget-body am-fr">
+                	<form class="am-form tpl-form-line-form " id="js_images_form" action="#(base_path)/api/fs/upload" method="post" enctype="multipart/form-data">
+	                 	<div class="am-form-group am-form-file"  style=" text-align: center;">
+	                       <div class="tpl-form-file-img">
+	                           <img class="am-img-circle am-img-thumbnail extLogo" src="#(base_path)#(eQuery.imgUrl??'/assets/img/title.png')" alt="" style="width: 110px;height: 110px;">
+	                       </div>
+	                       <button type="button" class="am-btn am-btn-danger am-btn-sm">
+							<i class="am-icon-cloud-upload"></i> 上传LOGO图片
+	                       <input type="file" id="imageFile" name="imgFile" multiple="multiple"></button>
+	                   </div>
+                   </form>
+                    <form class="am-form tpl-form-line-form eQueryForm" >
+                    
+	                    <div class="am-form-group">
+				           <label for="user-phone" class="am-u-sm-3 am-form-label">页面标题<span class="tpl-form-line-small-title">/ Title</span></label>
+				           <div class="am-u-sm-9">
+				             <input type="tel" id="user-phone" placeholder="输入页面标题 / Title" name="extQuery.title" value="#(eQuery.title??)" >
+				           </div>
+				         </div>
+	                    <div class="am-form-group">
+				           <label for="user-phone" class="am-u-sm-3 am-form-label">公告<span class="tpl-form-line-small-title">/ Notice</span></label>
+				           <div class="am-u-sm-9">
+				             <input type="tel" id="user-phone" placeholder="输入公告 / Notice" name="extQuery.notice" value="#(eQuery.notice??)" >
+				           </div>
+				         </div>
+	                    <div class="am-form-group">
+				           <label for="user-phone" class="am-u-sm-3 am-form-label">页面广告词1<span class="tpl-form-line-small-title">/ Words</span></label>
+				           <div class="am-u-sm-9">
+				             <input type="tel" id="user-phone" placeholder="输入页面广告词1 / Words" name="extQuery.adWords" value="#(eQuery.adWords??)" >
+				           </div>
+				         </div>
+	                    <div class="am-form-group">
+				           <label for="user-phone" class="am-u-sm-3 am-form-label">页面广告词2<span class="tpl-form-line-small-title">/ Words2</span></label>
+				           <div class="am-u-sm-9">
+				             <input type="tel" id="user-phone" placeholder="输入页面广告词2 / Words2" name="extQuery.adWords2" value="#(eQuery.adWords2??)" >
+				           </div>
+				         </div>
+				         <div class="am-form-group" style=" text-align: center;">
+				         <button type="button" class="am-btn am-btn-secondary am-form-label saveBtn">保存</button>
+				         </div>
+				         <input type="hidden" class="imgURL" name="extQuery.imgUrl" value="#(eQuery.imgUrl??)">
+				         <input type="hidden" name="extQuery.id" value="#(eQuery.id??)">
+				         <input type="hidden" name="extQuery.userId" value="#(eQuery.userId??)">
+                    </form>
+	            </div>
+        	</div>
+         </div>
+         
+         </form>
+         
+     </div>
+ </div>
+#end
+#define js()
+<script src="#(base_path)/static/amazeui/assets/js/jquery.min.js"></script>
+<script src="#(base_path)/static/front/jquery.form.js"></script>
+<script src="#(base_path)/static/amazeui/assets/js/amazeui.tree.min.js"></script>
+<script type="text/javascript">
+	jQuery(function($) {
+		
+		//保存
+		$(".saveBtn").unbind("click");
+		$(".saveBtn").bind("click",function(){
+			var $form = $(".eQueryForm");
+			
+			$.ajax({
+				type : "POST",
+			    url : "#(base_path)/extQuery/saveEQueryEdit",
+			    data: $form.serialize(),
+			    dataType : "json",
+			    success : function(data) {
+			    	if(data.code == 1){
+				    	layer.msg(data.message, {shift: 1});
+			    	}else{
+			    		layer.msg("修改成功", {shift: 1});
+			    	}
+			    	setTimeout(function(){window.location.href = "#(base_path)/extQuery";}, 600);
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		//上传图片
+		$("#imageFile").bind("change",function(){
+			$("#js_images_form").ajaxSubmit({
+			    dataType: "json",
+			    success: function(data) {
+			        layer.msg("上传成功", {shift: 1});
+			        var url = "#(base_path)/upload"+data.datum.imgFile;
+			        $(".extLogo").attr("src",url);
+			        $(".extLogo").val(url);
+			        $(".imgURL").val(url);
+			    }
+			});
+		});
+		
+	});	
+</script>
+
+#end

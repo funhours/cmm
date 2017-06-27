@@ -1,0 +1,180 @@
+#@layout()
+#define main()
+<div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新增文章</strong> / <small>Add Article</small></div>
+      </div>
+
+      <hr/>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
+          <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+              <div class="am-g">
+                <div class="am-u-md-4">
+                  <img class="am-img-circle am-img-thumbnail" src="http://s.amazeui.org/media/i/demos/bw-2014-06-19.jpg?imageView/1/w/200/h/200/q/80" alt=""/>
+                </div>
+                <div class="am-u-md-8">
+                  <p>请上传文章封面图片（必填） </p>
+                  <form class="am-form" id="js_images_form" action="#(base_path)/uploadFile/ajax_upload/" method="post" enctype="multipart/form-data">
+                    <div class="am-form-group">
+                      <input type="file" id="imageFile" name="imgFile"  multiple="multiple">
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
+          <form class="am-form am-form-horizontal">
+            <div class="am-form-group">
+              <label for="user-name" class="am-u-sm-3 am-form-label">标题 / Title</label>
+              <div class="am-u-sm-9">
+                <input type="text" id="user-name" placeholder="标题 / Title">
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <label for="user-email" class="am-u-sm-3 am-form-label">作者 / Author</label>
+              <div class="am-u-sm-9">
+                <input type="email" id="user-email" placeholder="作者 / Author">
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <label for="user-intro" class="am-u-sm-3 am-form-label">内容 / Content</label>
+              <div class="am-u-sm-9">
+                <script id="container" name="feedback.content" style="line-height: 20px;"  type="text/plain"></script>
+              </div>
+            </div>
+
+            <div class="am-form-group">
+              <div class="am-u-sm-9 am-u-sm-push-3">
+                <button type="button" class="am-btn am-btn-primary">保存修改</button>
+                <button type="button" class="am-btn am-btn-primary " onclick="javascript:history.back(-1);" >放弃保存</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+
+  </div>
+#end
+
+#define js()
+<script type="text/javascript" src="#(base_path)/assets/jquery_form/jquery.form.min.js"></script>
+<script type="text/javascript" src="#(base_path)/assets/layer/layer/layer.js"></script>
+#include("/common/_article_form_js.html")
+<script type="text/javascript">
+//上传时在 url 中用问号挂参的方式添加额外的参数 uploadType，用于分类管理图片
+ue.ready(function() {
+	ue.execCommand('serverparam', {
+		'uploadType': 'feedback'
+	});
+});
+
+// 也用 ajax 提交比较好，这样有利于在出异常的时候信息不会丢失
+function showErrorMsg(msg) {
+	layer.msg(msg, {
+			shift: 6
+			, shade: 0.4
+			, time: 0
+			, offset: "140px"
+			, closeBtn: 1
+			, shadeClose: true
+			,maxWidth: "1000"
+		}, function () {}
+	);
+}
+	jQuery(function($) {	
+		
+		$("#myArticleForm").ajaxForm({
+			dataType: "json"
+			, beforeSubmit: function(formData, jqForm, options) {
+				ue.sync();  // 同步一下 ueditor 中的数据到表单域
+			}
+			, success: function(ret) {
+				if (ret.isOk) {
+					location.href = "/my/feedback";
+				} else {
+					showErrorMsg(ret.msg);
+				}
+			}
+			, error: function(ret) {
+				alert(ret);
+			}
+			, complete: function(ret) { }       // 无论是 success 还是 error，最终都会被回调
+		});
+		
+		//提交保存
+		$(".saveEdit").unbind("click");
+		$(".saveEdit").bind("click",function(){
+			var $form = $(".prizeForm");
+			
+			var imgId = $(".imgId").val();
+			if(imgId == ""){
+				layer.msg("文章封面未上传成功", {shift: 1});
+				return;
+			}
+			
+			$.ajax({
+				type : "POST",
+			    url : "saveEdit",
+			    data: $form.serialize(),
+			    dataType : "json",
+			    success : function(data) {
+			    	layer.msg("保存成功", {shift: 1});
+			    	setTimeout(function(){window.location.href = "#(base_path)/aritcle";}, 600);
+			    },
+			    error : function(data) {
+			    	layer.msg(data.message, {shift: 6});
+			    }
+			});
+		});
+		
+		
+		//上传图片
+		$("#imageFile").bind("change",function(){
+			$("#js_images_form").ajaxSubmit({
+			    dataType: "json",
+			    beforeSend: function() {
+			        var percentVal = "0%";
+			        $('.am-progress-bar').css("width", percentVal).text(percentVal);
+			    },
+			    uploadProgress: function(event, position, total, percentComplete) {
+			        var percentVal = percentComplete + "%";
+			        $('.am-progress-bar').css("width", percentVal).text(percentVal);
+			    },
+			    success: function(data) {
+			        var percentVal = "100%";
+			        $('.am-progress-bar').css("width", percentVal).text(percentVal);
+			        layer.msg(data.message, {shift: 1});
+			        var url = "\\imageUpload\\"+data.data.imgName;
+			        $(".prizeImg").attr("src",url);
+			        $(".imgId").attr("value",data.data.id);
+			    }
+			
+			});
+			
+		});
+		
+	});
+
+	
+</script>
+
+#end
+
+
+

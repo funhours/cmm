@@ -1,0 +1,44 @@
+html,body{height: 100%;width: 100%;margin: 0;-webkit-overflow-scrolling: touch;}
+body{text-align: center;font-family: "微软雅黑";font-size: 12px;color: #FFFFFF; margin:0 auto;min-width:320px;}
+*{margin: 0;padding: 0;border: 0;word-wrap: break-word;}
+a{text-decoration: none;}
+ul li{list-style-type: none;}
+input:focus,select:focus,button:focus,textarea:focus{outline: none;}
+input,select,button,textarea{background: transparent;border: 1px solid #c9c9c9;}
+select{border: none;font-size: 15px;}
+.beijing{position: fixed;top: 0;left: 0;width: 100%;height: 100%;z-index: -1;background: url(../img/bg.jpg) no-repeat;background-size: 100% 100%;}
+/*=========
+     头部样式
+ ==========*/
+.title{width: 100%;text-align: center; font-size: 24px;position: absolute;top: 6%;left: 0;}
+.logo{width: 110px;height: 110px; display: block;border: 2px solid #FFFFFF;border-radius: 10px; position: absolute;top: 14%;left: 50%;margin-left: -55px;}
+input[type='text']{display: block;position: absolute;top: 34%; left: 50%; width: 284px;margin-left: -150px; height: 35px;line-height: 35px;padding-left: 16px;font-size: 15px;color: #FFFFFF; overflow: hidden;border-radius: 20px;background: rgba(255,255,255,.2);box-shadow: 0 0 2px #FFFFFF;}
+#countTimestart{display: block;position: absolute;top: 42%; left: 50%;width:284px;margin-left: -150px; height: 35px;line-height: 35px;padding-left: 16px;font-size: 15px;color: #FFFFFF; overflow: hidden;border-radius: 20px;background: rgba(255,255,255,.2);box-shadow: 0 0 2px #FFFFFF;}
+.button{display: block;position: absolute;top: 50%;left: 50%;width: 100px;margin-left: -50px; height: 40px;line-height: 40px; text-align: center;background-image: linear-gradient(#4ea0d9,#00367b);border: none;box-shadow: 0 0 5px #2067c4; color: #FFFFFF;border-radius: 6px;}
+.button:active{box-shadow: 0 0 3px #434343;}
+
+/*公告*/
+.con-text{width: 82%;font-size:13px;max-height: 84px; line-height: 21px; color: #faa139; text-align: center;overflow: hidden; position: absolute;top: 62%;left: 9%;}
+.con-text .blod{font-weight: bold;}
+.advert{width: 90%;max-height: 50px; font-size: 15px;position: absolute;top: 79%;left: 5%;overflow: hidden;}
+.advert p{line-height: 26px;}
+.footer{width: 100%;color: #c9c9c9; position: absolute;bottom: 15px;left: 0;font-size: 12px;max-height: 54px;overflow: hidden;}
+.footer p{line-height: 18px;}
+.footer a{color: #a9d0fa;}
+.footer a:hover{text-decoration: underline;}
+
+.biaoti{width: 100%;height: 60px;line-height: 60px;box-shadow: 0 0 6px #fff;background-image:  linear-gradient(#37abe2,#023577);position: fixed;top: 0;left: 0;z-index: 9999;}
+.mark{width: 84%;margin: auto;font-size: 20px; text-align: left;}
+.mark span{color: #ff0000;padding: 0 5px;}
+.message{width: 70%;padding: 15px;border: 1px solid #ededed;box-shadow: 0 0 8px #898989;background: rgba(255,255,255,0.1); margin: auto;text-align: left;font-size: 14px;line-height: 25px;margin-top: 80px;}
+.message p .type-name{font-weight: bold;}
+.logistics-news{width: 86%;margin: auto;font-size: 13px; margin-top: 30px;margin-bottom: 30px;}
+.logistics-news tr td:last-child{border-left: 3px solid #dcdcdc;text-align: left;padding-left: 10px;}
+.logistics-news tr td{padding: 0.15rem 0;border-bottom: 1px dashed #3569b2;}
+
+.copy{width: 100%;height: 70px;color: #c9c9c9;margin-top: 100px;}
+.copy .text{line-height: 20px;}
+.copy .text:first-child{padding-top: 15px;}
+
+
+

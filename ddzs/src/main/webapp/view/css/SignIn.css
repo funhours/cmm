@@ -46,7 +46,7 @@ input{background: transparent;}
 /*账号或者密码输入错误的图片提示，调用的时候直接修改属性为：visibility: visible;即可显示出来*/
 .denglv .icon-fail{visibility: hidden; display: inline-block; vertical-align: text-top;width: 14px;height: 14px;background: url(../img/SignIn/fail.png) no-repeat center center;}
 .denglv .remember{width: 100%;height: 20px;line-height: 20px;margin-top: 16px;position: relative;}
-.denglv .remember .holdon{width: 100px;position: absolute;left: 0;}
+.denglv .remember .holdon{position: absolute;left: 0;}
 .denglv .remember .holdon .input-checkbok{cursor: pointer;vertical-align: text-top;}
 .denglv .remember .holdon .input-checkbok + label{position: relative;display: inline-block;cursor: pointer;padding-left: 4px;}
 .denglv .remember .holdon .text:hover{color: #2C7CDF;}

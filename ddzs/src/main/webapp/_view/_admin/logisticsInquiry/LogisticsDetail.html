@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+	    <meta name="format-detection" content="telephone=no" />
+		<title>物流查询</title>
+		<link rel="stylesheet" href="#(base_path)/_view/_admin/logisticsInquiry/LogisticsInquiry.css" />
+		<script type="text/javascript" src="#(base_path)/static/amazeui/assets/js/jquery.min.js" ></script>
+		<script type="text/javascript" src="#(base_path)/_view/_admin/logisticsInquiry/index.js" ></script>
+	</head>
+	<body>
+		<img class="beijing" src="#(base_path)/assets/img/bg.jpg">
+		<div class="biaoti">
+			<p class="mark">为<span class="username">#(searchKey??'您')</span>查到<span class="number">#(count??0)</span>个订单：</p>
+		</div> 
+		#for(ord : orders)
+			<div class="message">
+				<p>
+					<span class="type-name">购买产品：</span>
+					<span class="wares">#(ord.productName??"")</span>
+				</p>
+				<p>
+					<span class="type-name">数量：</span>
+					<span class="wares">#(ord.productCount??"")</span>
+				</p>
+				<p>
+					<span class="type-name">姓名：</span>
+					<span class="wares">#(ord.recipient??"")</span>
+				</p>
+				<p>
+					<span class="type-name">电话：</span>
+					<span class="wares">#(ord.recipientTel??"")</span>
+				</p>
+				<p>
+					<span class="type-name">发货单号：</span>
+					<span class="wares">#(ord.courierNumber??"")</span>
+				</p>
+			</div>
+		#end
+		<!--物流信息-->
+		#for(t : tList)
+			<table class="logistics-news">
+				<tr>
+					<td colspan="2" style="border: none;border-bottom: 1px solid #1c81e5;color: #1c81e5;font-weight: bold; text-align: left;font-size: 15px;">订单#(for.index + 1)：物流跟踪信息</td>
+					<td style="border: none;"></td>
+				</tr>
+				#for(x:t.Traces)
+					<tr>
+						<td>#(x.AcceptTime)</td>
+						<td>#(x.AcceptStation)</td>
+					</tr>
+				#end
+			</table>
+		#end
+		<div class="copy">
+			<p class="text">Copyright&nbsp;&nbsp;&copy;&nbsp;&nbsp;2017&nbsp;&nbsp;重庆凯优科技有限公司&nbsp;&nbsp;版权所有&nbsp;&nbsp;</p>
+			<p class="text">蜀icp备17012800号-1</p>
+		</div>
+	</body>
+</html>

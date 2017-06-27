@@ -54,18 +54,18 @@
 							</p>
 							<div class="name">
 								<i class="icon-user"></i> 
-								<input type="text" class="userName" placeholder="请使用手机号登录" name="user" id="username" autocomplete="off"> 
+								<input type="text" class="userName" placeholder="请使用手机号登录" name="user" id="txt_username" autocomplete="off"> 
 								<i class="icon-fail"></i>
 							</div>
 							<div class="password">
 								<i class="icon-pwd"></i> 
-								<input type="password" class="userPassword" placeholder="密码" name="userPassword" id="userPassword" autocomplete="off"> 
+								<input type="password" class="userPassword" placeholder="密码" name="userPassword" id="txt_password" autocomplete="off"> 
 								<i class="icon-fail"></i>
 							</div>
 							<div class="remember">
 								<div class="holdon">
 									<input id="cbx_keep" class="input-checkbok" type='checkbox' name='keepLogin' />
-									<label class="text">记住密码</label>
+									<label class="text" id="ck_rmbUser">在此计算机上记住密码</label>
 									<!-- <input id="isAutoLoginId" class="input-checkbok" type='checkbox' name="isAutoLoginId" />
 									<label class="text">自动登录</label> -->
 								</div>
@@ -73,7 +73,7 @@
 									<a class="wangji" href="#">忘记密码？</a>
 								</div>
 							</div>
-							<a class="button login" id="btn_login" href="#">登录</a>
+							<a class="button login" id="btn_login" href="#" onclick="Save()" >登录</a>
 							<p class="no-account">
 								<span class="no">没有账号?</span> <a href="#" class="color zhuce" >立即注册</a>
 							</p>
@@ -114,6 +114,7 @@
 
 </body>
 <script src="#(base_path)/view/js/jquery-1.11.3.min.js"></script>
+<script src="#(base_path)/view/js/jquery.cookie.js"></script>
 <script src="#(base_path)/assets/layer/layer.js"></script>
 <script type="text/javascript">
 	$(".wangji").unbind("click");
@@ -150,6 +151,7 @@
    	    var getUserName = storage["userName"];    
    	    var getPwd = storage["userPassword"];    
    	    var getisstroepwd = storage["isstorePwd"];    
+   	 	$(".userName").val(getUserName);  
    	    if("yes" == getisstroepwd)    
    	    {
    	    	$("#cbx_keep").prop("checked",true);
@@ -161,7 +163,15 @@
                 $(".userPassword").val(getPwd);  
             	$("#cbx_keep").prop("checked",true);
             }
-   	    }    
+   	    }
+   	    
+   	 if ($.cookie("rmbUser") == "true") {  
+         $("#ck_rmbUser").attr("checked", true);  
+         $("#txt_username").val($.cookie("username"));  
+         $("#txt_password").val($.cookie("password"));  
+         }  
+
+   	    
    	 });   
     function login(){  
        var userName=$(".userName").val();    
@@ -262,6 +272,22 @@
 			alert("Ajax请求失败，错误状态为："+XMLHttpRequest.status);
 		}
 		})  
-   }  
+   } 
+   //记住用户名密码  
+   function Save() {  
+       if ($("#ck_rmbUser").attr("checked")) {  
+           var str_username = $("#txt_username").val();  
+           var str_password = $("#txt_password").val();  
+           $.cookie("rmbUser", "true", { expires: 7 }); //存储一个带7天期限的cookie  
+           $.cookie("username", str_username, { expires: 7 });  
+           $.cookie("password", str_password, { expires: 7 });  
+       }  
+       else {  
+           $.cookie("rmbUser", "false", { expire: -1 });  
+           $.cookie("username", "", { expires: -1 });  
+           $.cookie("password", "", { expires: -1 });  
+       }  
+   };  
+
 </script>
 </html>
